@@ -15,10 +15,6 @@ object MLManager {
     fun hasGPUSupport(): Boolean =
         NativeInterface.hasGPUSupport()
 
-    suspend fun createGPUInstance(): Boolean = withContext(Dispatchers.Default) {
-        NativeInterface.createGPUInstance()
-    }
-
     fun isGuideModelInitialized(): Boolean =
         NativeInterface.isGeneralModelInitialized()
 

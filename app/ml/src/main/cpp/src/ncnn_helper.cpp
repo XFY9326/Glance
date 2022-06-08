@@ -18,11 +18,8 @@ namespace NCNNHelper {
     }
 
     bool create_gpu_instance() {
-        if (has_gpu_support()) {
-            gpu_instance_created = ncnn::create_gpu_instance() == 0;
-            return gpu_instance_created;
-        }
-        return false;
+        gpu_instance_created = ncnn::create_gpu_instance() == 0;
+        return gpu_instance_created;
     }
 
     void destroy_gpu_instance() {

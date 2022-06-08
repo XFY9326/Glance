@@ -17,9 +17,6 @@ internal object NativeInterface {
     external fun hasGPUSupport(): Boolean
 
     @Synchronized
-    external fun createGPUInstance(): Boolean
-
-    @Synchronized
     external fun isGuideModelInitialized(): Boolean
 
     @Synchronized

@@ -6,20 +6,24 @@
 #include "object_detector.h"
 
 #define LOG_TAG "JNI_INTERFACE"
+#define JNI_VERSION JNI_VERSION_1_4
 
 extern "C" JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *) {
     JNIEnv *env;
-    if (vm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION_1_6) != JNI_OK) return JNI_ERR;
+    if (vm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION) != JNI_OK) return JNI_ERR;
     if (!JVMConvert::init(env)) {
         LOG_E(LOG_TAG, "JVM Convert class load error!");
         return JNI_ERR;
     }
-    return JNI_VERSION_1_6;
+    if (NCNNHelper::has_gpu_support() && !NCNNHelper::create_gpu_instance()) {
+        LOG_E(LOG_TAG, "NCNN GPU instance create failed!");
+    }
+    return JNI_VERSION;
 }
 
 extern "C" JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *) {
     JNIEnv *env;
-    if (vm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION_1_6) == JNI_OK) {
+    if (vm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION) == JNI_OK) {
         JVMConvert::clear(env);
     }
     NCNNHelper::destroy_gpu_instance();
@@ -39,12 +43,6 @@ extern "C"
 JNIEXPORT jboolean JNICALL
 Java_io_github_xfy9326_glance_ml_NativeInterface_hasGPUSupport(JNIEnv *, jobject) {
     return NCNNHelper::has_gpu_support() ? JNI_TRUE : JNI_FALSE;
-}
-
-extern "C"
-JNIEXPORT jboolean JNICALL
-Java_io_github_xfy9326_glance_ml_NativeInterface_createGPUInstance(JNIEnv *, jobject) {
-    return NCNNHelper::create_gpu_instance() ? JNI_TRUE : JNI_FALSE;
 }
 
 extern "C"
