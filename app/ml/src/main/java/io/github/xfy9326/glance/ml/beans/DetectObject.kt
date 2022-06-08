@@ -1,7 +1,9 @@
 package io.github.xfy9326.glance.ml.beans
 
 import android.graphics.RectF
+import androidx.annotation.Keep
 
+@Keep
 data class DetectObject(
     val box: RectF,
     val class_id: Int,
