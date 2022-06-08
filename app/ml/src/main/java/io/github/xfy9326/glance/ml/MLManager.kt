@@ -8,16 +8,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 object MLManager {
-    private const val DEFAULT_CONF_THRESHOLD = 0.25f
-    private const val DEFAULT_IOU_THRESHOLD = 0.45f
-
-    // yolov5n_fp16_opt
-    private const val MODEL_GUIDE_BIN_PATH = "models/guide.bin"
-    private const val MODEL_GUIDE_PARAM_BIN_PATH = "models/guide.param.bin"
-
-    // yolov5s_fp16_opt
-    private const val MODEL_GENERAL_BIN_PATH = "models/general.bin"
-    private const val MODEL_GENERAL_PARAM_BIN_PATH = "models/general.param.bin"
 
     fun isGPUInstanceCreated(): Boolean =
         NativeInterface.isGPUInstanceCreated()
@@ -36,18 +26,26 @@ object MLManager {
         NativeInterface.isGeneralModelInitialized()
 
     suspend fun initGuideModel(): Boolean = withContext(Dispatchers.IO) {
-        NativeInterface.initGuideModel(IOManager.assetManager, MODEL_GUIDE_BIN_PATH, MODEL_GUIDE_PARAM_BIN_PATH)
+        NativeInterface.initGuideModel(IOManager.assetManager, MLConfig.MODEL_GUIDE_BIN_PATH, MLConfig.MODEL_GUIDE_PARAM_BIN_PATH)
     }
 
     suspend fun initGeneralModel(): Boolean = withContext(Dispatchers.IO) {
-        NativeInterface.initGuideModel(IOManager.assetManager, MODEL_GENERAL_BIN_PATH, MODEL_GENERAL_PARAM_BIN_PATH)
+        NativeInterface.initGuideModel(IOManager.assetManager, MLConfig.MODEL_GENERAL_BIN_PATH, MLConfig.MODEL_GENERAL_PARAM_BIN_PATH)
     }
 
     suspend fun detectGuideModel(pixelsData: PixelsData, enableGPU: Boolean): Array<DetectObject>? = withContext(Dispatchers.Default) {
-        NativeInterface.detectGuideModel(pixelsData, enableGPU, DEFAULT_CONF_THRESHOLD, DEFAULT_IOU_THRESHOLD)
+        NativeInterface.detectGuideModel(pixelsData, enableGPU, MLConfig.DEFAULT_CONF_THRESHOLD, MLConfig.DEFAULT_IOU_THRESHOLD)
     }
 
     suspend fun detectGeneralModel(bitmap: Bitmap, enableGPU: Boolean): Array<DetectObject>? = withContext(Dispatchers.Default) {
-        NativeInterface.detectGeneralModel(bitmap, enableGPU, DEFAULT_CONF_THRESHOLD, DEFAULT_IOU_THRESHOLD)
+        NativeInterface.detectGeneralModel(bitmap, enableGPU, MLConfig.DEFAULT_CONF_THRESHOLD, MLConfig.DEFAULT_IOU_THRESHOLD)
+    }
+
+    suspend fun loadGuideLabels(): Array<String> {
+        return LabelsUtils.loadLabels(R.raw.labels_model_guide)
+    }
+
+    suspend fun loadGeneralLabels(): Array<String> {
+        return LabelsUtils.loadLabels(R.raw.labels_model_general)
     }
 }
