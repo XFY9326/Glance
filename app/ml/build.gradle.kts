@@ -46,9 +46,10 @@ android {
 }
 
 dependencies {
-    // Library
-    implementation("io.github.xfy9326.atools:atools-core:0.0.8")
-    implementation("io.github.xfy9326.atools:atools-io:0.0.8")
+    // ATools
+    val aToolsVersion = "0.0.8"
+    implementation("io.github.xfy9326.atools:atools-core:$aToolsVersion")
+    implementation("io.github.xfy9326.atools:atools-io:$aToolsVersion")
 
     // Kotlin Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.2")
