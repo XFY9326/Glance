@@ -21,3 +21,10 @@ target_link_libraries(
         ncnn
         jnigraphics
         ${log-lib})
+
+# Settings
+if (CMAKE_BUILD_TYPE STREQUAL "Release")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Os -ffunction-sections -fdata-sections -fvisibility=hidden -fvisibility-inlines-hidden")
+    set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS}")
+    SET_TARGET_PROPERTIES(ml PROPERTIES LINK_FLAGS "-Wl,-exclude-libs,ALL -Wl,--gc-sections -Wl,--strip-all")
+endif ()
