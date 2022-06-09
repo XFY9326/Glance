@@ -3,6 +3,16 @@
 namespace Utils {
     using namespace std;
 
+    float sigmoid(float x) {
+        x = min(x, 88.3762626647949f);
+        x = max(x, -88.3762626647949f);
+        return (float) (1.f / (1.f + exp(-x)));
+    }
+
+    float reverse_sigmoid(float f) {
+        return (float) (-1.0f * (float) log((1.0f / (f + 1e-8)) - 1.0f));
+    }
+
     static const auto detected_object_comparator = [](const shared_ptr<DetectObject> &a, const shared_ptr<DetectObject> &b) {
         return a->confidence < b->confidence;
     };

@@ -11,13 +11,9 @@
 namespace Utils {
     using namespace std;
 
-    static inline float sigmoid(float x) {
-        return static_cast<float>(1.f / (1.f + exp(-x)));
-    }
+    float sigmoid(float x);
 
-    static inline float reverse_sigmoid(float f) {
-        return static_cast<float>(-1.0f * (float) log((1.0f / (f + 1e-8)) - 1.0f));
-    }
+    float reverse_sigmoid(float f);
 
     float intersection_over_union(const DetectObject &r1, const DetectObject &r2);
 
