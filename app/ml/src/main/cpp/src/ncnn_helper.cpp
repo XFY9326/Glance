@@ -30,12 +30,13 @@ namespace NCNNHelper {
     }
 
     bool load_model(ncnn::Net &net, AAssetManager *mgr, const char *param_bin_path, const char *bin_path) {
+        net.clear();
         if (net.load_param_bin(mgr, param_bin_path) != 0) {
-            LOG_E(LOG_TAG, "YoloV5Model param bin load failed: %s", param_bin_path);
+            LOG_E(LOG_TAG, "Model param bin load failed: %s", param_bin_path);
             return false;
         }
         if (net.load_model(mgr, bin_path) != 0) {
-            LOG_E(LOG_TAG, "YoloV5Model bin load failed: %s", bin_path);
+            LOG_E(LOG_TAG, "Model bin load failed: %s", bin_path);
             return false;
         }
         return true;

@@ -6,8 +6,16 @@ import io.github.xfy9326.glance.ml.beans.DetectObject
 import io.github.xfy9326.glance.ml.beans.PixelsData
 
 internal object NativeInterface {
+    var hasInitSuccess = false
+        private set
+
     init {
-        System.loadLibrary("ml")
+        try {
+            System.loadLibrary("ml")
+            hasInitSuccess = true
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     @Synchronized

@@ -9,6 +9,9 @@ import kotlinx.coroutines.withContext
 
 object MLManager {
 
+    fun hasInitSuccess(): Boolean =
+        NativeInterface.hasInitSuccess
+
     fun isGPUInstanceCreated(): Boolean =
         NativeInterface.isGPUInstanceCreated()
 

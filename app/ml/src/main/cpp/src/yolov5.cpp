@@ -135,17 +135,24 @@ namespace YoloV5Executor {
         }
     }
 
+    static shared_ptr<vector<shared_ptr<DetectObject>>> run_model(
+            const ncnn::Net &net, const ModelInfo &modelInfo, const ncnn::Mat &input, const ResizeInfo &resize_info,
+            const bool enable_gpu, const float conf_threshold, const float iou_threshold
+    ) {
+        auto output = process(net, modelInfo, input, enable_gpu, conf_threshold, iou_threshold);
+        post_process(output, resize_info);
+        return output;
+    }
+
     // Require RGBA_8888
     shared_ptr<vector<shared_ptr<DetectObject>>> launch(
             const ncnn::Net &net, const ModelInfo &modelInfo, const PixelsData &pixelsData,
             const bool enable_gpu, const float conf_threshold, const float iou_threshold
     ) {
         ncnn::Mat input;
-        ResizeInfo resize_info{};
+        ResizeInfo resize_info;
         pre_process_pixels(pixelsData, modelInfo, input, resize_info);
-        auto output = process(net, modelInfo, input, enable_gpu, conf_threshold, iou_threshold);
-        post_process(output, resize_info);
-        return output;
+        return run_model(net, modelInfo, input, resize_info, enable_gpu, conf_threshold, iou_threshold);
     }
 
     // Require RGBA_8888
@@ -154,10 +161,8 @@ namespace YoloV5Executor {
             const bool enable_gpu, const float conf_threshold, const float iou_threshold
     ) {
         ncnn::Mat input;
-        ResizeInfo resize_info{};
+        ResizeInfo resize_info;
         pre_process_bitmap(env, bitmap, modelInfo, input, resize_info);
-        auto output = process(net, modelInfo, input, enable_gpu, conf_threshold, iou_threshold);
-        post_process(output, resize_info);
-        return output;
+        return run_model(net, modelInfo, input, resize_info, enable_gpu, conf_threshold, iou_threshold);
     }
 }

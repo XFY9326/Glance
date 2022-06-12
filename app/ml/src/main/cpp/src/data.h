@@ -19,6 +19,8 @@ struct ResizeInfo {
     int scaled_width;
     int scaled_height;
     float ratio;
+
+    ResizeInfo() {}
 };
 
 struct PixelsData {
