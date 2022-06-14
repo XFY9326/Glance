@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">一目</string>
+    <string name="app_icon">应用图标</string>
+    <string name="guide">引导员</string>
+    <string name="guide_summary">实时步行辅助</string>
+    <string name="camera_photo_analysis">相机图片分析</string>
+    <string name="camera_photo_analysis_summary">附近有什么?</string>
+    <string name="local_image_analysis">本地图片分析</string>
+    <string name="local_image_analysis_summary">图片里有什么?</string>
+    <string name="help">帮助</string>
+    <string name="settings">设置</string>
+    <string name="about">关于</string>
+</resources>

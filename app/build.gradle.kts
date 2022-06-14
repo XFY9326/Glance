@@ -50,6 +50,7 @@ android {
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.toString()
+        freeCompilerArgs = freeCompilerArgs + "-opt-in=kotlin.RequiresOptIn"
     }
 
     buildFeatures {
@@ -57,7 +58,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.1.1"
+        kotlinCompilerExtensionVersion = "1.2.0-beta03"
     }
 
     packagingOptions {
@@ -84,21 +85,14 @@ dependencies {
     implementation("androidx.core:core-ktx:1.8.0")
     implementation("androidx.core:core-splashscreen:1.0.0-rc01")
 
-    // AndroidX AppCompat
-    val appCompatVersion = "1.4.2"
-    implementation("androidx.appcompat:appcompat:$appCompatVersion")
-    implementation("androidx.appcompat:appcompat-resources:$appCompatVersion")
-
     // AndroidX Activity and Fragment
     val activityVersion = "1.4.0"
     implementation("androidx.activity:activity-ktx:$activityVersion")
     implementation("androidx.activity:activity-compose:$activityVersion")
-    implementation("androidx.fragment:fragment-ktx:1.4.1")
 
     // AndroidX Lifecycle
     val lifeCycleVersion = "2.4.1"
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifeCycleVersion")
-    implementation("androidx.lifecycle:lifecycle-common-java8:$lifeCycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifeCycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifeCycleVersion")
 
@@ -109,11 +103,8 @@ dependencies {
     implementation("androidx.camera:camera-lifecycle:$cameraVersion")
     implementation("androidx.camera:camera-view:$cameraVersion")
 
-    // Material Design
-    implementation("com.google.android.material:material:1.6.1")
-
     // Jetpack Compose
-    val composeVersion = "1.1.1"
+    val composeVersion = "1.2.0-beta03"
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
