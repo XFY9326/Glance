@@ -11,9 +11,11 @@ namespace JVMConvert {
 
     bool init(JNIEnv *env);
 
-    jobjectArray to_jvm(JNIEnv *env, const shared_ptr<vector<shared_ptr<DetectObject>>> &output);
+    jobjectArray output_vector_to_jvm(JNIEnv *env, const shared_ptr<vector<shared_ptr<DetectObject>>> &output);
 
-    bool to_native(JNIEnv *env, jobject pixels_data, PixelsData &pixelsData);
+    bool pixels_data_to_native(JNIEnv *env, jobject pixels_data, PixelsData &pixelsData);
+
+    ModelType model_type_to_native(jint model_type);
 
     void clear(JNIEnv *env);
 }

@@ -29,8 +29,7 @@ extern "C" JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *) {
     NCNNHelper::destroy_gpu_instance();
     NCNNHelper::blob_pool_allocator.clear();
     NCNNHelper::workspace_pool_allocator.clear();
-    ObjectDetector::clear_guide_model();
-    ObjectDetector::clear_general_model();
+    ObjectDetector::clear_models();
 }
 
 extern "C"
@@ -47,39 +46,18 @@ Java_io_github_xfy9326_glance_ml_NativeInterface_hasGPUSupport(JNIEnv *, jobject
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_io_github_xfy9326_glance_ml_NativeInterface_isGuideModelInitialized(JNIEnv *, jobject) {
-    return ObjectDetector::is_guide_model_initialized() ? JNI_TRUE : JNI_FALSE;
+Java_io_github_xfy9326_glance_ml_NativeInterface_isModelInitialized(JNIEnv *env, jobject, jint model_type) {
+    return ObjectDetector::is_model_initialized(JVMConvert::model_type_to_native(model_type)) ? JNI_TRUE : JNI_FALSE;
 }
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_io_github_xfy9326_glance_ml_NativeInterface_isGeneralModelInitialized(JNIEnv *, jobject) {
-    return ObjectDetector::is_general_model_initialized() ? JNI_TRUE : JNI_FALSE;
-}
-
-extern "C"
-JNIEXPORT jboolean JNICALL
-Java_io_github_xfy9326_glance_ml_NativeInterface_initGuideModel(JNIEnv *env, jobject, jobject asset_manager, jstring bin_path, jstring param_bin_path) {
+Java_io_github_xfy9326_glance_ml_NativeInterface_initModel(JNIEnv *env, jobject, jint model_type, jobject asset_manager, jstring bin_path, jstring param_bin_path) {
     const char *bin = env->GetStringUTFChars(bin_path, JNI_FALSE);
     const char *param_bin = env->GetStringUTFChars(param_bin_path, JNI_FALSE);
 
     AAssetManager *mgr = AAssetManager_fromJava(env, asset_manager);
-    auto result = ObjectDetector::init_guide_model(mgr, bin, param_bin) ? JNI_TRUE : JNI_FALSE;
-
-    env->ReleaseStringUTFChars(bin_path, bin);
-    env->ReleaseStringUTFChars(param_bin_path, param_bin);
-
-    return result;
-}
-
-extern "C"
-JNIEXPORT jboolean JNICALL
-Java_io_github_xfy9326_glance_ml_NativeInterface_initGeneralModel(JNIEnv *env, jobject, jobject asset_manager, jstring bin_path, jstring param_bin_path) {
-    const char *bin = env->GetStringUTFChars(bin_path, JNI_FALSE);
-    const char *param_bin = env->GetStringUTFChars(param_bin_path, JNI_FALSE);
-
-    AAssetManager *mgr = AAssetManager_fromJava(env, asset_manager);
-    auto result = ObjectDetector::init_general_model(mgr, bin, param_bin) ? JNI_TRUE : JNI_FALSE;
+    auto result = ObjectDetector::init_model(JVMConvert::model_type_to_native(model_type), mgr, bin, param_bin) ? JNI_TRUE : JNI_FALSE;
 
     env->ReleaseStringUTFChars(bin_path, bin);
     env->ReleaseStringUTFChars(param_bin_path, param_bin);
@@ -89,27 +67,31 @@ Java_io_github_xfy9326_glance_ml_NativeInterface_initGeneralModel(JNIEnv *env, j
 
 extern "C"
 JNIEXPORT jobjectArray JNICALL
-Java_io_github_xfy9326_glance_ml_NativeInterface_detectGuideModel(JNIEnv *env, jobject, jobject pixels_data, jboolean enable_gpu, jfloat conf_threshold, jfloat iou_threshold) {
+Java_io_github_xfy9326_glance_ml_NativeInterface_detectByPixelsData(JNIEnv *env, jobject, jint model_type, jobject pixels_data, jboolean enable_gpu, jfloat conf_threshold,
+                                                                    jfloat iou_threshold) {
     using namespace std;
 
     PixelsData pixelsData;
-    JVMConvert::to_native(env, pixels_data, pixelsData);
-    const shared_ptr<vector<shared_ptr<DetectObject>>> output = ObjectDetector::detect_guide_model(
+    JVMConvert::pixels_data_to_native(env, pixels_data, pixelsData);
+    const shared_ptr<vector<shared_ptr<DetectObject>>> output = ObjectDetector::detect(
+            JVMConvert::model_type_to_native(model_type),
             pixelsData,
             enable_gpu == JNI_TRUE,
             (float) conf_threshold,
             (float) iou_threshold
     );
 
-    return JVMConvert::to_jvm(env, output);
+    return JVMConvert::output_vector_to_jvm(env, output);
 }
 
 extern "C"
 JNIEXPORT jobjectArray JNICALL
-Java_io_github_xfy9326_glance_ml_NativeInterface_detectGeneralModel(JNIEnv *env, jobject, jobject bitmap, jboolean enable_gpu, jfloat conf_threshold, jfloat iou_threshold) {
+Java_io_github_xfy9326_glance_ml_NativeInterface_detectByBitmap(JNIEnv *env, jobject, jint model_type, jobject bitmap, jboolean enable_gpu, jfloat conf_threshold,
+                                                                jfloat iou_threshold) {
     using namespace std;
 
-    const shared_ptr<vector<shared_ptr<DetectObject>>> output = ObjectDetector::detect_general_model(
+    const shared_ptr<vector<shared_ptr<DetectObject>>> output = ObjectDetector::detect(
+            JVMConvert::model_type_to_native(model_type),
             env,
             bitmap,
             enable_gpu == JNI_TRUE,
@@ -117,5 +99,5 @@ Java_io_github_xfy9326_glance_ml_NativeInterface_detectGeneralModel(JNIEnv *env,
             (float) iou_threshold
     );
 
-    return JVMConvert::to_jvm(env, output);
+    return JVMConvert::output_vector_to_jvm(env, output);
 }

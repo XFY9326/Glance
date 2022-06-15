@@ -35,4 +35,11 @@ struct PixelsData {
             width(width), height(height), stride(stride), pixels(pixels) {}
 };
 
+#define MODEL_TYPE_SIZE 2
+
+// Must be ordered number from 0
+enum ModelType {
+    GUIDE_MODEL = 0, GENERAL_MODEL = 1
+};
+
 #endif //GLANCE_DATA_H

@@ -6,39 +6,19 @@ import io.github.xfy9326.glance.ml.beans.DetectObject
 import io.github.xfy9326.glance.ml.beans.PixelsData
 
 internal object NativeInterface {
-    var hasInitSuccess = false
-        private set
-
     init {
-        try {
-            System.loadLibrary("ml")
-            hasInitSuccess = true
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        System.loadLibrary("ml")
     }
 
-    @Synchronized
     external fun isGPUInstanceCreated(): Boolean
 
-    @Synchronized
     external fun hasGPUSupport(): Boolean
 
-    @Synchronized
-    external fun isGuideModelInitialized(): Boolean
+    external fun isModelInitialized(modelType: Int): Boolean
 
-    @Synchronized
-    external fun isGeneralModelInitialized(): Boolean
+    external fun initModel(modelType: Int, assetManager: AssetManager, binPath: String, paramBinPath: String): Boolean
 
-    @Synchronized
-    external fun initGuideModel(assetManager: AssetManager, binPath: String, paramBinPath: String): Boolean
+    external fun detectByPixelsData(modelType: Int, pixelsData: PixelsData, enableGPU: Boolean, confThreshold: Float, iouThreshold: Float): Array<DetectObject>?
 
-    @Synchronized
-    external fun initGeneralModel(assetManager: AssetManager, binPath: String, paramBinPath: String): Boolean
-
-    @Synchronized
-    external fun detectGuideModel(pixelsData: PixelsData, enableGPU: Boolean, confThreshold: Float, iouThreshold: Float): Array<DetectObject>?
-
-    @Synchronized
-    external fun detectGeneralModel(bitmap: Bitmap, enableGPU: Boolean, confThreshold: Float, iouThreshold: Float): Array<DetectObject>?
+    external fun detectByBitmap(modelType: Int, bitmap: Bitmap, enableGPU: Boolean, confThreshold: Float, iouThreshold: Float): Array<DetectObject>?
 }

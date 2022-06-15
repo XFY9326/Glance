@@ -9,7 +9,6 @@ namespace JVMConvert {
     static jclass detect_object_class;
     static jmethodID detect_object_class_constructor;
 
-    static jclass pixels_data_class;
     static jfieldID pixels_data_class_width;
     static jfieldID pixels_data_class_height;
     static jfieldID pixels_data_class_stride;
@@ -30,28 +29,27 @@ namespace JVMConvert {
 
         clazz = env->FindClass("io/github/xfy9326/glance/ml/beans/PixelsData");
         if (clazz == nullptr) return false;
-        pixels_data_class = reinterpret_cast<jclass>(env->NewGlobalRef(clazz));
 
-        field = env->GetFieldID(pixels_data_class, "width", "I");
+        field = env->GetFieldID(clazz, "width", "I");
         if (field == nullptr) return false;
         pixels_data_class_width = field;
 
-        field = env->GetFieldID(pixels_data_class, "height", "I");
+        field = env->GetFieldID(clazz, "height", "I");
         if (field == nullptr) return false;
         pixels_data_class_height = field;
 
-        field = env->GetFieldID(pixels_data_class, "stride", "I");
+        field = env->GetFieldID(clazz, "stride", "I");
         if (field == nullptr) return false;
         pixels_data_class_stride = field;
 
-        field = env->GetFieldID(pixels_data_class, "pixels", "Ljava/nio/ByteBuffer;");
+        field = env->GetFieldID(clazz, "pixels", "Ljava/nio/ByteBuffer;");
         if (field == nullptr) return false;
         pixels_data_class_pixels = field;
 
         return true;
     }
 
-    jobjectArray to_jvm(JNIEnv *env, const shared_ptr<vector<shared_ptr<DetectObject>>> &output) {
+    jobjectArray output_vector_to_jvm(JNIEnv *env, const shared_ptr<vector<shared_ptr<DetectObject>>> &output) {
         if (env == nullptr || output == nullptr) return nullptr;
         jobjectArray object_array = env->NewObjectArray((jsize) output->size(), detect_object_class, nullptr);
         for (int i = 0; i < output->size(); ++i) {
@@ -65,7 +63,7 @@ namespace JVMConvert {
         return object_array;
     }
 
-    bool to_native(JNIEnv *env, jobject pixels_data, PixelsData &pixelsData) {
+    bool pixels_data_to_native(JNIEnv *env, jobject pixels_data, PixelsData &pixelsData) {
         if (env == nullptr || pixels_data == nullptr) return false;
         const jint width = env->GetIntField(pixels_data, pixels_data_class_width);
         const jint height = env->GetIntField(pixels_data, pixels_data_class_height);
@@ -85,13 +83,15 @@ namespace JVMConvert {
         }
     }
 
+    ModelType model_type_to_native(jint model_type) {
+        return static_cast<ModelType>((int) model_type);
+    }
+
     void clear(JNIEnv *env) {
         if (detect_object_class != nullptr) env->DeleteGlobalRef(detect_object_class);
         detect_object_class = nullptr;
         detect_object_class_constructor = nullptr;
 
-        if (pixels_data_class != nullptr) env->DeleteGlobalRef(pixels_data_class);
-        pixels_data_class = nullptr;
         pixels_data_class_width = nullptr;
         pixels_data_class_height = nullptr;
         pixels_data_class_stride = nullptr;

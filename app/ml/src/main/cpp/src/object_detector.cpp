@@ -7,61 +7,51 @@
 namespace ObjectDetector {
     using namespace std;
 
-    static ncnn::Net yolov5_guide_net;
-    static ncnn::Net yolov5_general_net;
+    static ncnn::Net net[MODEL_TYPE_SIZE];
+    static bool net_init[MODEL_TYPE_SIZE] = {false};
 
-    static bool yolov5_guide_net_init = false;
-    static bool yolov5_general_net_init = false;
-
-    void clear_guide_model() {
-        yolov5_guide_net.clear();
-    }
-
-    void clear_general_model() {
-        yolov5_general_net.clear();
-    }
-
-    bool is_guide_model_initialized() {
-        return yolov5_guide_net_init;
-    }
-
-    bool is_general_model_initialized() {
-        return yolov5_general_net_init;
-    }
-
-    bool init_guide_model(AAssetManager *mgr, const char *bin, const char *param_bin) {
-        if (!yolov5_guide_net_init) {
-            yolov5_guide_net_init = YoloV5Executor::load_model(mgr, YoloV5Model::yolov5_guide, yolov5_guide_net, bin, param_bin);
-            return yolov5_guide_net_init;
+    static const YoloV5Model::ModelInfo *get_model_info_by_type(const ModelType modelType) {
+        switch (modelType) {
+            case GUIDE_MODEL:
+                return &YoloV5Model::yolov5_guide;
+            case GENERAL_MODEL:
+                return &YoloV5Model::yolov5_general;
         }
-        return true;
+        return nullptr;
     }
 
-    bool init_general_model(AAssetManager *mgr, const char *bin, const char *param_bin) {
-        if (!yolov5_general_net_init) {
-            yolov5_general_net_init = YoloV5Executor::load_model(mgr, YoloV5Model::yolov5_general, yolov5_general_net, bin, param_bin);
-            return yolov5_general_net_init;
+    void clear_models() {
+        for (auto &item: net) {
+            item.clear();
+        }
+        memset(net_init, 0, sizeof(net_init));
+    }
+
+    bool is_model_initialized(const ModelType modelType) {
+        return net_init[modelType];
+    }
+
+    bool init_model(const ModelType modelType, AAssetManager *mgr, const char *bin, const char *param_bin) {
+        if (!net_init[modelType]) {
+            net_init[modelType] = YoloV5Executor::load_model(mgr, *get_model_info_by_type(modelType), net[modelType], bin, param_bin);
+            return net_init[modelType];
         }
         return true;
     }
 
     shared_ptr<vector<shared_ptr<DetectObject>>>
-    detect_guide_model(const PixelsData &pixelsData, const bool enable_gpu, const float conf_threshold, const float iou_threshold) {
-        if (yolov5_guide_net_init) {
-            return YoloV5Executor::launch(yolov5_general_net, YoloV5Model::yolov5_general, pixelsData, enable_gpu, conf_threshold, iou_threshold);
-        } else {
-            LOG_E(LOG_TAG, "Object detector model 'yolov5_guide' hasn't initialized!");
-            return nullptr;
+    detect(const ModelType modelType, const PixelsData &pixelsData, const bool enable_gpu, const float conf_threshold, const float iou_threshold) {
+        if (net_init[modelType]) {
+            return YoloV5Executor::launch(net[modelType], *get_model_info_by_type(modelType), pixelsData, enable_gpu, conf_threshold, iou_threshold);
         }
+        return nullptr;
     }
 
     shared_ptr<vector<shared_ptr<DetectObject>>>
-    detect_general_model(JNIEnv *env, jobject bitmap, const bool enable_gpu, const float conf_threshold, const float iou_threshold) {
-        if (yolov5_general_net_init) {
-            return YoloV5Executor::launch(yolov5_general_net, YoloV5Model::yolov5_general, env, bitmap, enable_gpu, conf_threshold, iou_threshold);
-        } else {
-            LOG_E(LOG_TAG, "Object detector model 'yolov5_general' hasn't initialized!");
-            return nullptr;
+    detect(const ModelType modelType, JNIEnv *env, jobject bitmap, const bool enable_gpu, const float conf_threshold, const float iou_threshold) {
+        if (net_init[modelType]) {
+            return YoloV5Executor::launch(net[modelType], *get_model_info_by_type(modelType), env, bitmap, enable_gpu, conf_threshold, iou_threshold);
         }
+        return nullptr;
     }
 }
