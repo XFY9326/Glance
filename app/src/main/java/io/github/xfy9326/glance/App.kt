@@ -3,6 +3,7 @@ package io.github.xfy9326.glance
 import android.app.Application
 import io.github.xfy9326.glance.ml.MLManager
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -20,7 +21,7 @@ class App : Application() {
 
     @OptIn(DelicateCoroutinesApi::class)
     private fun init() {
-        GlobalScope.launch {
+        GlobalScope.launch(Dispatchers.Default) {
             MLManager.initInstance()
             internalIsAppInitialized = true
             MLManager.initModelsInBackground()

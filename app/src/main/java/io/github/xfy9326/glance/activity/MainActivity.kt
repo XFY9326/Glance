@@ -34,8 +34,8 @@ import io.github.xfy9326.glance.ui.theme.AppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         prepareSplashScreen()
+        super.onCreate(savedInstanceState)
         setContent {
             Content()
         }
