@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import io.github.xfy9326.glance.R
+import io.github.xfy9326.glance.tools.startActivity
 import io.github.xfy9326.glance.ui.base.*
 import io.github.xfy9326.glance.ui.theme.AppTheme
 
@@ -40,6 +42,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Preview(showBackground = true, device = Devices.PIXEL_4)
 @Composable
 private fun Content() {
     val contentScrollState = rememberScrollState()
@@ -88,6 +91,7 @@ private fun Header() {
 
 @Composable
 private fun Functions() {
+    val context = LocalContext.current
     Column(
         modifier = Modifier
             .padding(horizontal = 16.dp)
@@ -99,21 +103,21 @@ private fun Functions() {
             title = stringResource(id = R.string.guide),
             summary = stringResource(id = R.string.guide_summary)
         ) {
-
+            context.startActivity<GuideActivity>()
         }
         FunctionCard(
             icon = Icons.Default.PhotoCamera,
             title = stringResource(id = R.string.camera_photo_analysis),
             summary = stringResource(id = R.string.camera_photo_analysis_summary)
         ) {
-
+            context.startActivity<CameraActivity>()
         }
         FunctionCard(
             icon = Icons.Default.ImageSearch,
             title = stringResource(id = R.string.local_image_analysis),
             summary = stringResource(id = R.string.local_image_analysis_summary)
         ) {
-
+            context.startActivity<AnalysisActivity>()
         }
     }
 }
@@ -149,10 +153,4 @@ private fun Settings() {
             }
         }
     }
-}
-
-@Preview(showBackground = true, device = Devices.PIXEL_4)
-@Composable
-private fun Preview() {
-    Content()
 }
