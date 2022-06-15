@@ -7,17 +7,17 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -25,10 +25,9 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import io.github.xfy9326.glance.R
-import io.github.xfy9326.glance.ui.base.FunctionCard
-import io.github.xfy9326.glance.ui.base.FunctionItem
-import io.github.xfy9326.glance.ui.base.prepareSplashScreen
+import io.github.xfy9326.glance.ui.base.*
 import io.github.xfy9326.glance.ui.theme.AppTheme
 
 class MainActivity : ComponentActivity() {
@@ -78,12 +77,7 @@ private fun Header() {
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            painter = painterResource(id = R.drawable.ic_launcher_foreground),
-            contentDescription = stringResource(id = R.string.app_icon),
-            modifier = Modifier.size(80.dp),
-            tint = AppTheme.launcherIconColor
-        )
+        ApplicationIcon(modifier = Modifier.size(80.dp))
         Text(
             text = stringResource(id = R.string.app_name),
             fontSize = 20.sp,
@@ -126,6 +120,7 @@ private fun Functions() {
 
 @Composable
 private fun Settings() {
+    val aboutDialog = remember { mutableStateOf(false) }
     Column(
         modifier = Modifier.padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(6.dp)
@@ -146,7 +141,12 @@ private fun Settings() {
             icon = Icons.Default.Info,
             title = stringResource(id = R.string.about)
         ) {
-
+            aboutDialog.value = true
+        }
+        if (aboutDialog.value) {
+            Dialog(onDismissRequest = { aboutDialog.value = false }) {
+                AboutDialogContent()
+            }
         }
     }
 }

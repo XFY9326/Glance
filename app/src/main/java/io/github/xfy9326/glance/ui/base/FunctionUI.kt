@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -34,13 +35,15 @@ fun FunctionCard(icon: ImageVector, title: String, summary: String, onClick: () 
         ) {
             Icon(
                 imageVector = icon,
-                contentDescription = title,
+                contentDescription = null,
                 modifier = Modifier
                     .padding(horizontal = 4.dp)
                     .size(36.dp)
             )
             Column(
-                modifier = Modifier.padding(start = 15.dp),
+                modifier = Modifier
+                    .padding(start = 15.dp)
+                    .semantics(mergeDescendants = true) {},
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(text = title, fontSize = 16.sp)
@@ -61,7 +64,7 @@ fun FunctionItem(icon: ImageVector, title: String, onClick: () -> Unit) {
     ) {
         Icon(
             imageVector = icon,
-            contentDescription = title,
+            contentDescription = null,
             modifier = Modifier.size(30.dp)
         )
         Text(
