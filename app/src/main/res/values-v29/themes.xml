@@ -15,6 +15,7 @@
     <style name="AppTheme.SplashScreen" parent="Theme.SplashScreen">
         <item name="android:forceDarkAllowed">false</item>
         <item name="postSplashScreenTheme">@style/AppTheme.FullContent.DayNight</item>
+        <item name="windowSplashScreenBackground">@android:color/white</item>
     </style>
 
 </resources>
