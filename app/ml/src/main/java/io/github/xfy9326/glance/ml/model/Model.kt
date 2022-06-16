@@ -14,12 +14,7 @@ import kotlin.coroutines.coroutineContext
 abstract class Model {
     private val initMutex = Mutex()
     private val detectMutex = Mutex()
-
-    @Volatile
-    private var finished = false
-
-    @Volatile
-    private var success = false
+    private var initSuccess: Boolean? = null
 
     protected abstract fun onInitModel(): Boolean
 
@@ -29,33 +24,26 @@ abstract class Model {
 
     protected abstract fun onDetectByPixelsData(pixelsData: PixelsData, enableGPU: Boolean): Array<DetectObject>?
 
-    private fun internalInit() {
-        if (!finished) {
-            success = onInitModel()
-            println(success)
-            finished = true
+    private suspend fun internalInit(): Boolean {
+        return initSuccess ?: initMutex.withLock {
+            initSuccess ?: onInitModel().also {
+                initSuccess = it
+            }
         }
     }
 
     internal suspend fun init() = with(CoroutineScope(coroutineContext)) {
         launch {
-            initMutex.withLock {
-                internalInit()
-            }
+            internalInit()
         }
     }
 
     suspend fun withInitializedModel(block: suspend (Boolean) -> Unit) {
-        initMutex.withLock {
-            if (!finished) {
-                internalInit()
-            }
-            block(success)
-        }
+        block(internalInit())
     }
 
     suspend fun detectByBitmap(bitmap: Bitmap, enableGPU: Boolean): Array<DetectObject>? = withContext(Dispatchers.Default) {
-        if (initMutex.withLock { finished && success }) {
+        if (initMutex.withLock { initSuccess == true }) {
             detectMutex.withLock {
                 onDetectByBitmap(bitmap, enableGPU)
             }
@@ -65,7 +53,7 @@ abstract class Model {
     }
 
     suspend fun detectByPixelsData(pixelsData: PixelsData, enableGPU: Boolean): Array<DetectObject>? = withContext(Dispatchers.Default) {
-        if (initMutex.withLock { finished && success }) {
+        if (initMutex.withLock { initSuccess == true }) {
             detectMutex.withLock {
                 onDetectByPixelsData(pixelsData, enableGPU)
             }

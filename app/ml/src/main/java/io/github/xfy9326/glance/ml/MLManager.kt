@@ -10,23 +10,26 @@ import io.github.xfy9326.glance.ml.model.GeneralModel
 import io.github.xfy9326.glance.ml.model.GuideModel
 import io.github.xfy9326.glance.ml.model.Model
 import kotlinx.coroutines.*
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.json.JSONArray
 
 object MLManager {
-    private var hasInstanceCreated = false
-
-    fun initInstance() {
-        if (!hasInstanceCreated) {
-            hasInstanceCreated = true
-            NativeInterface
-        }
-    }
+    private var initMutex = Mutex()
+    private var hasModelInitialized = false
 
     @OptIn(DelicateCoroutinesApi::class)
     fun initModelsInBackground() {
-        GlobalScope.launch(Dispatchers.IO) {
-            ModelType.values().forEach {
-                getModel(it).init()
+        if (!hasModelInitialized) {
+            GlobalScope.launch(Dispatchers.IO) {
+                initMutex.withLock {
+                    if (!hasModelInitialized) {
+                        hasModelInitialized = true
+                        ModelType.values().forEach {
+                            getModel(it).init()
+                        }
+                    }
+                }
             }
         }
     }
