@@ -58,7 +58,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.2.0-beta03"
+        kotlinCompilerExtensionVersion = "1.2.0-rc01"
     }
 
     packagingOptions {
@@ -104,13 +104,17 @@ dependencies {
     implementation("androidx.camera:camera-view:$cameraVersion")
 
     // Jetpack Compose
-    val composeVersion = "1.2.0-beta03"
+    val composeVersion = "1.2.0-rc01"
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
     implementation("androidx.compose.material:material:$composeVersion")
     implementation("androidx.compose.material:material-icons-core:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
+
+    // Google accompanist
+    val accompanistVersion = "0.24.11-rc"
+    implementation("com.google.accompanist:accompanist-permissions:$accompanistVersion")
 
     // Test
     testImplementation("junit:junit:4.13.2")

@@ -4,7 +4,6 @@ import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import io.github.xfy9326.glance.R
 import io.github.xfy9326.glance.ui.theme.AppTheme
@@ -13,7 +12,7 @@ import io.github.xfy9326.glance.ui.theme.AppTheme
 fun ApplicationIcon(modifier: Modifier) {
     Icon(
         imageVector = ImageVector.vectorResource(id = R.drawable.ic_launcher_foreground),
-        contentDescription = stringResource(id = R.string.app_icon),
+        contentDescription = null,
         modifier = modifier,
         tint = AppTheme.launcherIconColor
     )

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">一目</string>
-    <string name="app_icon">应用图标</string>
     <string name="guide">引导员</string>
     <string name="guide_summary">实时步行辅助</string>
     <string name="camera_photo_analysis">相机图片分析</string>
@@ -11,4 +10,8 @@
     <string name="help">帮助</string>
     <string name="settings">设置</string>
     <string name="about">关于</string>
+    <string name="permission_request">请求权限</string>
+    <string name="camera_permission">相机权限</string>
+    <string name="camera_permission_summary">授予此权限以允许使用相机拍摄的图片进行实时的物体检测。\n所有图片只会在本地处理。</string>
+    <string name="permission_not_granted">‘%1$s’未授予！</string>
 </resources>
