@@ -42,7 +42,6 @@ import io.github.xfy9326.glance.ui.base.prepareSplashScreen
 import io.github.xfy9326.glance.ui.dialog.createAboutDialog
 import io.github.xfy9326.glance.ui.dialog.createCameraPermissionDialog
 import io.github.xfy9326.glance.ui.theme.AppTheme
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -55,19 +54,16 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-private val LocalScaffoldState = compositionLocalOf<ScaffoldState> { error("No local scaffold state available!") }
-private val LocalCoroutineScope = compositionLocalOf<CoroutineScope> { error("No local coroutine scope available!") }
+private val LocalScaffoldState = compositionLocalOf<ScaffoldState> { error("CompositionLocal ScaffoldState not present") }
 
 @Preview(showBackground = true, device = Devices.PIXEL_4)
 @Composable
 private fun Content() {
     val scaffoldState = rememberScaffoldState()
-    val coroutineScope = rememberCoroutineScope()
     AppTheme {
         Scaffold(scaffoldState = scaffoldState) {
             CompositionLocalProvider(
-                LocalScaffoldState provides scaffoldState,
-                LocalCoroutineScope provides coroutineScope
+                LocalScaffoldState provides scaffoldState
             ) {
                 Screen(paddingValues = it)
             }
@@ -78,7 +74,8 @@ private fun Content() {
 @Composable
 private fun Screen(paddingValues: PaddingValues) {
     val contentScrollState = rememberScrollState()
-    val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val configuration = LocalConfiguration.current
+    val contentWidthFraction = if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 0.6f else 0.9f
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -90,7 +87,7 @@ private fun Screen(paddingValues: PaddingValues) {
                 .padding(paddingValues)
                 .systemBarsPadding()
                 .fillMaxHeight()
-                .fillMaxWidth(fraction = if (isLandscape) 0.6f else 0.9f)
+                .fillMaxWidth(fraction = contentWidthFraction)
         ) {
             Header()
             Spacer(modifier = Modifier.height(8.dp))
@@ -132,10 +129,10 @@ private fun Functions() {
 
 @Composable
 @OptIn(ExperimentalPermissionsApi::class)
-fun FunctionGuideCard() {
+private fun FunctionGuideCard() {
     val context = LocalContext.current
     val scaffoldState = LocalScaffoldState.current
-    val coroutineScope = LocalCoroutineScope.current
+    val coroutineScope = rememberCoroutineScope()
     val cameraPermissionState = rememberPermissionState(permission = Manifest.permission.CAMERA) {
         if (it) {
             context.startActivity<GuideActivity>()
@@ -164,7 +161,7 @@ fun FunctionGuideCard() {
 }
 
 @Composable
-fun FunctionCameraPhotoAnalysisCard() {
+private fun FunctionCameraPhotoAnalysisCard() {
     val context = LocalContext.current
     FunctionCard(
         icon = Icons.Default.Camera,
@@ -176,7 +173,7 @@ fun FunctionCameraPhotoAnalysisCard() {
 }
 
 @Composable
-fun FunctionLocalImageAnalysisCard() {
+private fun FunctionLocalImageAnalysisCard() {
     val context = LocalContext.current
     FunctionCard(
         icon = Icons.Default.ImageSearch,
