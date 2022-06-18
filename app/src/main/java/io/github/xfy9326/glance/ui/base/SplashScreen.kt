@@ -5,6 +5,13 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import io.github.xfy9326.glance.App
 
 fun Activity.prepareSplashScreen() =
-    installSplashScreen().setKeepOnScreenCondition {
-        !App.isAppInitialized
+    installSplashScreen().apply {
+        setKeepOnScreenCondition {
+            !App.isAppInitialized
+        }
+        setOnExitAnimationListener {
+            it.view.animate().alpha(0f).withEndAction {
+                it.remove()
+            }.start()
+        }
     }
