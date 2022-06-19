@@ -14,6 +14,6 @@
     <string name="camera_permission">相机权限</string>
     <string name="camera_permission_summary">授予此权限以允许使用相机拍摄的图片进行物体检测。\n所有图片只会在本地处理。</string>
     <string name="permission_not_granted">‘%1$s’未授予！</string>
-    <string name="cancel_taking_picture">取消拍摄图片</string>
-    <string name="cancel_selecting_picture">取消选择图片</string>
+    <string name="cancel_taking_picture">图片拍摄被取消</string>
+    <string name="cancel_selecting_picture">图片选择被取消</string>
 </resources>
