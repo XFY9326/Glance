@@ -73,13 +73,16 @@ dependencies {
     // Project
     implementation(project(":app:ml"))
 
+    // Kotlin Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.2")
+
     // ATools
     val aToolsVersion = "0.0.8"
     implementation("io.github.xfy9326.atools:atools-core:$aToolsVersion")
     implementation("io.github.xfy9326.atools:atools-io:$aToolsVersion")
 
-    // Kotlin Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.2")
+    // Coli
+    implementation("io.coil-kt:coil-compose:2.1.0")
 
     // AndroidX
     implementation("androidx.core:core-ktx:1.8.0")
@@ -111,10 +114,6 @@ dependencies {
     implementation("androidx.compose.material:material:$composeVersion")
     implementation("androidx.compose.material:material-icons-core:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
-
-    // Google accompanist
-    val accompanistVersion = "0.24.11-rc"
-    implementation("com.google.accompanist:accompanist-permissions:$accompanistVersion")
 
     // Test
     testImplementation("junit:junit:4.13.2")

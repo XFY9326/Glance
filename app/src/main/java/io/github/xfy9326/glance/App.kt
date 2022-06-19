@@ -12,10 +12,6 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        init()
-    }
-
-    private fun init() {
         MLManager.initModelsInBackground()
         internalIsAppInitialized = true
     }
