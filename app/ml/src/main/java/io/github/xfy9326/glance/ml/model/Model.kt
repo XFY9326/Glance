@@ -38,12 +38,8 @@ abstract class Model {
         }
     }
 
-    suspend fun withInitializedModel(block: suspend (Boolean) -> Unit) {
-        block(internalInit())
-    }
-
     suspend fun detectByBitmap(bitmap: Bitmap, enableGPU: Boolean): Array<DetectObject>? = withContext(Dispatchers.Default) {
-        if (initMutex.withLock { initSuccess == true }) {
+        if (internalInit()) {
             detectMutex.withLock {
                 onDetectByBitmap(bitmap, enableGPU)
             }
@@ -53,7 +49,7 @@ abstract class Model {
     }
 
     suspend fun detectByPixelsData(pixelsData: PixelsData, enableGPU: Boolean): Array<DetectObject>? = withContext(Dispatchers.Default) {
-        if (initMutex.withLock { initSuccess == true }) {
+        if (internalInit()) {
             detectMutex.withLock {
                 onDetectByPixelsData(pixelsData, enableGPU)
             }

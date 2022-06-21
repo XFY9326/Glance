@@ -40,7 +40,7 @@ object MLManager {
     fun hasGPUSupport(): Boolean =
         NativeInterface.hasGPUSupport()
 
-    suspend fun loadGuideLabels(modelType: ModelType): Array<String> = withContext(Dispatchers.IO) {
+    suspend fun loadLabels(modelType: ModelType): Array<String> = withContext(Dispatchers.IO) {
         rawResFile(modelType.labelsResId).source().useBuffer {
             JSONArray(readUtf8()).let { json ->
                 Array(json.length()) {

@@ -6,9 +6,9 @@ import androidx.annotation.Keep
 @Keep
 data class DetectObject(
     val box: RectF,
-    val class_id: Int,
+    val classId: Int,
     val confidence: Float
 ) {
-    constructor(left: Float, top: Float, right: Float, bottom: Float, class_id: Int, confidence: Float) :
-            this(RectF(left, top, right, bottom), class_id, confidence)
+    constructor(left: Float, top: Float, right: Float, bottom: Float, classId: Int, confidence: Float) :
+            this(RectF(left, top, right, bottom), classId, confidence)
 }

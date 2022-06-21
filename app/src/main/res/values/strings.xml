@@ -4,7 +4,7 @@
     <string name="guide">Guide</string>
     <string name="guide_summary">Real-time walking assistance</string>
     <string name="camera_photo_analysis">What\'s nearby?</string>
-    <string name="camera_photo_analysis_summary">Take s picture and analyze</string>
+    <string name="camera_photo_analysis_summary">Take a picture and analyze</string>
     <string name="local_image_analysis">What\'s in the picture?</string>
     <string name="local_image_analysis_summary">Select a image and analyze</string>
     <string name="help">Help</string>
@@ -16,4 +16,6 @@
     <string name="permission_not_granted">\'%1$s\' not granted!</string>
     <string name="cancel_selecting_picture">Image selection has been cancelled</string>
     <string name="cancel_taking_picture">Picture taking has been canceled</string>
+    <string name="image_analysis">Image analysis</string>
+    <string name="back">Back</string>
 </resources>

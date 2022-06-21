@@ -1,28 +1,36 @@
 package io.github.xfy9326.glance.activity
 
-import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import io.github.xfy9326.glance.tools.startActivity
-import io.github.xfy9326.glance.ui.activity.AnalysisActivityContent
+import androidx.activity.viewModels
+import androidx.compose.runtime.Composable
+import io.github.xfy9326.glance.ui.screen.analysis.AnalysisViewModel
+import io.github.xfy9326.glance.ui.screen.analysis.AnalysisViewModelFactory
+import io.github.xfy9326.glance.ui.screen.analysis.composable.AnalysisScreen
+import io.github.xfy9326.glance.ui.theme.AppTheme
 
 class AnalysisActivity : ComponentActivity() {
-    companion object {
-        private const val EXTRA_IMAGE_URI = "IMAGE_URI"
-
-        fun launch(context: Context, imageUri: Uri) {
-            context.startActivity<AnalysisActivity> {
-                putExtra(EXTRA_IMAGE_URI, imageUri)
-            }
-        }
-    }
+    private val imageUri: Uri by lazy { intent?.data ?: error("No data in intent!") }
+    private val viewModel by viewModels<AnalysisViewModel> { AnalysisViewModelFactory(imageUri) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AnalysisActivityContent()
+            AppTheme {
+                Content()
+            }
         }
+    }
+
+    @Composable
+    private fun Content() {
+        AnalysisScreen(
+            viewModel = viewModel,
+            onBackPressed = {
+                finish()
+            }
+        )
     }
 }
