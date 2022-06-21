@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
-import io.github.xfy9326.glance.ui.screen.guide.GuideScreen
+import io.github.xfy9326.glance.ui.screen.guide.composable.GuideScreen
 import io.github.xfy9326.glance.ui.theme.AppTheme
 
 class GuideActivity : ComponentActivity() {
@@ -19,6 +19,8 @@ class GuideActivity : ComponentActivity() {
 
     @Composable
     private fun Content() {
-        GuideScreen()
+        GuideScreen(
+            onBackPressed = this::onBackPressed
+        )
     }
 }

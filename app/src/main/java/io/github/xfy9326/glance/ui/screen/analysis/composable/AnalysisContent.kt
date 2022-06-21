@@ -1,15 +1,14 @@
 package io.github.xfy9326.glance.ui.screen.analysis.composable
 
 import android.net.Uri
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.Text
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
@@ -23,7 +22,7 @@ import io.github.xfy9326.glance.ui.theme.AppTheme
 
 @Preview(showBackground = true, device = Devices.PIXEL_4)
 @Composable
-private fun PreviewAnalysisScreen() {
+private fun PreviewAnalysisContent() {
     AppTheme {
         AnalysisScreenContent(
             scaffoldState = rememberScaffoldState(),
@@ -44,26 +43,17 @@ fun AnalysisScreenContent(
     val context = LocalContext.current
     Scaffold(
         scaffoldState = scaffoldState,
-        modifier = Modifier.systemBarsPadding(),
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = stringResource(id = R.string.image_analysis))
-                },
-                navigationIcon = {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = stringResource(id = R.string.back),
-                        modifier = Modifier.clickable(onClick = onBackPressed)
-                    )
-                },
-                backgroundColor = Color.White
+            AnalysisTopAppBar(
+                title = stringResource(id = R.string.image_analysis),
+                onBackPressed = onBackPressed
             )
         }
     ) {
         Column(
             modifier = Modifier
                 .padding(it)
+                .systemBarsPadding()
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center

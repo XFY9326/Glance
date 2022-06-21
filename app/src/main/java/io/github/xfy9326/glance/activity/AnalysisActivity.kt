@@ -28,9 +28,7 @@ class AnalysisActivity : ComponentActivity() {
     private fun Content() {
         AnalysisScreen(
             viewModel = viewModel,
-            onBackPressed = {
-                finish()
-            }
+            onBackPressed = this::onBackPressed
         )
     }
 }

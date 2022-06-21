@@ -114,6 +114,9 @@ dependencies {
     implementation("androidx.compose.material:material-icons-core:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
+    val accompanistVersion = "0.24.11-rc"
+    implementation("com.google.accompanist:accompanist-insets-ui:$accompanistVersion")
+
     // Test
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
