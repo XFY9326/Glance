@@ -18,6 +18,7 @@ import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import io.github.xfy9326.glance.R
+import io.github.xfy9326.glance.ui.common.SimpleTopAppToolBar
 import io.github.xfy9326.glance.ui.theme.AppTheme
 
 @Preview(showBackground = true, device = Devices.PIXEL_4)
@@ -44,7 +45,7 @@ fun AnalysisScreenContent(
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
-            AnalysisTopAppBar(
+            SimpleTopAppToolBar(
                 title = stringResource(id = R.string.image_analysis),
                 onBackPressed = onBackPressed
             )
@@ -53,7 +54,7 @@ fun AnalysisScreenContent(
         Column(
             modifier = Modifier
                 .padding(it)
-                .systemBarsPadding()
+                .navigationBarsPadding()
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center

@@ -1,12 +1,15 @@
 package io.github.xfy9326.glance.ui.common
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.AppBarDefaults
-import androidx.compose.material.contentColorFor
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
+import io.github.xfy9326.glance.R
 import io.github.xfy9326.glance.ui.theme.AppThemeColor
 import io.github.xfy9326.glance.ui.theme.topAppBarColor
 
@@ -31,5 +34,25 @@ fun TopAppToolBar(
         backgroundColor = backgroundColor,
         contentColor = contentColor,
         elevation = elevation
+    )
+}
+
+@Composable
+fun SimpleTopAppToolBar(
+    title: String,
+    onBackPressed: () -> Unit
+) {
+    TopAppToolBar(
+        title = {
+            Text(text = title)
+        },
+        navigationIcon = {
+            IconButton(onClick = onBackPressed) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = stringResource(id = R.string.back)
+                )
+            }
+        }
     )
 }

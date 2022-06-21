@@ -1,7 +1,8 @@
 package io.github.xfy9326.glance.ui.screen.guide.composable
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
@@ -12,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.xfy9326.glance.R
+import io.github.xfy9326.glance.ui.common.SimpleTopAppToolBar
 import io.github.xfy9326.glance.ui.theme.AppTheme
 
 @Preview(showBackground = true, device = Devices.PIXEL_4)
@@ -33,15 +35,16 @@ fun GuideContent(
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
-            GuideTopAppBar(
+            SimpleTopAppToolBar(
                 title = stringResource(id = R.string.guide),
                 onBackPressed = onBackPressed
             )
         }
     ) {
-        Box(
+        Column(
             modifier = Modifier
                 .padding(it)
+                .navigationBarsPadding()
                 .fillMaxSize()
         ) {
 
