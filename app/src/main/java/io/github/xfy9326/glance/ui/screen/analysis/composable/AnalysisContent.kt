@@ -1,7 +1,9 @@
 package io.github.xfy9326.glance.ui.screen.analysis.composable
 
 import android.net.Uri
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
@@ -15,9 +17,10 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import coil.request.CachePolicy
 import coil.request.ImageRequest
 import io.github.xfy9326.glance.R
+import io.github.xfy9326.glance.ui.base.AnalyzingImage
+import io.github.xfy9326.glance.ui.common.DividedLayout
 import io.github.xfy9326.glance.ui.common.SimpleTopAppToolBar
 import io.github.xfy9326.glance.ui.theme.AppTheme
 
@@ -27,7 +30,7 @@ private fun PreviewAnalysisContent() {
     AppTheme {
         AnalysisScreenContent(
             scaffoldState = rememberScaffoldState(),
-            imageUri = Uri.EMPTY,
+            image = AnalyzingImage(Uri.EMPTY),
             analyzeText = "Loading ...",
             onBackPressed = {}
         )
@@ -37,7 +40,7 @@ private fun PreviewAnalysisContent() {
 @Composable
 fun AnalysisScreenContent(
     scaffoldState: ScaffoldState,
-    imageUri: Uri,
+    image: AnalyzingImage,
     analyzeText: String,
     onBackPressed: () -> Unit
 ) {
@@ -51,26 +54,36 @@ fun AnalysisScreenContent(
             )
         }
     ) {
-        Column(
+        DividedLayout(
             modifier = Modifier
                 .padding(it)
                 .navigationBarsPadding()
                 .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            AsyncImage(
-                model = ImageRequest.Builder(context)
-                    .crossfade(true)
-                    .memoryCachePolicy(CachePolicy.DISABLED)
-                    .data(imageUri)
-                    .build(),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(fraction = 0.8f)
-            )
-            Text(text = analyzeText, modifier = Modifier.padding(5.dp))
-        }
+            weightUpStart = 0.7f,
+            weightDownEnd = 0.3f,
+            contentUpStart = {
+                AsyncImage(
+                    model = ImageRequest.Builder(context)
+                        .crossfade(true)
+                        .data(image.uri)
+                        .memoryCacheKey(image.cacheKey)
+                        .diskCacheKey(image.cacheKey)
+                        .build(),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(4.dp)
+                        .fillMaxSize()
+                )
+            },
+            contentDownEnd = {
+                Text(
+                    text = analyzeText,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(4.dp)
+                )
+            }
+        )
     }
 }

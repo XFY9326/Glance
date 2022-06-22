@@ -8,17 +8,20 @@ import io.github.xfy9326.glance.io.FileManager
 import io.github.xfy9326.glance.ml.MLManager
 import io.github.xfy9326.glance.ml.beans.ModelType
 import io.github.xfy9326.glance.tools.suspendLazy
+import io.github.xfy9326.glance.ui.base.AnalyzingImage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class AnalysisViewModel constructor(val imageUri: Uri) : ViewModel() {
+class AnalysisViewModel constructor(private val imageUri: Uri) : ViewModel() {
+    val analyzingImage = AnalyzingImage(imageUri)
+
     private val detectModel by lazy { MLManager.getModel(ModelType.GENERAL_MODEL) }
     private val detectLabels by suspendLazy(Dispatchers.IO) { MLManager.loadLabels(ModelType.GENERAL_MODEL) }
     private val detectResult by suspendLazy {
         val imageBitmap = FileManager.readBitmap(imageUri)
-        detectModel.detectByBitmap(imageBitmap.getOrThrow(), true)
+        detectModel.detectByBitmap(imageBitmap.getOrThrow(), MLManager.hasGPUSupport())
     }
 
     private val _analyzeText = MutableStateFlow("")

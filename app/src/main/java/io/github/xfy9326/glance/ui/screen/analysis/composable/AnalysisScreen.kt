@@ -15,7 +15,7 @@ fun AnalysisScreen(
 
     AnalysisScreenContent(
         scaffoldState = scaffoldState,
-        imageUri = viewModel.imageUri,
+        image = viewModel.analyzingImage,
         analyzeText = analyzeText.value,
         onBackPressed = onBackPressed
     )
