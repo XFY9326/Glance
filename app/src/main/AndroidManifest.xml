@@ -37,7 +37,15 @@
 
         <activity android:name=".activity.GuideActivity" />
 
-        <activity android:name=".activity.AnalysisActivity" />
+        <activity
+            android:name=".activity.AnalysisActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"

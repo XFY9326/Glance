@@ -11,6 +11,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.xfy9326.glance.R
+import io.github.xfy9326.glance.tools.MIME_IMAGE
 import io.github.xfy9326.glance.ui.base.rememberLauncherForGetContent
 import io.github.xfy9326.glance.ui.base.rememberLauncherForTakePicture
 import io.github.xfy9326.glance.ui.common.AboutDialog
@@ -48,7 +49,7 @@ fun MainScreen(
             cameraPhotoCameraPermission.requestPermission()
         },
         onLocalImageAnalysisClick = {
-            selectPicture.launch("image/*")
+            selectPicture.launch(MIME_IMAGE)
         },
         onSettingsClick = {
 
