@@ -1,4 +1,4 @@
-package io.github.xfy9326.glance.ui.base
+package io.github.xfy9326.glance.ui.data
 
 import android.net.Uri
 

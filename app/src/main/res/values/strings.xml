@@ -18,4 +18,9 @@
     <string name="cancel_taking_picture">Picture taking has been canceled</string>
     <string name="image_analysis">Image analysis</string>
     <string name="back">Back</string>
+    <string name="image_load_failed">Image load failed!\nPlease select a valid picture!</string>
+    <string name="model_init_failed">Deep learning model initialization error! \nPlease try restarting the application to resolve the issue. \nIf the problem persists, please contact the developer to report this bug.</string>
+    <string name="image_processing">Image is processing \.\.\.</string>
+    <string name="analysis_results_text">Object: %1$s Reliability: %2$d%%</string>
+    <string name="image_being_analyzed">The image being analyzed</string>
 </resources>

@@ -2,6 +2,7 @@ package io.github.xfy9326.glance.ml.model
 
 import android.graphics.Bitmap
 import io.github.xfy9326.glance.ml.beans.DetectObject
+import io.github.xfy9326.glance.ml.beans.DetectResult
 import io.github.xfy9326.glance.ml.beans.PixelsData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,23 +39,27 @@ abstract class Model {
         }
     }
 
-    suspend fun detectByBitmap(bitmap: Bitmap, enableGPU: Boolean): Array<DetectObject>? = withContext(Dispatchers.Default) {
+    private suspend fun detect(block: () -> Array<DetectObject>?) = withContext(Dispatchers.Default) {
         if (internalInit()) {
             detectMutex.withLock {
-                onDetectByBitmap(bitmap, enableGPU)
+                block()
             }
         } else {
             null
         }
     }
 
-    suspend fun detectByPixelsData(pixelsData: PixelsData, enableGPU: Boolean): Array<DetectObject>? = withContext(Dispatchers.Default) {
-        if (internalInit()) {
-            detectMutex.withLock {
-                onDetectByPixelsData(pixelsData, enableGPU)
-            }
-        } else {
-            null
-        }
-    }
+    suspend fun detectByBitmap(bitmap: Bitmap, enableGPU: Boolean): DetectResult =
+        detect {
+            onDetectByBitmap(bitmap, enableGPU)
+        }?.let {
+            DetectResult.Success(it)
+        } ?: DetectResult.ModelInitFailed
+
+    suspend fun detectByPixelsData(pixelsData: PixelsData, enableGPU: Boolean): DetectResult =
+        detect {
+            onDetectByPixelsData(pixelsData, enableGPU)
+        }?.let {
+            DetectResult.Success(it)
+        } ?: DetectResult.ModelInitFailed
 }

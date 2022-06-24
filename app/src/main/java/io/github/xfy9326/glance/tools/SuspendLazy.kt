@@ -14,6 +14,8 @@ fun <T> suspendLazy(coroutineContext: CoroutineContext = Dispatchers.Default, in
 
 interface SuspendLazy<T> {
     suspend fun value(): T
+
+    suspend fun refresh(): T
 }
 
 private class ValueWrapper<T>(val value: T)
@@ -28,6 +30,15 @@ private class SuspendLazyImpl<T>(
     override suspend fun value(): T =
         cached?.value ?: mutex.withLock {
             cached?.value ?: withContext(coroutineContext) {
+                initializer()
+            }.also {
+                cached = ValueWrapper(it)
+            }
+        }
+
+    override suspend fun refresh(): T =
+        mutex.withLock {
+            withContext(coroutineContext) {
                 initializer()
             }.also {
                 cached = ValueWrapper(it)

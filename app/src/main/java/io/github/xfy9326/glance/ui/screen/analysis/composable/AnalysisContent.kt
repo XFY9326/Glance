@@ -1,9 +1,9 @@
 package io.github.xfy9326.glance.ui.screen.analysis.composable
 
 import android.net.Uri
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
@@ -19,10 +19,12 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import io.github.xfy9326.glance.R
-import io.github.xfy9326.glance.ui.base.AnalyzingImage
 import io.github.xfy9326.glance.ui.common.DividedLayout
 import io.github.xfy9326.glance.ui.common.SimpleTopAppToolBar
+import io.github.xfy9326.glance.ui.data.AnalysisResult
+import io.github.xfy9326.glance.ui.data.AnalyzingImage
 import io.github.xfy9326.glance.ui.theme.AppTheme
+import kotlin.math.roundToInt
 
 @Preview(showBackground = true, device = Devices.PIXEL_4)
 @Composable
@@ -31,7 +33,7 @@ private fun PreviewAnalysisContent() {
         AnalysisScreenContent(
             scaffoldState = rememberScaffoldState(),
             image = AnalyzingImage(Uri.EMPTY),
-            analyzeText = "Loading ...",
+            analysisResult = AnalysisResult.Processing,
             onBackPressed = {}
         )
     }
@@ -41,7 +43,7 @@ private fun PreviewAnalysisContent() {
 fun AnalysisScreenContent(
     scaffoldState: ScaffoldState,
     image: AnalyzingImage,
-    analyzeText: String,
+    analysisResult: AnalysisResult,
     onBackPressed: () -> Unit
 ) {
     val context = LocalContext.current
@@ -69,7 +71,7 @@ fun AnalysisScreenContent(
                         .memoryCacheKey(image.cacheKey)
                         .diskCacheKey(image.cacheKey)
                         .build(),
-                    contentDescription = null,
+                    contentDescription = stringResource(id = R.string.image_being_analyzed),
                     modifier = Modifier
                         .align(Alignment.Center)
                         .padding(4.dp)
@@ -77,12 +79,51 @@ fun AnalysisScreenContent(
                 )
             },
             contentDownEnd = {
-                Text(
-                    text = analyzeText,
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .padding(4.dp)
-                )
+                when (analysisResult) {
+                    is AnalysisResult.Processing -> {
+                        Text(
+                            text = stringResource(id = R.string.image_processing),
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .padding(4.dp)
+                        )
+                    }
+                    is AnalysisResult.Success -> {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .verticalScroll(rememberScrollState())
+                                .padding(horizontal = 6.dp, vertical = 8.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            analysisResult.analysisItem.forEach { item ->
+                                Text(
+                                    text = stringResource(
+                                        id = R.string.analysis_results_text,
+                                        item.classText,
+                                        (item.reliability * 100).roundToInt()
+                                    ),
+                                )
+                            }
+                        }
+                    }
+                    AnalysisResult.ImageLoadFailed -> {
+                        Text(
+                            text = stringResource(id = R.string.image_load_failed),
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .padding(4.dp)
+                        )
+                    }
+                    AnalysisResult.ModelLoadFailed -> {
+                        Text(
+                            text = stringResource(id = R.string.model_init_failed),
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .padding(4.dp)
+                        )
+                    }
+                }
             }
         )
     }

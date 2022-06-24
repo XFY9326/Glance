@@ -11,12 +11,12 @@ fun AnalysisScreen(
     onBackPressed: () -> Unit
 ) {
     val scaffoldState = rememberScaffoldState()
-    val analyzeText = viewModel.analyzeText.collectAsState()
+    val analysisResult = viewModel.analysisResult.collectAsState()
 
     AnalysisScreenContent(
         scaffoldState = scaffoldState,
         image = viewModel.analyzingImage,
-        analyzeText = analyzeText.value,
+        analysisResult = analysisResult.value,
         onBackPressed = onBackPressed
     )
 }

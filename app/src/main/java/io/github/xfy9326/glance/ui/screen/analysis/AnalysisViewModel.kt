@@ -6,37 +6,52 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import io.github.xfy9326.glance.io.FileManager
 import io.github.xfy9326.glance.ml.MLManager
+import io.github.xfy9326.glance.ml.beans.DetectResult
 import io.github.xfy9326.glance.ml.beans.ModelType
 import io.github.xfy9326.glance.tools.suspendLazy
-import io.github.xfy9326.glance.ui.base.AnalyzingImage
-import kotlinx.coroutines.Dispatchers
+import io.github.xfy9326.glance.ui.data.AnalysisItem
+import io.github.xfy9326.glance.ui.data.AnalysisResult
+import io.github.xfy9326.glance.ui.data.AnalyzingImage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class AnalysisViewModel constructor(private val imageUri: Uri) : ViewModel() {
     val analyzingImage = AnalyzingImage(imageUri)
-
-    private val detectModel by lazy { MLManager.getModel(ModelType.GENERAL_MODEL) }
-    private val detectLabels by suspendLazy(Dispatchers.IO) { MLManager.loadLabels(ModelType.GENERAL_MODEL) }
-    private val detectResult by suspendLazy {
-        val imageBitmap = FileManager.readBitmap(imageUri)
-        detectModel.detectByBitmap(imageBitmap.getOrThrow(), MLManager.hasGPUSupport())
-    }
-
-    private val _analyzeText = MutableStateFlow("")
-    val analyzeText = _analyzeText.asStateFlow()
+    private val cachedAnalysisResult by suspendLazy { analyzeImage() }
+    private val _analysisResult = MutableStateFlow<AnalysisResult>(AnalysisResult.Processing)
+    val analysisResult = _analysisResult.asStateFlow()
 
     init {
-        analyzeImage()
+        initImageAnalysing()
     }
 
-    private fun analyzeImage() {
+    private fun initImageAnalysing() {
         viewModelScope.launch {
-            val labels = detectLabels.value()
-            val result = detectResult.value()?.map { labels[it.classId] }
-            _analyzeText.tryEmit(result.toString())
+            _analysisResult.value = cachedAnalysisResult.value()
         }
+    }
+
+    private suspend fun analyzeImage(): AnalysisResult {
+        return FileManager.readBitmap(imageUri).fold(
+            onSuccess = {
+                val labels = MLManager.loadLabels(ModelType.GENERAL_MODEL)
+                val model = MLManager.getModel(ModelType.GENERAL_MODEL)
+                when (val result = model.detectByBitmap(it, MLManager.hasGPUSupport())) {
+                    is DetectResult.ModelInitFailed -> AnalysisResult.ModelLoadFailed
+                    is DetectResult.Success -> AnalysisResult.Success(
+                        result.objects.map { obj ->
+                            AnalysisItem.from(labels, obj)
+                        }.sortedByDescending { item ->
+                            item.reliability
+                        }
+                    )
+                }
+            },
+            onFailure = {
+                AnalysisResult.ImageLoadFailed
+            }
+        )
     }
 }
 
