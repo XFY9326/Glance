@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 class AnalysisViewModel constructor(private val imageUri: Uri) : ViewModel() {
     val analyzingImage = AnalyzingImage(imageUri)
     private val cachedAnalysisResult by suspendLazy { analyzeImage() }
-    private val _analysisResult = MutableStateFlow<AnalysisResult>(AnalysisResult.Processing)
+    private val _analysisResult = MutableStateFlow<AnalysisResult>(AnalysisResult.Initializing)
     val analysisResult = _analysisResult.asStateFlow()
 
     init {

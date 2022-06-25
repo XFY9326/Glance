@@ -17,7 +17,9 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import io.github.xfy9326.glance.R
-import io.github.xfy9326.glance.ui.common.*
+import io.github.xfy9326.glance.ui.common.DividedLayout
+import io.github.xfy9326.glance.ui.common.ImageObjectBoxLayer
+import io.github.xfy9326.glance.ui.common.SimpleTopAppToolBar
 import io.github.xfy9326.glance.ui.data.AnalysisResult
 import io.github.xfy9326.glance.ui.data.AnalyzingImage
 import io.github.xfy9326.glance.ui.data.hasObjects
@@ -30,7 +32,7 @@ private fun PreviewAnalysisContent() {
         AnalysisScreenContent(
             scaffoldState = rememberScaffoldState(),
             image = AnalyzingImage(Uri.EMPTY),
-            analysisResult = AnalysisResult.Processing,
+            analysisResult = AnalysisResult.Initializing,
             onBackPressed = {}
         )
     }
@@ -57,18 +59,6 @@ fun AnalysisScreenContent(
                 .padding(it)
                 .navigationBarsPadding()
                 .fillMaxSize(),
-            rowDividerContent = {
-                Divider(
-                    direction = DividerDirection.Vertical,
-                    thickness = 2.dp,
-                )
-            },
-            columnDividerContent = {
-                Divider(
-                    direction = DividerDirection.Horizontal,
-                    thickness = 2.dp,
-                )
-            },
             contentUpStart = {
                 ImageContent(
                     modifier = Modifier.align(Alignment.Center),
@@ -144,7 +134,7 @@ private fun AnalysisResultContent(
                 AnalysisResultEmpty(modifier = modifier)
             }
         }
-        AnalysisResult.Processing -> AnalysisLoading(modifier = modifier)
+        AnalysisResult.Initializing -> AnalysisLoading(modifier = modifier)
         AnalysisResult.ImageLoadFailed -> AnalysisImageLoadFailed(modifier = modifier)
         AnalysisResult.ModelLoadFailed -> AnalysisModelLoadFailed(modifier = modifier)
     }

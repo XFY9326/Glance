@@ -100,8 +100,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifeCycleVersion")
 
     // AndroidX CameraX
-    val cameraVersion = "1.1.0-rc01"
-    implementation("androidx.camera:camera-core:$cameraVersion")
+    val cameraVersion = "1.1.0-rc02"
     implementation("androidx.camera:camera-camera2:$cameraVersion")
     implementation("androidx.camera:camera-lifecycle:$cameraVersion")
     implementation("androidx.camera:camera-view:$cameraVersion")

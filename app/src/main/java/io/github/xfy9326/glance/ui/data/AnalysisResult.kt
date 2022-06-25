@@ -3,7 +3,7 @@ package io.github.xfy9326.glance.ui.data
 import io.github.xfy9326.glance.ml.beans.DetectResult
 
 sealed interface AnalysisResult {
-    object Processing : AnalysisResult
+    object Initializing : AnalysisResult
     object ImageLoadFailed : AnalysisResult
     object ModelLoadFailed : AnalysisResult
     class Success(val imageObjectInfo: ImageObjectInfo) : AnalysisResult

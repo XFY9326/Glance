@@ -57,8 +57,8 @@ fun DividedLayout(
     modifier: Modifier = Modifier,
     weightUpStart: Float = 0.5f,
     weightDownEnd: Float = 0.5f,
-    rowDividerContent: (@Composable RowScope.() -> Unit)? = null,
-    columnDividerContent: (@Composable ColumnScope.() -> Unit)? = null,
+    rowDividerContent: (@Composable RowScope.() -> Unit)? = { DefaultRowDividerContent },
+    columnDividerContent: (@Composable ColumnScope.() -> Unit)? = { DefaultColumnDividerContent },
     contentUpStart: @Composable BoxScope.() -> Unit,
     contentDownEnd: @Composable BoxScope.() -> Unit
 ) {
@@ -96,4 +96,18 @@ fun DividedLayout(
             )
         }
     }
+}
+
+private val DefaultRowDividerContent = @Composable {
+    Divider(
+        direction = DividerDirection.Vertical,
+        thickness = 2.dp,
+    )
+}
+
+private val DefaultColumnDividerContent = @Composable {
+    Divider(
+        direction = DividerDirection.Horizontal,
+        thickness = 2.dp,
+    )
 }
