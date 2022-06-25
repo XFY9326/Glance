@@ -48,12 +48,10 @@ android {
 
 dependencies {
     // ATools
-    val aToolsVersion = "0.0.8"
-    implementation("io.github.xfy9326.atools:atools-core:$aToolsVersion")
-    implementation("io.github.xfy9326.atools:atools-io:$aToolsVersion")
+    implementation("io.github.xfy9326.atools:atools-io:0.0.12")
 
     // Kotlin Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")

@@ -7,8 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
+import io.github.xfy9326.atools.core.isPermissionGranted
 import io.github.xfy9326.glance.R
-import io.github.xfy9326.glance.tools.isPermissionGranted
 import io.github.xfy9326.glance.ui.base.rememberLauncherForRequestPermission
 import io.github.xfy9326.glance.ui.common.CameraPermissionDialog
 import kotlinx.coroutines.launch

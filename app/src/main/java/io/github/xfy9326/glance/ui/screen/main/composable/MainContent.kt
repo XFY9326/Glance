@@ -8,7 +8,10 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.HelpCenter
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Radar
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -128,7 +131,7 @@ private fun Functions(
             onClick = onCameraPhotoAnalysisClick
         )
         FunctionCard(
-            icon = Icons.Default.ImageSearch,
+            icon = ImageVector.vectorResource(id = R.drawable.ic_detection_24),
             title = stringResource(id = R.string.local_image_analysis),
             summary = stringResource(id = R.string.local_image_analysis_summary),
             onClick = onLocalImageAnalysisClick

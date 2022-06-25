@@ -8,7 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.core.content.MimeTypeFilter
-import io.github.xfy9326.glance.tools.MIME_IMAGE
+import io.github.xfy9326.atools.io.utils.ImageMimeType
 import io.github.xfy9326.glance.ui.screen.analysis.AnalysisViewModel
 import io.github.xfy9326.glance.ui.screen.analysis.AnalysisViewModelFactory
 import io.github.xfy9326.glance.ui.screen.analysis.composable.AnalysisScreen
@@ -38,7 +38,7 @@ class AnalysisActivity : ComponentActivity() {
     private fun receiveUriFromIntent(): Uri =
         intent?.let {
             if (it.action == Intent.ACTION_SEND) {
-                if (MimeTypeFilter.matches(it.type, MIME_IMAGE)) {
+                if (MimeTypeFilter.matches(it.type, ImageMimeType.IMAGE)) {
                     it.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
                 } else {
                     error("Received data isn't image!")

@@ -19,8 +19,10 @@
     <string name="image_analysis">图片分析</string>
     <string name="back">返回</string>
     <string name="image_load_failed">图片加载错误！\n请选择一张有效的图片！</string>
-    <string name="model_init_failed">深度学习模型初始化错误！\n请尝试重启应用程序以解决问题。\n若依然存在问题，请联系开发者上报这个错误。</string>
+    <string name="model_init_failed">算法初始化错误！\n请尝试重启应用程序。\n若依然存在问题，请上报这个错误。</string>
     <string name="image_processing">图片正在处理中··· ···</string>
-    <string name="analysis_results_text">物体: %1$s 可靠度: %2$d%%</string>
     <string name="image_being_analyzed">被分析的图片</string>
+    <string name="image_analysis_result_title">检测到的物体与可信度：</string>
+    <string name="reliability">可信度：%1$3d%%</string>
+    <string name="empty_image_analysis_result">未检测到任何物体</string>
 </resources>

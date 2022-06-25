@@ -57,7 +57,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.2.0-rc01"
+        kotlinCompilerExtensionVersion = "1.2.0-rc02"
     }
 
     packagingOptions {
@@ -73,12 +73,13 @@ dependencies {
     implementation(project(":app:ml"))
 
     // Kotlin Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3")
 
     // ATools
-    val aToolsVersion = "0.0.8"
+    val aToolsVersion = "0.0.12"
     implementation("io.github.xfy9326.atools:atools-core:$aToolsVersion")
     implementation("io.github.xfy9326.atools:atools-io:$aToolsVersion")
+    implementation("io.github.xfy9326.atools:atools-coroutines:$aToolsVersion")
 
     // Coli
     implementation("io.coil-kt:coil-compose:2.1.0")
@@ -106,7 +107,7 @@ dependencies {
     implementation("androidx.camera:camera-view:$cameraVersion")
 
     // Jetpack Compose
-    val composeVersion = "1.2.0-rc01"
+    val composeVersion = "1.2.0-rc02"
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
@@ -114,7 +115,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-core:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
-    val accompanistVersion = "0.24.11-rc"
+    val accompanistVersion = "0.24.12-rc"
     implementation("com.google.accompanist:accompanist-insets-ui:$accompanistVersion")
 
     // Test

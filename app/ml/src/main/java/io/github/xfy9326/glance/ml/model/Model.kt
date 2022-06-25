@@ -53,13 +53,21 @@ abstract class Model {
         detect {
             onDetectByBitmap(bitmap, enableGPU)
         }?.let {
-            DetectResult.Success(it)
+            DetectResult.Success(
+                imageWidth = bitmap.width,
+                imageHeight = bitmap.height,
+                objects = it
+            )
         } ?: DetectResult.ModelInitFailed
 
     suspend fun detectByPixelsData(pixelsData: PixelsData, enableGPU: Boolean): DetectResult =
         detect {
             onDetectByPixelsData(pixelsData, enableGPU)
         }?.let {
-            DetectResult.Success(it)
+            DetectResult.Success(
+                imageWidth = pixelsData.width,
+                imageHeight = pixelsData.height,
+                objects = it
+            )
         } ?: DetectResult.ModelInitFailed
 }

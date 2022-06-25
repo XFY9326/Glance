@@ -1,7 +1,6 @@
 package io.github.xfy9326.glance.ui.screen.main.composable
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -37,7 +36,6 @@ fun FunctionCard(icon: ImageVector, title: String, summary: String, onClick: () 
     Card(
         onClick = onClick,
         elevation = 4.dp,
-        shape = RoundedCornerShape(8.dp),
         modifier = Modifier
             .fillMaxWidth()
             .height(84.dp)

@@ -1,9 +1,10 @@
 package io.github.xfy9326.glance.ui.screen.analysis.composable
 
 import android.net.Uri
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
@@ -11,6 +12,7 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
@@ -19,12 +21,10 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import io.github.xfy9326.glance.R
-import io.github.xfy9326.glance.ui.common.DividedLayout
-import io.github.xfy9326.glance.ui.common.SimpleTopAppToolBar
+import io.github.xfy9326.glance.ui.common.*
 import io.github.xfy9326.glance.ui.data.AnalysisResult
 import io.github.xfy9326.glance.ui.data.AnalyzingImage
 import io.github.xfy9326.glance.ui.theme.AppTheme
-import kotlin.math.roundToInt
 
 @Preview(showBackground = true, device = Devices.PIXEL_4)
 @Composable
@@ -34,7 +34,8 @@ private fun PreviewAnalysisContent() {
             scaffoldState = rememberScaffoldState(),
             image = AnalyzingImage(Uri.EMPTY),
             analysisResult = AnalysisResult.Processing,
-            onBackPressed = {}
+            onBackPressed = {},
+            onImageClick = {}
         )
     }
 }
@@ -44,9 +45,9 @@ fun AnalysisScreenContent(
     scaffoldState: ScaffoldState,
     image: AnalyzingImage,
     analysisResult: AnalysisResult,
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
+    onImageClick: () -> Unit
 ) {
-    val context = LocalContext.current
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
@@ -61,70 +62,91 @@ fun AnalysisScreenContent(
                 .padding(it)
                 .navigationBarsPadding()
                 .fillMaxSize(),
-            weightUpStart = 0.7f,
-            weightDownEnd = 0.3f,
-            contentUpStart = {
-                AsyncImage(
-                    model = ImageRequest.Builder(context)
-                        .crossfade(true)
-                        .data(image.uri)
-                        .memoryCacheKey(image.cacheKey)
-                        .diskCacheKey(image.cacheKey)
-                        .build(),
-                    contentDescription = stringResource(id = R.string.image_being_analyzed),
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .padding(4.dp)
-                        .fillMaxSize()
+            rowDividerContent = {
+                Divider(
+                    direction = DividerDirection.Vertical,
+                    thickness = 2.dp,
                 )
             },
-            contentDownEnd = {
-                when (analysisResult) {
-                    is AnalysisResult.Processing -> {
-                        Text(
-                            text = stringResource(id = R.string.image_processing),
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .padding(4.dp)
-                        )
-                    }
-                    is AnalysisResult.Success -> {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .verticalScroll(rememberScrollState())
-                                .padding(horizontal = 6.dp, vertical = 8.dp),
-                            verticalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            analysisResult.analysisItem.forEach { item ->
-                                Text(
-                                    text = stringResource(
-                                        id = R.string.analysis_results_text,
-                                        item.classText,
-                                        (item.reliability * 100).roundToInt()
-                                    ),
-                                )
-                            }
-                        }
-                    }
-                    AnalysisResult.ImageLoadFailed -> {
-                        Text(
-                            text = stringResource(id = R.string.image_load_failed),
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .padding(4.dp)
-                        )
-                    }
-                    AnalysisResult.ModelLoadFailed -> {
-                        Text(
-                            text = stringResource(id = R.string.model_init_failed),
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .padding(4.dp)
-                        )
-                    }
+            columnDividerContent = {
+                Divider(
+                    direction = DividerDirection.Horizontal,
+                    thickness = 2.dp,
+                )
+            },
+            contentUpStart = {
+                ImageContent(
+                    modifier = Modifier.align(Alignment.Center),
+                    image = image,
+                    onClick = onImageClick
+                )
+                if (analysisResult is AnalysisResult.Success) {
+                    ImageObjectBoxLayer(
+                        imageSize = Size(analysisResult.imageWidth.toFloat(), analysisResult.imageHeight.toFloat()),
+                        imageObjects = analysisResult.imageObject,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(4.dp)
+                    )
                 }
+            },
+            contentDownEnd = {
+                AnalysisResultContent(
+                    modifier = Modifier.align(Alignment.Center),
+                    analysisResult = analysisResult
+                )
             }
         )
+    }
+}
+
+@Composable
+private fun ImageContent(modifier: Modifier, image: AnalyzingImage, onClick: () -> Unit) {
+    val context = LocalContext.current
+    AsyncImage(
+        model = ImageRequest.Builder(context)
+            .crossfade(true)
+            .data(image.uri)
+            .memoryCacheKey(image.cacheKey)
+            .diskCacheKey(image.cacheKey)
+            .build(),
+        contentDescription = stringResource(id = R.string.image_being_analyzed),
+        modifier = Modifier
+            .then(modifier)
+            .padding(4.dp)
+            .fillMaxSize()
+        //.clickable(onClick = onClick),
+    )
+}
+
+@Composable
+private fun AnalysisResultContent(
+    modifier: Modifier = Modifier,
+    analysisResult: AnalysisResult
+) {
+    when (analysisResult) {
+        is AnalysisResult.Success -> {
+            if (analysisResult.imageObject.isEmpty()) {
+                AnalysisResultEmpty(modifier = modifier)
+            } else {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .then(modifier)
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.image_analysis_result_title),
+                        modifier = Modifier.padding(horizontal = 18.dp, vertical = 10.dp)
+                    )
+                    AnalysisResultList(
+                        modifier = modifier,
+                        imageObjects = analysisResult.imageObject
+                    )
+                }
+            }
+        }
+        AnalysisResult.Processing -> AnalysisLoading(modifier = modifier)
+        AnalysisResult.ImageLoadFailed -> AnalysisImageLoadFailed(modifier = modifier)
+        AnalysisResult.ModelLoadFailed -> AnalysisModelLoadFailed(modifier = modifier)
     }
 }
