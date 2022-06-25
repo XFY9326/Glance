@@ -7,11 +7,10 @@ import androidx.lifecycle.viewModelScope
 import io.github.xfy9326.atools.coroutines.suspendLazy
 import io.github.xfy9326.atools.io.okio.readBitmapAsync
 import io.github.xfy9326.glance.ml.MLManager
-import io.github.xfy9326.glance.ml.beans.DetectResult
 import io.github.xfy9326.glance.ml.beans.ModelType
 import io.github.xfy9326.glance.ui.data.AnalysisResult
 import io.github.xfy9326.glance.ui.data.AnalyzingImage
-import io.github.xfy9326.glance.ui.data.ImageObject
+import io.github.xfy9326.glance.ui.data.convertToAnalysisResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -37,18 +36,8 @@ class AnalysisViewModel constructor(private val imageUri: Uri) : ViewModel() {
             onSuccess = {
                 val labels = MLManager.loadLabels(ModelType.GENERAL_MODEL)
                 val model = MLManager.getModel(ModelType.GENERAL_MODEL)
-                when (val result = model.detectByBitmap(it, MLManager.hasGPUSupport())) {
-                    is DetectResult.ModelInitFailed -> AnalysisResult.ModelLoadFailed
-                    is DetectResult.Success -> AnalysisResult.Success(
-                        imageWidth = result.imageWidth,
-                        imageHeight = result.imageHeight,
-                        imageObject = result.objects.map { obj ->
-                            ImageObject.from(labels, obj)
-                        }.sortedByDescending { item ->
-                            item.reliability
-                        }
-                    )
-                }
+                val result = model.detectByBitmap(it, MLManager.hasGPUSupport())
+                result.convertToAnalysisResult(labels)
             },
             onFailure = {
                 AnalysisResult.ImageLoadFailed

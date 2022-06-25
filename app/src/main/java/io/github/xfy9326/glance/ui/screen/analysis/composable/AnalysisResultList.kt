@@ -1,6 +1,5 @@
 package io.github.xfy9326.glance.ui.screen.analysis.composable
 
-import android.graphics.RectF
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +11,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
@@ -28,11 +29,10 @@ private fun PreviewAnalysisResultList() {
     AppTheme {
         AnalysisResultList(
             imageObjects = listOf(
-                ImageObject("Class 1", 100, RectF()),
-                ImageObject("Class 2", 90, RectF()),
-                ImageObject("Class 3", 80, RectF()),
-                ImageObject("Class 4", 70, RectF()),
-                ImageObject("Class 5", 60, RectF())
+                ImageObject("Class 1", 100, Offset(50f, 50f), Size(50f, 50f)),
+                ImageObject("Class 2", 90, Offset(150f, 150f), Size(50f, 50f)),
+                ImageObject("Class 3", 80, Offset(250f, 250f), Size(50f, 50f)),
+                ImageObject("Class 4", 70, Offset(350f, 350f), Size(50f, 50f))
             )
         )
     }

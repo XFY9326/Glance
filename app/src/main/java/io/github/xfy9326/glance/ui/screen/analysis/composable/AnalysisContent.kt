@@ -1,10 +1,7 @@
 package io.github.xfy9326.glance.ui.screen.analysis.composable
 
 import android.net.Uri
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
@@ -12,7 +9,6 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
@@ -24,6 +20,7 @@ import io.github.xfy9326.glance.R
 import io.github.xfy9326.glance.ui.common.*
 import io.github.xfy9326.glance.ui.data.AnalysisResult
 import io.github.xfy9326.glance.ui.data.AnalyzingImage
+import io.github.xfy9326.glance.ui.data.hasObjects
 import io.github.xfy9326.glance.ui.theme.AppTheme
 
 @Preview(showBackground = true, device = Devices.PIXEL_4)
@@ -34,8 +31,7 @@ private fun PreviewAnalysisContent() {
             scaffoldState = rememberScaffoldState(),
             image = AnalyzingImage(Uri.EMPTY),
             analysisResult = AnalysisResult.Processing,
-            onBackPressed = {},
-            onImageClick = {}
+            onBackPressed = {}
         )
     }
 }
@@ -45,8 +41,7 @@ fun AnalysisScreenContent(
     scaffoldState: ScaffoldState,
     image: AnalyzingImage,
     analysisResult: AnalysisResult,
-    onBackPressed: () -> Unit,
-    onImageClick: () -> Unit
+    onBackPressed: () -> Unit
 ) {
     Scaffold(
         scaffoldState = scaffoldState,
@@ -78,17 +73,8 @@ fun AnalysisScreenContent(
                 ImageContent(
                     modifier = Modifier.align(Alignment.Center),
                     image = image,
-                    onClick = onImageClick
+                    analysisResult = analysisResult
                 )
-                if (analysisResult is AnalysisResult.Success) {
-                    ImageObjectBoxLayer(
-                        imageSize = Size(analysisResult.imageWidth.toFloat(), analysisResult.imageHeight.toFloat()),
-                        imageObjects = analysisResult.imageObject,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(4.dp)
-                    )
-                }
             },
             contentDownEnd = {
                 AnalysisResultContent(
@@ -101,22 +87,35 @@ fun AnalysisScreenContent(
 }
 
 @Composable
-private fun ImageContent(modifier: Modifier, image: AnalyzingImage, onClick: () -> Unit) {
+private fun ImageContent(
+    modifier: Modifier,
+    image: AnalyzingImage,
+    analysisResult: AnalysisResult
+) {
     val context = LocalContext.current
-    AsyncImage(
-        model = ImageRequest.Builder(context)
-            .crossfade(true)
-            .data(image.uri)
-            .memoryCacheKey(image.cacheKey)
-            .diskCacheKey(image.cacheKey)
-            .build(),
-        contentDescription = stringResource(id = R.string.image_being_analyzed),
+    Box(
         modifier = Modifier
             .then(modifier)
-            .padding(4.dp)
             .fillMaxSize()
-        //.clickable(onClick = onClick),
-    )
+            .padding(4.dp)
+    ) {
+        AsyncImage(
+            model = ImageRequest.Builder(context)
+                .crossfade(true)
+                .data(image.uri)
+                .memoryCacheKey(image.cacheKey)
+                .diskCacheKey(image.cacheKey)
+                .build(),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+        )
+        if (analysisResult is AnalysisResult.Success) {
+            ImageObjectBoxLayer(
+                imageObjectInfo = analysisResult.imageObjectInfo,
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+    }
 }
 
 @Composable
@@ -126,9 +125,7 @@ private fun AnalysisResultContent(
 ) {
     when (analysisResult) {
         is AnalysisResult.Success -> {
-            if (analysisResult.imageObject.isEmpty()) {
-                AnalysisResultEmpty(modifier = modifier)
-            } else {
+            if (analysisResult.hasObjects()) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -140,9 +137,11 @@ private fun AnalysisResultContent(
                     )
                     AnalysisResultList(
                         modifier = modifier,
-                        imageObjects = analysisResult.imageObject
+                        imageObjects = analysisResult.imageObjectInfo.objects
                     )
                 }
+            } else {
+                AnalysisResultEmpty(modifier = modifier)
             }
         }
         AnalysisResult.Processing -> AnalysisLoading(modifier = modifier)

@@ -1,6 +1,7 @@
 package io.github.xfy9326.glance.ml.model
 
 import android.graphics.Bitmap
+import io.github.xfy9326.glance.ml.beans.DetectInfo
 import io.github.xfy9326.glance.ml.beans.DetectObject
 import io.github.xfy9326.glance.ml.beans.DetectResult
 import io.github.xfy9326.glance.ml.beans.PixelsData
@@ -54,9 +55,11 @@ abstract class Model {
             onDetectByBitmap(bitmap, enableGPU)
         }?.let {
             DetectResult.Success(
-                imageWidth = bitmap.width,
-                imageHeight = bitmap.height,
-                objects = it
+                DetectInfo(
+                    width = bitmap.width,
+                    height = bitmap.height,
+                    objects = it
+                )
             )
         } ?: DetectResult.ModelInitFailed
 
@@ -65,9 +68,11 @@ abstract class Model {
             onDetectByPixelsData(pixelsData, enableGPU)
         }?.let {
             DetectResult.Success(
-                imageWidth = pixelsData.width,
-                imageHeight = pixelsData.height,
-                objects = it
+                DetectInfo(
+                    width = pixelsData.width,
+                    height = pixelsData.height,
+                    objects = it
+                )
             )
         } ?: DetectResult.ModelInitFailed
 }
