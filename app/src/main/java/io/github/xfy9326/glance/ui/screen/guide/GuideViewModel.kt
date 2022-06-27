@@ -16,14 +16,13 @@ import kotlinx.coroutines.launch
 class GuideViewModel : ViewModel() {
     private val classLabels by suspendLazy { MLManager.loadLabels(ModelType.GUIDE_MODEL) }
     private val mlModel = MLManager.getModel(ModelType.GUIDE_MODEL)
-    private val enableGPU by lazy(LazyThreadSafetyMode.NONE) { MLManager.hasGPUSupport() }
 
     private val _analysisResult = MutableStateFlow<AnalysisResult>(AnalysisResult.Initializing)
     val analysisResult = _analysisResult.asStateFlow()
 
     fun detectImage(pixelsData: PixelsData) {
         viewModelScope.launch(Dispatchers.Default) {
-            val result = mlModel.detectByPixelsData(pixelsData, enableGPU)
+            val result = mlModel.detectByPixelsData(pixelsData)
             _analysisResult.value = result.convertToAnalysisResult(classLabels.value())
         }
     }

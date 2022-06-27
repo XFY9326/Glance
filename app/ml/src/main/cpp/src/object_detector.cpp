@@ -3,6 +3,7 @@
 #include "log.h"
 
 #define LOG_TAG "ObjectDetector"
+#define GPU_SUPPORT true
 
 namespace ObjectDetector {
     using namespace std;
@@ -40,17 +41,17 @@ namespace ObjectDetector {
     }
 
     shared_ptr<vector<shared_ptr<DetectObject>>>
-    detect(const ModelType modelType, const PixelsData &pixelsData, const bool enable_gpu, const float conf_threshold, const float iou_threshold) {
+    detect(const ModelType modelType, const PixelsData &pixelsData, const float conf_threshold, const float iou_threshold) {
         if (net_init[modelType]) {
-            return YoloV5Executor::launch(net[modelType], *get_model_info_by_type(modelType), pixelsData, enable_gpu, conf_threshold, iou_threshold);
+            return YoloV5Executor::launch(net[modelType], *get_model_info_by_type(modelType), pixelsData, GPU_SUPPORT, conf_threshold, iou_threshold);
         }
         return nullptr;
     }
 
     shared_ptr<vector<shared_ptr<DetectObject>>>
-    detect(const ModelType modelType, JNIEnv *env, jobject bitmap, const bool enable_gpu, const float conf_threshold, const float iou_threshold) {
+    detect(const ModelType modelType, JNIEnv *env, jobject bitmap, const float conf_threshold, const float iou_threshold) {
         if (net_init[modelType]) {
-            return YoloV5Executor::launch(net[modelType], *get_model_info_by_type(modelType), env, bitmap, enable_gpu, conf_threshold, iou_threshold);
+            return YoloV5Executor::launch(net[modelType], *get_model_info_by_type(modelType), env, bitmap, GPU_SUPPORT, conf_threshold, iou_threshold);
         }
         return nullptr;
     }

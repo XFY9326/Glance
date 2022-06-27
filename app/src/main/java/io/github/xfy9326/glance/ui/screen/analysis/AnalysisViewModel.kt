@@ -36,7 +36,7 @@ class AnalysisViewModel constructor(private val imageUri: Uri) : ViewModel() {
             onSuccess = {
                 val labels = MLManager.loadLabels(ModelType.GENERAL_MODEL)
                 val model = MLManager.getModel(ModelType.GENERAL_MODEL)
-                val result = model.detectByBitmap(it, MLManager.hasGPUSupport())
+                val result = model.detectByBitmap(it)
                 result.convertToAnalysisResult(labels)
             },
             onFailure = {

@@ -18,7 +18,7 @@ internal object NativeInterface {
 
     external fun initModel(modelType: Int, assetManager: AssetManager, binPath: String, paramBinPath: String): Boolean
 
-    external fun detectByPixelsData(modelType: Int, pixelsData: PixelsData, enableGPU: Boolean, confThreshold: Float, iouThreshold: Float): Array<DetectObject>?
+    external fun detectByPixelsData(modelType: Int, pixelsData: PixelsData, confThreshold: Float, iouThreshold: Float): Array<DetectObject>?
 
-    external fun detectByBitmap(modelType: Int, bitmap: Bitmap, enableGPU: Boolean, confThreshold: Float, iouThreshold: Float): Array<DetectObject>?
+    external fun detectByBitmap(modelType: Int, bitmap: Bitmap, confThreshold: Float, iouThreshold: Float): Array<DetectObject>?
 }

@@ -22,9 +22,9 @@ abstract class Model {
 
     abstract fun isInitialized(): Boolean
 
-    protected abstract fun onDetectByBitmap(bitmap: Bitmap, enableGPU: Boolean): Array<DetectObject>?
+    protected abstract fun onDetectByBitmap(bitmap: Bitmap): Array<DetectObject>?
 
-    protected abstract fun onDetectByPixelsData(pixelsData: PixelsData, enableGPU: Boolean): Array<DetectObject>?
+    protected abstract fun onDetectByPixelsData(pixelsData: PixelsData): Array<DetectObject>?
 
     private suspend fun internalInit(): Boolean {
         return initSuccess ?: initMutex.withLock {
@@ -50,9 +50,9 @@ abstract class Model {
         }
     }
 
-    suspend fun detectByBitmap(bitmap: Bitmap, enableGPU: Boolean): DetectResult =
+    suspend fun detectByBitmap(bitmap: Bitmap): DetectResult =
         detect {
-            onDetectByBitmap(bitmap, enableGPU)
+            onDetectByBitmap(bitmap)
         }?.let {
             DetectResult.Success(
                 DetectInfo(
@@ -63,9 +63,9 @@ abstract class Model {
             )
         } ?: DetectResult.ModelInitFailed
 
-    suspend fun detectByPixelsData(pixelsData: PixelsData, enableGPU: Boolean): DetectResult =
+    suspend fun detectByPixelsData(pixelsData: PixelsData): DetectResult =
         detect {
-            onDetectByPixelsData(pixelsData, enableGPU)
+            onDetectByPixelsData(pixelsData)
         }?.let {
             DetectResult.Success(
                 DetectInfo(

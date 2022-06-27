@@ -67,7 +67,7 @@ Java_io_github_xfy9326_glance_ml_NativeInterface_initModel(JNIEnv *env, jobject,
 
 extern "C"
 JNIEXPORT jobjectArray JNICALL
-Java_io_github_xfy9326_glance_ml_NativeInterface_detectByPixelsData(JNIEnv *env, jobject, jint model_type, jobject pixels_data, jboolean enable_gpu, jfloat conf_threshold,
+Java_io_github_xfy9326_glance_ml_NativeInterface_detectByPixelsData(JNIEnv *env, jobject, jint model_type, jobject pixels_data, jfloat conf_threshold,
                                                                     jfloat iou_threshold) {
     using namespace std;
 
@@ -76,7 +76,6 @@ Java_io_github_xfy9326_glance_ml_NativeInterface_detectByPixelsData(JNIEnv *env,
     const shared_ptr<vector<shared_ptr<DetectObject>>> output = ObjectDetector::detect(
             JVMConvert::model_type_to_native(model_type),
             pixelsData,
-            enable_gpu == JNI_TRUE,
             (float) conf_threshold,
             (float) iou_threshold
     );
@@ -86,7 +85,7 @@ Java_io_github_xfy9326_glance_ml_NativeInterface_detectByPixelsData(JNIEnv *env,
 
 extern "C"
 JNIEXPORT jobjectArray JNICALL
-Java_io_github_xfy9326_glance_ml_NativeInterface_detectByBitmap(JNIEnv *env, jobject, jint model_type, jobject bitmap, jboolean enable_gpu, jfloat conf_threshold,
+Java_io_github_xfy9326_glance_ml_NativeInterface_detectByBitmap(JNIEnv *env, jobject, jint model_type, jobject bitmap, jfloat conf_threshold,
                                                                 jfloat iou_threshold) {
     using namespace std;
 
@@ -94,7 +93,6 @@ Java_io_github_xfy9326_glance_ml_NativeInterface_detectByBitmap(JNIEnv *env, job
             JVMConvert::model_type_to_native(model_type),
             env,
             bitmap,
-            enable_gpu == JNI_TRUE,
             (float) conf_threshold,
             (float) iou_threshold
     );

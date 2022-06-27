@@ -4,7 +4,7 @@
 #include "layer.h"
 
 #define LOG_TAG "NCNNHelper"
-#define ENABLE_GPU_COMPUTE true
+#define VULKAN_COMPUTE true
 
 namespace NCNNHelper {
     static bool gpu_instance_created = false;
@@ -48,7 +48,7 @@ namespace NCNNHelper {
         opt.blob_allocator = &blob_pool_allocator;
         opt.workspace_allocator = &workspace_pool_allocator;
         opt.use_packing_layout = true;
-        opt.use_vulkan_compute = ENABLE_GPU_COMPUTE && has_gpu_support();
+        opt.use_vulkan_compute = VULKAN_COMPUTE && has_gpu_support();
         net.opt = opt;
     }
 }

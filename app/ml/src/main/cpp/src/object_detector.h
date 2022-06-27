@@ -16,10 +16,10 @@ namespace ObjectDetector {
     bool init_model(const ModelType modelType, AAssetManager *mgr, const char *bin, const char *param_bin);
 
     shared_ptr<vector<shared_ptr<DetectObject>>>
-    detect(const ModelType modelType, const PixelsData &pixelsData, const bool enable_gpu, const float conf_threshold, const float iou_threshold);
+    detect(const ModelType modelType, const PixelsData &pixelsData, const float conf_threshold, const float iou_threshold);
 
     shared_ptr<vector<shared_ptr<DetectObject>>>
-    detect(const ModelType modelType, JNIEnv *env, jobject bitmap, const bool enable_gpu, const float conf_threshold, const float iou_threshold);
+    detect(const ModelType modelType, JNIEnv *env, jobject bitmap, const float conf_threshold, const float iou_threshold);
 }
 
 #endif //GLANCE_OBJECT_DETECTOR_H
