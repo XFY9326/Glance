@@ -11,5 +11,9 @@ data class ImageObjectInfo(
 fun DetectInfo.convertToImageObjectInfo(labels: Array<String>): ImageObjectInfo =
     ImageObjectInfo(
         size = Size(width.toFloat(), height.toFloat()),
-        objects = objects.map { it.convertToImageObject(labels) }
+        objects = objects.asSequence().map {
+            it.convertToImageObject(labels)
+        }.sortedByDescending {
+            it.reliability
+        }.toList()
     )
