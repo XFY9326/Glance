@@ -1,6 +1,5 @@
 package io.github.xfy9326.glance.ui.screen.guide.composable
 
-import androidx.camera.core.ImageAnalysis
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -15,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.xfy9326.glance.R
+import io.github.xfy9326.glance.ui.base.PreviewUseCase
 import io.github.xfy9326.glance.ui.common.DividedLayout
 import io.github.xfy9326.glance.ui.common.ImageObjectBoxLayer
 import io.github.xfy9326.glance.ui.common.PreviewImageObjectInfo
@@ -29,7 +29,7 @@ private fun PreviewGuideContent() {
         GuideContent(
             scaffoldState = rememberScaffoldState(),
             onBackPressed = {},
-            imageAnalyzer = {},
+            onBindCamera = {},
             analysisResult = AnalysisResult.Success(PreviewImageObjectInfo)
         )
     }
@@ -39,7 +39,7 @@ private fun PreviewGuideContent() {
 fun GuideContent(
     scaffoldState: ScaffoldState,
     onBackPressed: () -> Unit,
-    imageAnalyzer: ImageAnalysis.Analyzer,
+    onBindCamera: (PreviewUseCase) -> Unit,
     analysisResult: AnalysisResult
 ) {
     Scaffold(
@@ -61,7 +61,7 @@ fun GuideContent(
             contentUpStart = {
                 GuideCameraPreview(
                     modifier = Modifier.fillMaxSize(),
-                    imageAnalyzer = imageAnalyzer
+                    onBindCamera = onBindCamera
                 )
                 if (analysisResult is AnalysisResult.Success) {
                     ImageObjectBoxLayer(

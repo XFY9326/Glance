@@ -1,6 +1,8 @@
 package io.github.xfy9326.glance.ui.base
 
 import android.content.Context
+import androidx.camera.core.CameraProvider
+import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageProxy
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
@@ -8,7 +10,15 @@ import io.github.xfy9326.glance.ml.beans.PixelsData
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
+typealias PreviewUseCase = androidx.camera.core.Preview
 typealias CameraPreviewBuilder = androidx.camera.core.Preview.Builder
+
+fun CameraProvider.getDefaultCameraSelector() =
+    if (hasCamera(CameraSelector.DEFAULT_BACK_CAMERA)) {
+        CameraSelector.DEFAULT_BACK_CAMERA
+    } else {
+        CameraSelector.DEFAULT_FRONT_CAMERA
+    }
 
 suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutine { continuation ->
     ProcessCameraProvider.getInstance(this).also { future ->
