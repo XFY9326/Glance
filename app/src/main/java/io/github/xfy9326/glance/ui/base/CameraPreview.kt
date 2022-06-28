@@ -4,14 +4,16 @@ import android.content.Context
 import androidx.camera.core.CameraProvider
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageProxy
+import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import io.github.xfy9326.glance.ml.beans.PixelsData
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-typealias PreviewUseCase = androidx.camera.core.Preview
-typealias CameraPreviewBuilder = androidx.camera.core.Preview.Builder
+typealias PreviewUseCase = Preview
+typealias PreviewSurfaceProvider = Preview.SurfaceProvider
+typealias CameraPreviewBuilder = Preview.Builder
 
 fun CameraProvider.getDefaultCameraSelector() =
     if (hasCamera(CameraSelector.DEFAULT_BACK_CAMERA)) {

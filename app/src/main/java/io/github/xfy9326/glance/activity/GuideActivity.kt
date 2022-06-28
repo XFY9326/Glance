@@ -12,9 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import io.github.xfy9326.atools.core.isPermissionGranted
 import io.github.xfy9326.atools.core.showToast
 import io.github.xfy9326.glance.R
-import io.github.xfy9326.glance.ui.base.PreviewUseCase
-import io.github.xfy9326.glance.ui.base.getCameraProvider
-import io.github.xfy9326.glance.ui.base.getDefaultCameraSelector
+import io.github.xfy9326.glance.ui.base.*
 import io.github.xfy9326.glance.ui.screen.guide.GuideViewModel
 import io.github.xfy9326.glance.ui.screen.guide.composable.GuideScreen
 import io.github.xfy9326.glance.ui.theme.AppTheme
@@ -46,18 +44,27 @@ class GuideActivity : ComponentActivity() {
         )
     }
 
-    private fun onBindCamera(previewUseCase: PreviewUseCase) {
+    private fun onBindCamera(surfaceProvider: PreviewSurfaceProvider) {
         lifecycleScope.launch {
             val cameraProvider = getCameraProvider()
             val cameraSelector = cameraProvider.getDefaultCameraSelector()
             val imageAnalysisUseCase = onBuildImageAnalysisUseCase()
+            val previewUseCase = onBuildPreviewUseCase(surfaceProvider)
             try {
                 cameraProvider.unbindAll()
-                cameraProvider.bindToLifecycle(this@GuideActivity, cameraSelector, imageAnalysisUseCase, previewUseCase)
+                cameraProvider.bindToLifecycle(this@GuideActivity, cameraSelector, previewUseCase, imageAnalysisUseCase)
             } catch (e: Exception) {
                 // Ignore
             }
         }
+    }
+
+    private fun onBuildPreviewUseCase(surfaceProvider: PreviewSurfaceProvider): PreviewUseCase {
+        val previewUseCase = CameraPreviewBuilder()
+            .setTargetAspectRatio(AspectRatio.RATIO_4_3)
+            .build()
+        previewUseCase.setSurfaceProvider(surfaceProvider)
+        return previewUseCase
     }
 
     private fun onBuildImageAnalysisUseCase(): ImageAnalysis {

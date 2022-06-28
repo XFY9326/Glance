@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.xfy9326.glance.R
-import io.github.xfy9326.glance.ui.base.PreviewUseCase
+import io.github.xfy9326.glance.ui.base.PreviewSurfaceProvider
 import io.github.xfy9326.glance.ui.common.DividedLayout
 import io.github.xfy9326.glance.ui.common.ImageObjectBoxLayer
 import io.github.xfy9326.glance.ui.common.PreviewImageObjectInfo
@@ -39,7 +39,7 @@ private fun PreviewGuideContent() {
 fun GuideContent(
     scaffoldState: ScaffoldState,
     onBackPressed: () -> Unit,
-    onBindCamera: (PreviewUseCase) -> Unit,
+    onBindCamera: (PreviewSurfaceProvider) -> Unit,
     analysisResult: AnalysisResult
 ) {
     Scaffold(
