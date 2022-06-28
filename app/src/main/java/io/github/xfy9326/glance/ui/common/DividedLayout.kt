@@ -20,18 +20,6 @@ import io.github.xfy9326.glance.ui.theme.AppTheme
 private fun PreviewDividedLayout() {
     AppTheme {
         DividedLayout(
-            rowDividerContent = {
-                Divider(
-                    direction = DividerDirection.Vertical,
-                    thickness = 2.dp,
-                )
-            },
-            columnDividerContent = {
-                Divider(
-                    direction = DividerDirection.Horizontal,
-                    thickness = 2.dp,
-                )
-            },
             contentUpStart = {
                 Text(
                     text = "UpStart",
@@ -57,8 +45,8 @@ fun DividedLayout(
     modifier: Modifier = Modifier,
     weightUpStart: Float = 0.5f,
     weightDownEnd: Float = 0.5f,
-    rowDividerContent: (@Composable RowScope.() -> Unit)? = { DefaultRowDividerContent },
-    columnDividerContent: (@Composable ColumnScope.() -> Unit)? = { DefaultColumnDividerContent },
+    rowDividerContent: (@Composable RowScope.() -> Unit)? = DefaultRowDividerContent,
+    columnDividerContent: (@Composable ColumnScope.() -> Unit)? = DefaultColumnDividerContent,
     contentUpStart: @Composable BoxScope.() -> Unit,
     contentDownEnd: @Composable BoxScope.() -> Unit
 ) {
@@ -98,14 +86,14 @@ fun DividedLayout(
     }
 }
 
-private val DefaultRowDividerContent = @Composable {
+private val DefaultRowDividerContent: @Composable RowScope.() -> Unit = {
     Divider(
         direction = DividerDirection.Vertical,
         thickness = 2.dp,
     )
 }
 
-private val DefaultColumnDividerContent = @Composable {
+private val DefaultColumnDividerContent: @Composable ColumnScope.() -> Unit = {
     Divider(
         direction = DividerDirection.Horizontal,
         thickness = 2.dp,

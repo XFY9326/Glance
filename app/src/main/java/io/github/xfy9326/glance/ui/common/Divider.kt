@@ -23,13 +23,8 @@ fun Divider(
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colors.onSurface.copy(alpha = DividerAlpha),
     thickness: Dp = 1.dp,
-    startIndent: Dp = 0.dp,
+    padding: PaddingValues = PaddingValues()
 ) {
-    val indentMod = if (startIndent.value != 0f) {
-        Modifier.padding(start = startIndent)
-    } else {
-        Modifier
-    }
     val targetThickness = if (thickness == Dp.Hairline) {
         (1f / LocalDensity.current.density).dp
     } else {
@@ -37,7 +32,7 @@ fun Divider(
     }
     Box(
         modifier
-            .then(indentMod)
+            .padding(padding)
             .let {
                 when (direction) {
                     DividerDirection.Horizontal -> it
