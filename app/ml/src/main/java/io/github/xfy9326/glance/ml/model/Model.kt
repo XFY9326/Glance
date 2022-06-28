@@ -1,10 +1,7 @@
 package io.github.xfy9326.glance.ml.model
 
 import android.graphics.Bitmap
-import io.github.xfy9326.glance.ml.beans.DetectInfo
-import io.github.xfy9326.glance.ml.beans.DetectObject
-import io.github.xfy9326.glance.ml.beans.DetectResult
-import io.github.xfy9326.glance.ml.beans.PixelsData
+import io.github.xfy9326.glance.ml.beans.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,9 +19,9 @@ abstract class Model {
 
     abstract fun isInitialized(): Boolean
 
-    protected abstract fun onDetectByBitmap(bitmap: Bitmap): Array<DetectObject>?
+    protected abstract fun onDetectByBitmap(bitmap: Bitmap, confThreshold: Float, iouThreshold: Float): Array<DetectObject>?
 
-    protected abstract fun onDetectByPixelsData(pixelsData: PixelsData): Array<DetectObject>?
+    protected abstract fun onDetectByPixelsData(pixelsData: PixelsData, confThreshold: Float, iouThreshold: Float): Array<DetectObject>?
 
     private suspend fun internalInit(): Boolean {
         return initSuccess ?: initMutex.withLock {
@@ -40,39 +37,32 @@ abstract class Model {
         }
     }
 
-    private suspend fun detect(block: () -> Array<DetectObject>?) = withContext(Dispatchers.Default) {
-        if (internalInit()) {
-            detectMutex.withLock {
-                block()
+    private suspend fun detect(width: Int, height: Int, block: () -> Array<DetectObject>?): DetectResult =
+        withContext(Dispatchers.Default) {
+            if (internalInit()) {
+                val result = detectMutex.withLock {
+                    block()
+                }
+                if (result != null) {
+                    return@withContext DetectResult.Success(
+                        DetectInfo(
+                            width = width,
+                            height = height,
+                            objects = result
+                        )
+                    )
+                }
             }
-        } else {
-            null
+            return@withContext DetectResult.ModelInitFailed
         }
-    }
 
-    suspend fun detectByBitmap(bitmap: Bitmap): DetectResult =
-        detect {
-            onDetectByBitmap(bitmap)
-        }?.let {
-            DetectResult.Success(
-                DetectInfo(
-                    width = bitmap.width,
-                    height = bitmap.height,
-                    objects = it
-                )
-            )
-        } ?: DetectResult.ModelInitFailed
+    suspend fun detectByBitmap(bitmap: Bitmap, confThreshold: MLThreshold.Confidence, iouThreshold: MLThreshold.IOU): DetectResult =
+        detect(bitmap.width, bitmap.height) {
+            onDetectByBitmap(bitmap, confThreshold.value, iouThreshold.value)
+        }
 
-    suspend fun detectByPixelsData(pixelsData: PixelsData): DetectResult =
-        detect {
-            onDetectByPixelsData(pixelsData)
-        }?.let {
-            DetectResult.Success(
-                DetectInfo(
-                    width = pixelsData.width,
-                    height = pixelsData.height,
-                    objects = it
-                )
-            )
-        } ?: DetectResult.ModelInitFailed
+    suspend fun detectByPixelsData(pixelsData: PixelsData, confThreshold: MLThreshold.Confidence, iouThreshold: MLThreshold.IOU): DetectResult =
+        detect(pixelsData.width, pixelsData.height) {
+            onDetectByPixelsData(pixelsData, confThreshold.value, iouThreshold.value)
+        }
 }

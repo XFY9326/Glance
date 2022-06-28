@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import io.github.xfy9326.atools.coroutines.suspendLazy
 import io.github.xfy9326.atools.io.okio.readBitmapAsync
 import io.github.xfy9326.glance.ml.MLManager
+import io.github.xfy9326.glance.ml.beans.MLThreshold
 import io.github.xfy9326.glance.ml.beans.ModelType
 import io.github.xfy9326.glance.ui.data.AnalysisResult
 import io.github.xfy9326.glance.ui.data.AnalyzingImage
@@ -16,6 +17,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class AnalysisViewModel constructor(private val imageUri: Uri) : ViewModel() {
+    private val confThreshold by lazy { MLThreshold.Confidence.Medium }
+    private val iouThreshold by lazy { MLThreshold.IOU.Medium }
+
     val analyzingImage = AnalyzingImage(imageUri)
     private val cachedAnalysisResult by suspendLazy { analyzeImage() }
     private val _analysisResult = MutableStateFlow<AnalysisResult>(AnalysisResult.Initializing)
@@ -36,7 +40,7 @@ class AnalysisViewModel constructor(private val imageUri: Uri) : ViewModel() {
             onSuccess = {
                 val labels = MLManager.loadLabels(ModelType.GENERAL_MODEL)
                 val model = MLManager.getModel(ModelType.GENERAL_MODEL)
-                val result = model.detectByBitmap(it)
+                val result = model.detectByBitmap(it, confThreshold, iouThreshold)
                 result.convertToAnalysisResult(labels)
             },
             onFailure = {

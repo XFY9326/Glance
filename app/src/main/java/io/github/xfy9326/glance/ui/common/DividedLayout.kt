@@ -47,6 +47,8 @@ fun DividedLayout(
     weightDownEnd: Float = 0.5f,
     rowDividerContent: (@Composable RowScope.() -> Unit)? = DefaultRowDividerContent,
     columnDividerContent: (@Composable ColumnScope.() -> Unit)? = DefaultColumnDividerContent,
+    modifierUpStart: Modifier = Modifier,
+    modifierDownEnd: Modifier = Modifier,
     contentUpStart: @Composable BoxScope.() -> Unit,
     contentDownEnd: @Composable BoxScope.() -> Unit
 ) {
@@ -56,14 +58,16 @@ fun DividedLayout(
             Box(
                 modifier = Modifier
                     .weight(weightUpStart)
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .then(modifierUpStart),
                 content = contentUpStart
             )
             rowDividerContent?.invoke(this)
             Box(
                 modifier = Modifier
                     .weight(weightDownEnd)
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .then(modifierDownEnd),
                 content = contentDownEnd
             )
         }
@@ -72,14 +76,16 @@ fun DividedLayout(
             Box(
                 modifier = Modifier
                     .weight(weightUpStart)
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .then(modifierUpStart),
                 content = contentUpStart
             )
             columnDividerContent?.invoke(this)
             Box(
                 modifier = Modifier
                     .weight(weightDownEnd)
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .then(modifierDownEnd),
                 content = contentDownEnd
             )
         }

@@ -15,9 +15,9 @@ internal abstract class NativeModel(private val modelType: ModelType) : Model() 
     override fun isInitialized(): Boolean =
         NativeInterface.isModelInitialized(modelType.nativeTypeInt)
 
-    override fun onDetectByBitmap(bitmap: Bitmap): Array<DetectObject>? =
-        NativeInterface.detectByBitmap(modelType.nativeTypeInt, bitmap, modelType.confThreshold, modelType.iouThreshold)
+    override fun onDetectByBitmap(bitmap: Bitmap, confThreshold: Float, iouThreshold: Float): Array<DetectObject>? =
+        NativeInterface.detectByBitmap(modelType.nativeTypeInt, bitmap, confThreshold, iouThreshold)
 
-    override fun onDetectByPixelsData(pixelsData: PixelsData): Array<DetectObject>? =
-        NativeInterface.detectByPixelsData(modelType.nativeTypeInt, pixelsData, modelType.confThreshold, modelType.iouThreshold)
+    override fun onDetectByPixelsData(pixelsData: PixelsData, confThreshold: Float, iouThreshold: Float): Array<DetectObject>? =
+        NativeInterface.detectByPixelsData(modelType.nativeTypeInt, pixelsData, confThreshold, iouThreshold)
 }
