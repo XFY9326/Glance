@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Glance</string>
-    <string name="guide">Guide</string>
-    <string name="guide_summary">Real-time walking assistance</string>
+    <string name="guide">Walking assistance</string>
+    <string name="guide_summary">Detection of people and vehicles</string>
     <string name="camera_photo_analysis">What\'s nearby?</string>
     <string name="camera_photo_analysis_summary">Take a picture and analyze</string>
     <string name="local_image_analysis">What\'s in the picture?</string>

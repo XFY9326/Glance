@@ -14,7 +14,7 @@ import kotlinx.coroutines.runBlocking
 import java.util.concurrent.Executors
 
 class GuideViewModel : ViewModel() {
-    private val imageAnalysisExecutor = Executors.newFixedThreadPool(2)
+    private val imageAnalysisExecutor = Executors.newSingleThreadExecutor()
 
     private val classLabels by suspendLazy { MLManager.loadLabels(ModelType.GUIDE_MODEL) }
     private val mlModel = MLManager.getModel(ModelType.GUIDE_MODEL)
@@ -30,6 +30,16 @@ class GuideViewModel : ViewModel() {
                     _analysisResult.value = result.convertToAnalysisResult(classLabels.value())
                 }
             }
+        }
+    }
+
+    override fun onCleared() {
+        try {
+            if (!imageAnalysisExecutor.isShutdown) {
+                imageAnalysisExecutor.shutdown()
+            }
+        } catch (e: Exception) {
+            // Ignore
         }
     }
 }

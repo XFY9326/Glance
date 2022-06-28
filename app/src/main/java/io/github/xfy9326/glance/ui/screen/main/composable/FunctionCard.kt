@@ -55,7 +55,7 @@ fun FunctionCard(icon: ImageVector, title: String, summary: String, onClick: () 
                     .size(36.dp)
             )
             Column(
-                modifier = Modifier.padding(start = 15.dp),
+                modifier = Modifier.padding(start = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(text = title, fontSize = 16.sp)

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">一目</string>
-    <string name="guide">引导员</string>
-    <string name="guide_summary">实时步行辅助</string>
+    <string name="guide">步行辅助</string>
+    <string name="guide_summary">实时探测人和车辆</string>
     <string name="camera_photo_analysis">附近有什么?</string>
     <string name="camera_photo_analysis_summary">拍摄图片并分析</string>
     <string name="local_image_analysis">图片里有什么?</string>

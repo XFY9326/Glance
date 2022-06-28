@@ -2,7 +2,6 @@ package io.github.xfy9326.glance.activity
 
 import android.Manifest
 import android.os.Bundle
-import android.view.Surface
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -64,7 +63,6 @@ class GuideActivity : ComponentActivity() {
     private fun onBuildImageAnalysisUseCase(): ImageAnalysis {
         val imageAnalysisUseCase = ImageAnalysis.Builder()
             .setTargetAspectRatio(AspectRatio.RATIO_4_3)
-            .setTargetRotation(Surface.ROTATION_0)
             .setOutputImageRotationEnabled(true)
             .setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888)
             .setImageQueueDepth(1)
