@@ -11,15 +11,25 @@ data class ImageObjectLayoutInfo(
 )
 
 fun ImageObjectInfo.calculateLayout(layoutSize: Size): List<ImageObjectLayoutInfo> {
-    val ratio = min(layoutSize.width / size.width, layoutSize.height / size.height)
-    val scaledWidth = min(size.width * ratio, layoutSize.width)
-    val scaledHeight = min(size.height * ratio, layoutSize.height)
-    val scaledOffset = Offset((layoutSize.width - scaledWidth) / 2f, (layoutSize.height - scaledHeight) / 2f)
-    return objects.map {
-        ImageObjectLayoutInfo(
-            imageObject = it,
-            boxOffset = it.offset * ratio + scaledOffset,
-            boxSize = it.size * ratio
-        )
+    if (layoutSize == size) {
+        return objects.map {
+            ImageObjectLayoutInfo(
+                imageObject = it,
+                boxOffset = it.offset,
+                boxSize = it.size
+            )
+        }
+    } else {
+        val ratio = min(layoutSize.width / size.width, layoutSize.height / size.height)
+        val scaledWidth = min(size.width * ratio, layoutSize.width)
+        val scaledHeight = min(size.height * ratio, layoutSize.height)
+        val scaledOffset = Offset((layoutSize.width - scaledWidth) / 2f, (layoutSize.height - scaledHeight) / 2f)
+        return objects.map {
+            ImageObjectLayoutInfo(
+                imageObject = it,
+                boxOffset = it.offset * ratio + scaledOffset,
+                boxSize = it.size * ratio
+            )
+        }
     }
 }

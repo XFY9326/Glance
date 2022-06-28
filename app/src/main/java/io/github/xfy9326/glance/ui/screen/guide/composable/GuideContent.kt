@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import io.github.xfy9326.glance.R
 import io.github.xfy9326.glance.ui.base.PreviewSurfaceProvider
 import io.github.xfy9326.glance.ui.common.DividedLayout
-import io.github.xfy9326.glance.ui.common.ImageObjectBoxLayer
 import io.github.xfy9326.glance.ui.common.PreviewImageObjectInfo
 import io.github.xfy9326.glance.ui.common.SimpleTopAppToolBar
 import io.github.xfy9326.glance.ui.data.AnalysisResult
@@ -61,14 +60,9 @@ fun GuideContent(
             contentUpStart = {
                 GuideCameraPreview(
                     modifier = Modifier.fillMaxSize(),
+                    analysisResult = analysisResult,
                     onBindCamera = onBindCamera
                 )
-                if (analysisResult is AnalysisResult.Success) {
-                    ImageObjectBoxLayer(
-                        imageObjectInfo = analysisResult.imageObjectInfo,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
             },
             contentDownEnd = {
                 Column(

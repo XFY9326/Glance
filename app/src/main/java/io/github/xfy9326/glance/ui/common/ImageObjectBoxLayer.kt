@@ -47,7 +47,8 @@ fun ImageObjectBoxLayer(
     imageObjectInfo: ImageObjectInfo,
     modifier: Modifier,
     boxStroke: Dp = 2.dp,
-    boxStrokeColor: Color = Color.Red
+    boxStrokeColor: Color = Color.Red,
+    cornerRadius: Dp = 2.dp,
 ) {
     val targetBoxStroke = if (boxStroke == Dp.Hairline) {
         (1f / LocalDensity.current.density).dp
@@ -58,7 +59,7 @@ fun ImageObjectBoxLayer(
         modifier = modifier,
         onDraw = {
             val stroke = Stroke(width = targetBoxStroke.toPx())
-            val radius = CornerRadius(2.dp.toPx(), 2.dp.toPx())
+            val radius = CornerRadius(cornerRadius.toPx(), cornerRadius.toPx())
             imageObjectInfo.calculateLayout(size).forEach {
                 drawRoundRect(
                     color = boxStrokeColor,
