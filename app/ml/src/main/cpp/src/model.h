@@ -24,8 +24,8 @@ namespace YoloV5Model {
     static const float means[RGB_CHANNELS]{0.f, 0.f, 0.f};
     static const float norms[RGB_CHANNELS]{1.f / 255.f, 1.f / 255.f, 1.f / 255.f};
 
-    static const ModelInfo yolov5n_6_1{
-            320, 320,
+    static const ModelInfo yolov5s_6_1{
+            640, 640,
             // BLOB_images
             0,
             {

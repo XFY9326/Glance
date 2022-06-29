@@ -22,7 +22,7 @@ namespace ObjectDetector {
 
     bool init_model(AAssetManager *mgr, const char *bin, const char *param_bin) {
         if (!net_init) {
-            net_init = YoloV5Executor::load_model(mgr, YoloV5Model::yolov5n_6_1, net, bin, param_bin);
+            net_init = YoloV5Executor::load_model(mgr, YoloV5Model::yolov5s_6_1, net, bin, param_bin);
             return net_init;
         }
         return true;
@@ -31,7 +31,7 @@ namespace ObjectDetector {
     shared_ptr<vector<shared_ptr<DetectObject>>>
     detect(const PixelsData &pixelsData, const float conf_threshold, const float iou_threshold) {
         if (net_init) {
-            return YoloV5Executor::launch(net, YoloV5Model::yolov5n_6_1, pixelsData, GPU_SUPPORT, conf_threshold, iou_threshold);
+            return YoloV5Executor::launch(net, YoloV5Model::yolov5s_6_1, pixelsData, GPU_SUPPORT, conf_threshold, iou_threshold);
         }
         return nullptr;
     }
@@ -39,7 +39,7 @@ namespace ObjectDetector {
     shared_ptr<vector<shared_ptr<DetectObject>>>
     detect(JNIEnv *env, jobject bitmap, const float conf_threshold, const float iou_threshold) {
         if (net_init) {
-            return YoloV5Executor::launch(net, YoloV5Model::yolov5n_6_1, env, bitmap, GPU_SUPPORT, conf_threshold, iou_threshold);
+            return YoloV5Executor::launch(net, YoloV5Model::yolov5s_6_1, env, bitmap, GPU_SUPPORT, conf_threshold, iou_threshold);
         }
         return nullptr;
     }

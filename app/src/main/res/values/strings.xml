@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Glance</string>
-    <string name="guide">Walking assistance</string>
-    <string name="guide_summary">Detection of people and vehicles</string>
+    <string name="guide">Guide</string>
+    <string name="guide_summary">Real-time scene description</string>
+    <string name="finder">Finder</string>
+    <string name="finder_summary">Use the camera to find items</string>
     <string name="camera_photo_analysis">What\'s nearby?</string>
     <string name="camera_photo_analysis_summary">Take a picture and analyze</string>
     <string name="local_image_analysis">What\'s in the picture?</string>
@@ -25,5 +27,5 @@
     <string name="image_being_analyzed">The image being analyzed</string>
     <string name="image_analysis_result_title">Detected objects and reliability:</string>
     <string name="reliability">Reliability: %1$3d%%</string>
-    <string name="empty_image_analysis_result">Can not find any objects!</string>
+    <string name="empty_image_analysis_result">No objects!</string>
 </resources>

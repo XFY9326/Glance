@@ -8,12 +8,18 @@ data class ImageObjectInfo(
     val objects: List<ImageObject>
 )
 
-fun DetectInfo.convertToImageObjectInfo(labels: Array<String>): ImageObjectInfo =
+fun DetectInfo.convertToImageObjectInfo(labels: Array<String>, takeAmount: Int? = null): ImageObjectInfo =
     ImageObjectInfo(
         size = Size(width.toFloat(), height.toFloat()),
         objects = objects.asSequence().map {
             it.convertToImageObject(labels)
         }.sortedByDescending {
             it.reliability
+        }.let {
+            if (takeAmount != null) {
+                it.take(takeAmount)
+            } else {
+                it
+            }
         }.toList()
     )

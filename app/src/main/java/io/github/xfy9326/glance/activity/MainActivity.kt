@@ -40,7 +40,11 @@ class MainActivity : ComponentActivity() {
         MainScreen(
             onNavigateToGuide = {
                 context.startActivity<GuideActivity>()
-            }, onNavigateToAnalysis = {
+            },
+            onNavigateToFinder = {
+                context.startActivity<FinderActivity>()
+            },
+            onNavigateToAnalysis = {
                 context.startActivity<AnalysisActivity> { data = it }
             }
         )

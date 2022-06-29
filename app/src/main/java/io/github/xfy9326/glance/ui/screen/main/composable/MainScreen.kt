@@ -22,6 +22,7 @@ import kotlinx.coroutines.launch
 fun MainScreen(
     viewModel: MainViewModel = viewModel(),
     onNavigateToGuide: () -> Unit,
+    onNavigateToFinder: () -> Unit,
     onNavigateToAnalysis: (Uri) -> Unit
 ) {
     val scaffoldState = rememberScaffoldState()
@@ -36,6 +37,10 @@ fun MainScreen(
         snackbarHostState = scaffoldState.snackbarHostState,
         onPermissionGranted = { onNavigateToGuide() }
     )
+    val finderCameraPermission = rememberCameraPermissionRequest(
+        snackbarHostState = scaffoldState.snackbarHostState,
+        onPermissionGranted = { onNavigateToFinder() }
+    )
     val cameraPhotoCameraPermission = rememberCameraPermissionRequest(
         snackbarHostState = scaffoldState.snackbarHostState,
         onPermissionGranted = { takePicture.launch(viewModel.capturedCacheImageUri) }
@@ -44,6 +49,9 @@ fun MainScreen(
         scaffoldState = scaffoldState,
         onGuideClick = {
             guideCameraPermission.requestPermission()
+        },
+        onFinderClick = {
+            finderCameraPermission.requestPermission()
         },
         onCameraPhotoAnalysisClick = {
             cameraPhotoCameraPermission.requestPermission()

@@ -8,10 +8,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.HelpCenter
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Radar
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -36,6 +33,7 @@ private fun PreviewMainScreen() {
         MainContent(
             scaffoldState = rememberScaffoldState(),
             onGuideClick = {},
+            onFinderClick = {},
             onCameraPhotoAnalysisClick = {},
             onLocalImageAnalysisClick = {},
             onSettingsClick = {},
@@ -49,6 +47,7 @@ private fun PreviewMainScreen() {
 fun MainContent(
     scaffoldState: ScaffoldState,
     onGuideClick: () -> Unit,
+    onFinderClick: () -> Unit,
     onCameraPhotoAnalysisClick: () -> Unit,
     onLocalImageAnalysisClick: () -> Unit,
     onSettingsClick: () -> Unit,
@@ -77,6 +76,7 @@ fun MainContent(
                 Spacer(modifier = Modifier.height(8.dp))
                 Functions(
                     onGuideClick = onGuideClick,
+                    onFinderClick = onFinderClick,
                     onCameraPhotoAnalysisClick = onCameraPhotoAnalysisClick,
                     onLocalImageAnalysisClick = onLocalImageAnalysisClick
                 )
@@ -109,6 +109,7 @@ private fun Header() {
 @Composable
 private fun Functions(
     onGuideClick: () -> Unit,
+    onFinderClick: () -> Unit,
     onCameraPhotoAnalysisClick: () -> Unit,
     onLocalImageAnalysisClick: () -> Unit
 ) {
@@ -126,12 +127,18 @@ private fun Functions(
         )
         FunctionCard(
             icon = Icons.Default.Radar,
+            title = stringResource(id = R.string.finder),
+            summary = stringResource(id = R.string.finder_summary),
+            onClick = onFinderClick
+        )
+        FunctionCard(
+            icon = ImageVector.vectorResource(id = R.drawable.ic_detection_24),
             title = stringResource(id = R.string.camera_photo_analysis),
             summary = stringResource(id = R.string.camera_photo_analysis_summary),
             onClick = onCameraPhotoAnalysisClick
         )
         FunctionCard(
-            icon = ImageVector.vectorResource(id = R.drawable.ic_detection_24),
+            icon = Icons.Default.ImageSearch,
             title = stringResource(id = R.string.local_image_analysis),
             summary = stringResource(id = R.string.local_image_analysis_summary),
             onClick = onLocalImageAnalysisClick

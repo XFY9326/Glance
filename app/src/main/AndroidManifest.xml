@@ -37,6 +37,8 @@
 
         <activity android:name=".activity.GuideActivity" />
 
+        <activity android:name=".activity.FinderActivity" />
+
         <activity
             android:name=".activity.AnalysisActivity"
             android:exported="true">
