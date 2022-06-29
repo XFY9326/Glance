@@ -14,7 +14,7 @@ data class ImageObject(
 
 fun DetectObject.convertToImageObject(labels: Array<String>) =
     ImageObject(
-        classText = labels[classId],
+        classText = labels[classId].replaceFirstChar { it.uppercaseChar() },
         reliability = (confidence * 100).roundToInt(),
         offset = Offset(box.left, box.top),
         size = Size(box.width(), box.height())

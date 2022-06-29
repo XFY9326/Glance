@@ -22,11 +22,11 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.xfy9326.glance.R
+import io.github.xfy9326.glance.ui.common.AnalysisResultContent
 import io.github.xfy9326.glance.ui.common.DividedLayout
 import io.github.xfy9326.glance.ui.common.SimpleTopAppToolBar
 import io.github.xfy9326.glance.ui.data.AnalysisResult
 import io.github.xfy9326.glance.ui.data.AnalyzingImage
-import io.github.xfy9326.glance.ui.data.hasObjects
 import io.github.xfy9326.glance.ui.theme.AppTheme
 
 @Preview(showBackground = true, device = Devices.PIXEL_4)
@@ -74,7 +74,7 @@ fun AnalysisScreenContent(
                 )
             },
             contentDownEnd = {
-                AnalysisResultContent(
+                ResultContent(
                     modifier = Modifier.align(Alignment.Center),
                     analysisResult = analysisResult
                 )
@@ -97,35 +97,29 @@ private fun ImageContent(
 }
 
 @Composable
-private fun AnalysisResultContent(
-    modifier: Modifier = Modifier,
+private fun ResultContent(
+    modifier: Modifier,
     analysisResult: AnalysisResult
 ) {
-    when (analysisResult) {
-        is AnalysisResult.Success -> {
-            if (analysisResult.hasObjects()) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .focusable()
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.image_analysis_result_title),
-                        modifier = Modifier
-                            .padding(horizontal = 18.dp, vertical = 10.dp)
-                            .semantics { heading() }
-                    )
-                    AnalysisResultList(
-                        modifier = Modifier.fillMaxSize(),
-                        imageObjects = analysisResult.imageObjectInfo.objects
-                    )
-                }
-            } else {
-                AnalysisResultEmpty(modifier = modifier)
-            }
+    AnalysisResultContent(
+        modifier = modifier,
+        analysisResult = analysisResult
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .focusable()
+        ) {
+            Text(
+                text = stringResource(id = R.string.image_analysis_result_title),
+                modifier = Modifier
+                    .padding(horizontal = 18.dp, vertical = 10.dp)
+                    .semantics { heading() }
+            )
+            AnalysisResultList(
+                modifier = Modifier.fillMaxSize(),
+                imageObjects = it
+            )
         }
-        AnalysisResult.Initializing -> AnalysisLoading(modifier = modifier)
-        AnalysisResult.ImageLoadFailed -> AnalysisImageLoadFailed(modifier = modifier)
-        AnalysisResult.ModelLoadFailed -> AnalysisModelLoadFailed(modifier = modifier)
     }
 }

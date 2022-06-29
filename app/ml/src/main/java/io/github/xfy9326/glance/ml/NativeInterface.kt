@@ -14,11 +14,11 @@ internal object NativeInterface {
 
     external fun hasGPUSupport(): Boolean
 
-    external fun isModelInitialized(modelType: Int): Boolean
+    external fun initDetectionModel(assetManager: AssetManager, binPath: String, paramBinPath: String): Boolean
 
-    external fun initModel(modelType: Int, assetManager: AssetManager, binPath: String, paramBinPath: String): Boolean
+    external fun isDetectionModelInitialized(): Boolean
 
-    external fun detectByPixelsData(modelType: Int, pixelsData: PixelsData, confThreshold: Float, iouThreshold: Float): Array<DetectObject>?
+    external fun detectByPixelsData(pixelsData: PixelsData, confThreshold: Float, iouThreshold: Float): Array<DetectObject>?
 
-    external fun detectByBitmap(modelType: Int, bitmap: Bitmap, confThreshold: Float, iouThreshold: Float): Array<DetectObject>?
+    external fun detectByBitmap(bitmap: Bitmap, confThreshold: Float, iouThreshold: Float): Array<DetectObject>?
 }

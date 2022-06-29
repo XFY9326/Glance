@@ -9,17 +9,17 @@
 namespace ObjectDetector {
     using namespace std;
 
-    void clear_models();
+    void clear_model();
 
-    bool is_model_initialized(const ModelType modelType);
+    bool is_model_initialized();
 
-    bool init_model(const ModelType modelType, AAssetManager *mgr, const char *bin, const char *param_bin);
-
-    shared_ptr<vector<shared_ptr<DetectObject>>>
-    detect(const ModelType modelType, const PixelsData &pixelsData, const float conf_threshold, const float iou_threshold);
+    bool init_model(AAssetManager *mgr, const char *bin, const char *param_bin);
 
     shared_ptr<vector<shared_ptr<DetectObject>>>
-    detect(const ModelType modelType, JNIEnv *env, jobject bitmap, const float conf_threshold, const float iou_threshold);
+    detect(const PixelsData &pixelsData, const float conf_threshold, const float iou_threshold);
+
+    shared_ptr<vector<shared_ptr<DetectObject>>>
+    detect(JNIEnv *env, jobject bitmap, const float conf_threshold, const float iou_threshold);
 }
 
 #endif //GLANCE_OBJECT_DETECTOR_H

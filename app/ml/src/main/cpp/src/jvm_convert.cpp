@@ -83,10 +83,6 @@ namespace JVMConvert {
         }
     }
 
-    ModelType model_type_to_native(jint model_type) {
-        return static_cast<ModelType>((int) model_type);
-    }
-
     void clear(JNIEnv *env) {
         if (detect_object_class != nullptr) env->DeleteGlobalRef(detect_object_class);
         detect_object_class = nullptr;

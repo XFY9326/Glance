@@ -2,17 +2,14 @@
 
 package io.github.xfy9326.glance.ml
 
-import io.github.xfy9326.atools.io.file.rawResFile
-import io.github.xfy9326.atools.io.okio.source
-import io.github.xfy9326.atools.io.okio.useBuffer
-import io.github.xfy9326.glance.ml.beans.ModelType
-import io.github.xfy9326.glance.ml.model.GeneralModel
-import io.github.xfy9326.glance.ml.model.GuideModel
-import io.github.xfy9326.glance.ml.model.Model
-import kotlinx.coroutines.*
+import io.github.xfy9326.glance.ml.model.DetectionModel
+import io.github.xfy9326.glance.ml.model.base.AbstractDetectionModel
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import org.json.JSONArray
 
 object MLManager {
     private var initMutex = Mutex()
@@ -25,9 +22,7 @@ object MLManager {
                 initMutex.withLock {
                     if (!hasModelInitialized) {
                         hasModelInitialized = true
-                        ModelType.values().forEach {
-                            getModel(it).init()
-                        }
+                        DetectionModel.init()
                     }
                 }
             }
@@ -40,19 +35,6 @@ object MLManager {
     fun hasGPUSupport(): Boolean =
         NativeInterface.hasGPUSupport()
 
-    suspend fun loadLabels(modelType: ModelType): Array<String> = withContext(Dispatchers.IO) {
-        rawResFile(modelType.labelsResId).source().useBuffer {
-            JSONArray(readUtf8()).let { json ->
-                Array(json.length()) {
-                    json.optString(it)
-                }
-            }
-        }
-    }
-
-    fun getModel(modelType: ModelType): Model =
-        when (modelType) {
-            ModelType.GUIDE_MODEL -> GuideModel
-            ModelType.GENERAL_MODEL -> GeneralModel
-        }
+    fun getDetectionModel(): AbstractDetectionModel =
+        DetectionModel
 }

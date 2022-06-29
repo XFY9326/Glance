@@ -19,10 +19,11 @@
     <string name="image_analysis">Image analysis</string>
     <string name="back">Back</string>
     <string name="image_load_failed">Image load failed!\nPlease select a valid picture!</string>
-    <string name="model_init_failed">Algorithm initialization error! \nRestarting the application may resolve the issue. \nIf the problem persists, please report this bug.</string>
+    <string name="model_init_failed">Model initialization failed! </string>
+    <string name="labels_load_failed">Resource load failed! </string>
     <string name="image_processing">Image is processing \.\.\.</string>
     <string name="image_being_analyzed">The image being analyzed</string>
     <string name="image_analysis_result_title">Detected objects and reliability:</string>
     <string name="reliability">Reliability: %1$3d%%</string>
-    <string name="empty_image_analysis_result">No objects were detected</string>
+    <string name="empty_image_analysis_result">Can not find any objects!</string>
 </resources>

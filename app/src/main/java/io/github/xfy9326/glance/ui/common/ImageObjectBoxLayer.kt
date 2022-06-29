@@ -21,13 +21,13 @@ import io.github.xfy9326.glance.ui.theme.AppTheme
 val PreviewImageObjectInfo = ImageObjectInfo(
     size = Size(500f, 500f),
     objects = listOf(
-        ImageObject("Class 1", 100, Offset(0f, 0f), Size(50f, 50f)),
-        ImageObject("Class 2", 90, Offset(450f, 0f), Size(50f, 50f)),
-        ImageObject("Class 3", 80, Offset(450f, 450f), Size(50f, 50f)),
-        ImageObject("Class 4", 70, Offset(0f, 450f), Size(50f, 50f)),
-        ImageObject("Class 5", 60, Offset(100f, 100f), Size(300f, 300f)),
-        ImageObject("Class 6", 50, Offset(0f, 200f), Size(500f, 100f)),
-        ImageObject("Class 7", 40, Offset(200f, 0f), Size(100f, 500f))
+        ImageObject("class 1", 100, Offset(0f, 0f), Size(50f, 50f)),
+        ImageObject("class 2", 90, Offset(450f, 0f), Size(50f, 50f)),
+        ImageObject("class 3", 80, Offset(450f, 450f), Size(50f, 50f)),
+        ImageObject("class 4", 70, Offset(0f, 450f), Size(50f, 50f)),
+        ImageObject("class 5", 60, Offset(100f, 100f), Size(300f, 300f)),
+        ImageObject("class 6", 50, Offset(0f, 200f), Size(500f, 100f)),
+        ImageObject("class 7", 40, Offset(200f, 0f), Size(100f, 500f))
     )
 )
 

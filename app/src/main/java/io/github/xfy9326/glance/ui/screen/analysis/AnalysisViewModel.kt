@@ -7,18 +7,16 @@ import androidx.lifecycle.viewModelScope
 import io.github.xfy9326.atools.coroutines.suspendLazy
 import io.github.xfy9326.atools.io.okio.readBitmapAsync
 import io.github.xfy9326.glance.ml.MLManager
-import io.github.xfy9326.glance.ml.beans.MLThreshold
-import io.github.xfy9326.glance.ml.beans.ModelType
 import io.github.xfy9326.glance.ui.data.AnalysisResult
 import io.github.xfy9326.glance.ui.data.AnalyzingImage
-import io.github.xfy9326.glance.ui.data.convertToAnalysisResult
+import io.github.xfy9326.glance.ui.data.convertToImageObjectInfo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class AnalysisViewModel constructor(private val imageUri: Uri) : ViewModel() {
-    private val confThreshold by lazy { MLThreshold.Confidence.Medium }
-    private val iouThreshold by lazy { MLThreshold.IOU.Medium }
+    private val confThreshold = 0.25f
+    private val iouThreshold = 0.45f
 
     val analyzingImage = AnalyzingImage(imageUri)
     private val cachedAnalysisResult by suspendLazy { analyzeImage() }
@@ -38,10 +36,10 @@ class AnalysisViewModel constructor(private val imageUri: Uri) : ViewModel() {
     private suspend fun analyzeImage(): AnalysisResult {
         return imageUri.readBitmapAsync().fold(
             onSuccess = {
-                val labels = MLManager.loadLabels(ModelType.GENERAL_MODEL)
-                val model = MLManager.getModel(ModelType.GENERAL_MODEL)
-                val result = model.detectByBitmap(it, confThreshold, iouThreshold)
-                result.convertToAnalysisResult(labels)
+                val model = MLManager.getDetectionModel()
+                val labels = model.loadLabels().getOrNull() ?: return@fold AnalysisResult.LabelsLoadFailed
+                val result = model.detectByBitmap(it, confThreshold, iouThreshold).getOrNull() ?: return@fold AnalysisResult.ModelLoadFailed
+                AnalysisResult.Success(result.convertToImageObjectInfo(labels))
             },
             onFailure = {
                 AnalysisResult.ImageLoadFailed

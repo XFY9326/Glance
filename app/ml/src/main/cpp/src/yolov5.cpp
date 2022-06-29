@@ -17,9 +17,9 @@ namespace YoloV5Executor {
             ncnn::Mat input((int) modelInfo.input_width, (int) modelInfo.input_height, RGB_CHANNELS);
             ncnn::Extractor extractor = net.create_extractor();
             extractor.input(modelInfo.input_blob, input);
-            ncnn::Mat mat;
+            ncnn::Mat output;
             for (auto &&item: modelInfo.output_layers) {
-                extractor.extract(item.blob, mat);
+                extractor.extract(item.blob, output);
             }
         }
         return load_success;
@@ -117,11 +117,11 @@ namespace YoloV5Executor {
         extractor.set_vulkan_compute(enable_gpu && net.opt.use_vulkan_compute && NCNNHelper::is_gpu_instance_created());
         extractor.input(modelInfo.input_blob, input);
 
-        ncnn::Mat mat;
+        ncnn::Mat output;
         map<int, unique_ptr<vector<shared_ptr<DetectObject>>>> result;
         for (auto &&item: modelInfo.output_layers) {
-            extractor.extract(item.blob, mat);
-            decode_proposals(item, input.w, input.h, mat, conf_threshold, result);
+            extractor.extract(item.blob, output);
+            decode_proposals(item, input.w, input.h, output, conf_threshold, result);
         }
         return Utils::non_maximum_suppression(result, iou_threshold);
     }

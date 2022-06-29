@@ -15,8 +15,6 @@ namespace JVMConvert {
 
     bool pixels_data_to_native(JNIEnv *env, jobject pixels_data, PixelsData &pixelsData);
 
-    ModelType model_type_to_native(jint model_type);
-
     void clear(JNIEnv *env);
 }
 

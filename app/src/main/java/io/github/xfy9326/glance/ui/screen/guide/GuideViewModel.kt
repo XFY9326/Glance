@@ -4,11 +4,9 @@ import androidx.camera.core.ImageAnalysis
 import androidx.lifecycle.ViewModel
 import io.github.xfy9326.atools.coroutines.suspendLazy
 import io.github.xfy9326.glance.ml.MLManager
-import io.github.xfy9326.glance.ml.beans.MLThreshold
-import io.github.xfy9326.glance.ml.beans.ModelType
 import io.github.xfy9326.glance.ui.base.toPixelsData
 import io.github.xfy9326.glance.ui.data.AnalysisResult
-import io.github.xfy9326.glance.ui.data.convertToAnalysisResult
+import io.github.xfy9326.glance.ui.data.convertToImageObjectInfo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.runBlocking
@@ -16,11 +14,11 @@ import java.util.concurrent.Executors
 
 class GuideViewModel : ViewModel() {
     private val imageAnalysisExecutor = Executors.newSingleThreadExecutor()
-    private val confThreshold by lazy { MLThreshold.Confidence.Medium }
-    private val iouThreshold by lazy { MLThreshold.IOU.Medium }
+    private val confThreshold = 0.65f
+    private val iouThreshold = 0.5f
 
-    private val classLabels by suspendLazy { MLManager.loadLabels(ModelType.GUIDE_MODEL) }
-    private val mlModel = MLManager.getModel(ModelType.GUIDE_MODEL)
+    private val detectionModel = MLManager.getDetectionModel()
+    private val detectionLabels by suspendLazy { detectionModel.loadLabels() }
 
     private val _analysisResult = MutableStateFlow<AnalysisResult>(AnalysisResult.Initializing)
     val analysisResult = _analysisResult.asStateFlow()
@@ -29,8 +27,17 @@ class GuideViewModel : ViewModel() {
         imageAnalysis.setAnalyzer(imageAnalysisExecutor) {
             it.use {
                 runBlocking {
-                    val result = mlModel.detectByPixelsData(it.toPixelsData(), confThreshold, iouThreshold)
-                    _analysisResult.value = result.convertToAnalysisResult(classLabels.value())
+                    val labels = detectionLabels.value().getOrNull()
+                    if (labels == null) {
+                        _analysisResult.value = AnalysisResult.LabelsLoadFailed
+                    } else {
+                        val result = detectionModel.detectByPixelsData(it.toPixelsData(), confThreshold, iouThreshold).getOrNull()
+                        if (result == null) {
+                            _analysisResult.value = AnalysisResult.ModelLoadFailed
+                        } else {
+                            _analysisResult.value = AnalysisResult.Success(result.convertToImageObjectInfo(labels))
+                        }
+                    }
                 }
             }
         }
