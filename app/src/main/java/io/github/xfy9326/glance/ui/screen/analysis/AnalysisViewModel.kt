@@ -9,7 +9,7 @@ import io.github.xfy9326.atools.io.okio.readBitmapAsync
 import io.github.xfy9326.glance.ml.MLManager
 import io.github.xfy9326.glance.ui.data.AnalysisResult
 import io.github.xfy9326.glance.ui.data.AnalyzingImage
-import io.github.xfy9326.glance.ui.data.convertToImageObjectInfo
+import io.github.xfy9326.glance.ui.data.toImageObjectInfo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -39,7 +39,9 @@ class AnalysisViewModel constructor(private val imageUri: Uri) : ViewModel() {
                 val model = MLManager.getDetectionModel()
                 val labels = model.loadLabels().getOrNull() ?: return@fold AnalysisResult.LabelsLoadFailed
                 val result = model.detectByBitmap(it, confThreshold, iouThreshold).getOrNull() ?: return@fold AnalysisResult.ModelLoadFailed
-                AnalysisResult.Success(result.convertToImageObjectInfo(labels))
+                AnalysisResult.Success(result.toImageObjectInfo(labels) {
+                    sortedByDescending { obj -> obj.reliability }
+                })
             },
             onFailure = {
                 AnalysisResult.ImageLoadFailed

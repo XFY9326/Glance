@@ -6,14 +6,16 @@ import io.github.xfy9326.glance.ml.beans.DetectObject
 import kotlin.math.roundToInt
 
 data class ImageObject(
+    val classId: Int,
     val classText: String,
     val reliability: Int,
     val offset: Offset,
     val size: Size
 )
 
-fun DetectObject.convertToImageObject(labels: Array<String>) =
+fun DetectObject.toImageObject(labels: Array<String>) =
     ImageObject(
+        classId = classId,
         classText = labels[classId].replaceFirstChar { it.uppercaseChar() },
         reliability = (confidence * 100).roundToInt(),
         offset = Offset(box.left, box.top),

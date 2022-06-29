@@ -1,5 +1,6 @@
 package io.github.xfy9326.glance.ui.screen.finder.composable
 
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
@@ -24,6 +25,7 @@ import io.github.xfy9326.glance.ui.common.DividedLayout
 import io.github.xfy9326.glance.ui.common.PreviewImageObjectInfo
 import io.github.xfy9326.glance.ui.common.SimpleTopAppToolBar
 import io.github.xfy9326.glance.ui.data.AnalysisResult
+import io.github.xfy9326.glance.ui.data.countOutputClasses
 import io.github.xfy9326.glance.ui.theme.AppTheme
 
 @Preview(showBackground = true, device = Devices.PIXEL_4)
@@ -34,7 +36,9 @@ private fun PreviewFinderContent() {
             scaffoldState = rememberScaffoldState(),
             onBackPressed = {},
             onBindCamera = {},
-            analysisResult = AnalysisResult.Success(PreviewImageObjectInfo)
+            analysisResult = AnalysisResult.Success(
+                PreviewImageObjectInfo.copy(objects = PreviewImageObjectInfo.objects.take(3))
+            )
         )
     }
 }
@@ -86,13 +90,16 @@ private fun ResultContent(
 ) {
     AnalysisResultContent(modifier = modifier, analysisResult = analysisResult) {
         Column(
-            modifier = modifier.semantics(true) { liveRegion = LiveRegionMode.Assertive },
-            verticalArrangement = Arrangement.spacedBy(10.dp),
+            modifier = modifier
+                .fillMaxSize()
+                .focusable()
+                .semantics(true) { liveRegion = LiveRegionMode.Assertive },
+            verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            it.forEach {
+            it.countOutputClasses().forEach {
                 Text(
-                    text = it.classText,
+                    text = if (it.second > 1) "${it.second}  ${it.first}" else it.first,
                     fontSize = 26.sp,
                     textAlign = TextAlign.Center
                 )
