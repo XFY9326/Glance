@@ -18,10 +18,10 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import io.github.xfy9326.atools.compose.common.DividedLayout
 import io.github.xfy9326.glance.R
 import io.github.xfy9326.glance.ui.base.PreviewSurfaceProvider
 import io.github.xfy9326.glance.ui.common.AnalysisResultContent
-import io.github.xfy9326.glance.ui.common.DividedLayout
 import io.github.xfy9326.glance.ui.common.PreviewImageObjectInfo
 import io.github.xfy9326.glance.ui.common.SimpleTopAppToolBar
 import io.github.xfy9326.glance.ui.data.AnalysisResult

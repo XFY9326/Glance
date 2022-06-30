@@ -67,7 +67,7 @@ private fun AnalysisResultItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = imageObject.classText,
+                text = imageObject.classText.replaceFirstChar { it.uppercaseChar() },
                 modifier = Modifier.weight(1f)
             )
             Text(

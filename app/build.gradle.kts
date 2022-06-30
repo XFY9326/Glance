@@ -76,9 +76,10 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3")
 
     // ATools
-    val aToolsVersion = "0.0.12"
+    val aToolsVersion = "0.0.13"
     implementation("io.github.xfy9326.atools:atools-core:$aToolsVersion")
     implementation("io.github.xfy9326.atools:atools-io:$aToolsVersion")
+    implementation("io.github.xfy9326.atools:atools-compose:$aToolsVersion")
     implementation("io.github.xfy9326.atools:atools-coroutines:$aToolsVersion")
 
     // Coli
@@ -88,13 +89,13 @@ dependencies {
     implementation("androidx.core:core-ktx:1.8.0")
     implementation("androidx.core:core-splashscreen:1.0.0-rc01")
 
-    // AndroidX Activity and Fragment
-    val activityVersion = "1.4.0"
+    // AndroidX Activity
+    val activityVersion = "1.5.0"
     implementation("androidx.activity:activity-ktx:$activityVersion")
     implementation("androidx.activity:activity-compose:$activityVersion")
 
     // AndroidX Lifecycle
-    val lifeCycleVersion = "2.4.1"
+    val lifeCycleVersion = "2.5.0"
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifeCycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifeCycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifeCycleVersion")
