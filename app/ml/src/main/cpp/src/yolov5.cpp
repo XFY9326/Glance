@@ -2,6 +2,11 @@
 #include "utils.h"
 #include "ncnn_helper.h"
 
+#define YOLOV5_OUTPUT_DX 0
+#define YOLOV5_OUTPUT_DY 1
+#define YOLOV5_OUTPUT_DW 2
+#define YOLOV5_OUTPUT_DH 3
+#define YOLOV5_OUTPUT_PB 4
 #define YOLOV5_OUTPUT_META_SIZE 5
 #define YOLOV5_INPUT_BORDER_PADDING 114.f
 
@@ -80,30 +85,30 @@ namespace YoloV5Executor {
             for (int shift_y = 0; shift_y < num_grid_y; ++shift_y) {
                 for (int shift_x = 0; shift_x < num_grid_x; ++shift_x) {
                     const float *feature = channel_feature.row(shift_x + shift_y * (int) num_grid_y);
-                    if (feature[4] > reverse_conf_threshold) {
-                        int max_conf_class_index = YOLOV5_OUTPUT_META_SIZE;
-                        for (int i = max_conf_class_index + 1; i < output.w; ++i) {
-                            if (feature[i] > feature[max_conf_class_index]) max_conf_class_index = i;
+                    if (feature[YOLOV5_OUTPUT_PB] > reverse_conf_threshold) {
+                        int class_index = YOLOV5_OUTPUT_META_SIZE;
+                        for (int i = class_index + 1; i < output.w; ++i) {
+                            if (feature[i] > feature[class_index]) class_index = i;
                         }
-                        const float confidence = Utils::sigmoid(feature[max_conf_class_index]) * Utils::sigmoid(feature[4]);
+                        float confidence = Utils::sigmoid(feature[class_index]) * Utils::sigmoid(feature[YOLOV5_OUTPUT_PB]);
                         if (confidence > conf_threshold) {
-                            const double cx = (Utils::sigmoid(feature[0]) * 2.f - 0.5f + (float) shift_x) * (float) layer.stride;
-                            const double cy = (Utils::sigmoid(feature[1]) * 2.f - 0.5f + (float) shift_y) * (float) layer.stride;
-                            const double w = pow(Utils::sigmoid(feature[2]) * 2.f, 2) * layer.anchors[c][0];
-                            const double h = pow(Utils::sigmoid(feature[3]) * 2.f, 2) * layer.anchors[c][1];
-                            const int object_class_id = max_conf_class_index - YOLOV5_OUTPUT_META_SIZE;
+                            float cx = (Utils::sigmoid(feature[YOLOV5_OUTPUT_DX]) * 2.f - 0.5f + (float) shift_x) * (float) layer.stride;
+                            float cy = (Utils::sigmoid(feature[YOLOV5_OUTPUT_DY]) * 2.f - 0.5f + (float) shift_y) * (float) layer.stride;
+                            auto w = (float) (pow(Utils::sigmoid(feature[YOLOV5_OUTPUT_DW]) * 2.f, 2) * layer.anchors[c][0]);
+                            auto h = (float) (pow(Utils::sigmoid(feature[YOLOV5_OUTPUT_DH]) * 2.f, 2) * layer.anchors[c][1]);
+                            int class_id = class_index - YOLOV5_OUTPUT_META_SIZE;
                             auto new_object = make_shared<DetectObject>(
-                                    max(0.0, cx - w / 2),
-                                    max(0.0, cy - h / 2),
-                                    min((double) input_width, cx + w / 2),
-                                    min((double) input_height, cy + h / 2),
-                                    object_class_id,
-                                    confidence
+                                    max(0.0f, cx - w / 2),
+                                    max(0.0f, cy - h / 2),
+                                    min((float) input_width, cx + w / 2),
+                                    min((float) input_height, cy + h / 2),
+                                    confidence,
+                                    class_id
                             );
-                            if (result.find(object_class_id) == result.end()) {
-                                result.emplace(object_class_id, make_unique<vector<shared_ptr<DetectObject>>>());
+                            if (result.find(class_id) == result.end()) {
+                                result.emplace(class_id, make_unique<vector<shared_ptr<DetectObject>>>());
                             }
-                            result[object_class_id]->emplace_back(new_object);
+                            result[class_id]->emplace_back(new_object);
                         }
                     }
                 }

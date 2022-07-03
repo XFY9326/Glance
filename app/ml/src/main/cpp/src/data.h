@@ -6,11 +6,11 @@ struct DetectObject {
     float top;
     float right;
     float bottom;
-    int class_id;
     float confidence;
+    int class_id;
 
-    DetectObject(float left, float top, float right, float bottom, int class_id, float confidence) :
-            left(left), top(top), right(right), bottom(bottom), class_id(class_id), confidence(confidence) {}
+    DetectObject(float left, float top, float right, float bottom, float confidence, int class_id) :
+            left(left), top(top), right(right), bottom(bottom), confidence(confidence), class_id(class_id) {}
 };
 
 struct ResizeInfo {

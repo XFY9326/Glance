@@ -1,6 +1,6 @@
 package io.github.xfy9326.glance.ml.beans
 
-data class DetectInfo(
+data class DetectInfo internal constructor(
     val width: Int,
     val height: Int,
     val objects: Array<DetectObject>

@@ -23,7 +23,7 @@ namespace JVMConvert {
         if (clazz == nullptr) return false;
         detect_object_class = reinterpret_cast<jclass>(env->NewGlobalRef(clazz));
 
-        method = env->GetMethodID(detect_object_class, "<init>", "(FFFFIF)V");
+        method = env->GetMethodID(detect_object_class, "<init>", "(FFFFFI)V");
         if (method == nullptr) return false;
         detect_object_class_constructor = method;
 
@@ -57,7 +57,7 @@ namespace JVMConvert {
             jobject detected_object = env->NewObject(
                     detect_object_class, detect_object_class_constructor,
                     (jfloat) item->left, (jfloat) item->top, (jfloat) item->right, (jfloat) item->bottom,
-                    (jint) item->class_id, (jfloat) item->confidence);
+                    (jfloat) item->confidence, (jint) item->class_id);
             env->SetObjectArrayElement(object_array, i, detected_object);
         }
         return object_array;

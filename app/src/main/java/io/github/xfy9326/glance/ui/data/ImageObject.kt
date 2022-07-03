@@ -18,6 +18,6 @@ fun DetectObject.toImageObject(labels: Array<String>) =
         classId = classId,
         classText = labels[classId],
         reliability = (confidence * 100).roundToInt(),
-        offset = Offset(box.left, box.top),
-        size = Size(box.width(), box.height())
+        offset = Offset(left, top),
+        size = Size(width, height)
     )
