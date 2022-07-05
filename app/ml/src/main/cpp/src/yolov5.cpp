@@ -23,6 +23,7 @@ namespace YoloV5Executor {
             ncnn::Extractor extractor = net.create_extractor();
             extractor.input(modelInfo.input_blob, input);
             ncnn::Mat output;
+            extractor.extract(modelInfo.output_features_blob, output);
             for (auto &&item: modelInfo.output_layers) {
                 extractor.extract(item.blob, output);
             }

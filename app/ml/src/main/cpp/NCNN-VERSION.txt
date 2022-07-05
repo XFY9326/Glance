@@ -1,6 +1,6 @@
 Release: https://github.com/Tencent/ncnn/releases/
-Version: ncnn-20220420-android-vulkan
-Url: https://github.com/Tencent/ncnn/releases/download/20220420/ncnn-20220420-android-vulkan.zip
+Version: ncnn-20220701-android-vulkan
+Url: https://github.com/Tencent/ncnn/releases/download/20220701/ncnn-20220701-android-vulkan.zip
 
 Folder structure:
 cpp - src  - ...

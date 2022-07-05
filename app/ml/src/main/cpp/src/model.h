@@ -19,23 +19,27 @@ namespace YoloV5Model {
         const unsigned int input_height;
         const int input_blob;
         const OutputLayer output_layers[YOLOV5_OUTPUT_LAYER_SIZE];
+        const int output_features_blob;
     };
 
     static const float means[RGB_CHANNELS]{0.f, 0.f, 0.f};
     static const float norms[RGB_CHANNELS]{1.f / 255.f, 1.f / 255.f, 1.f / 255.f};
 
+    // BLOB index comes from detection.id.h
     static const ModelInfo yolov5s_6_1{
             640, 640,
             // BLOB_images
             0,
             {
                     // BLOB_output
-                    {190, 8, {{10, 13}, {16, 30}, {33, 23}}},
+                    {193, 8, {{10, 13}, {16, 30}, {33, 23}}},
                     // BLOB_353
-                    {193, 16, {{30, 61}, {62, 45}, {59, 119}}},
+                    {196, 16, {{30, 61}, {62, 45}, {59, 119}}},
                     // BLOB_367
-                    {196, 32, {{116, 90}, {156, 198}, {373, 326}}}
-            }
+                    {199, 32, {{116, 90}, {156, 198}, {373, 326}}}
+            },
+            // BLOB_features
+            102
     };
 }
 
