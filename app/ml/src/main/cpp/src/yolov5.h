@@ -14,12 +14,12 @@ namespace YoloV5Executor {
 
     bool load_model(AAssetManager *mgr, const ModelInfo &modelInfo, ncnn::Net &net, const char *bin, const char *param_bin);
 
-    shared_ptr<vector<shared_ptr<DetectObject>>> launch(
+    shared_ptr<YoloV5Output> launch(
             const ncnn::Net &net, const ModelInfo &modelInfo, const PixelsData &pixelsData,
             const bool enable_gpu, const float conf_threshold, const float iou_threshold
     );
 
-    shared_ptr<vector<shared_ptr<DetectObject>>> launch(
+    shared_ptr<YoloV5Output> launch(
             const ncnn::Net &net, const ModelInfo &modelInfo, JNIEnv *env, jobject bitmap,
             const bool enable_gpu, const float conf_threshold, const float iou_threshold
     );

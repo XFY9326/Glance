@@ -1,8 +1,6 @@
 #include "object_detector.h"
 #include "yolov5.h"
-#include "log.h"
 
-#define LOG_TAG "ObjectDetector"
 #define GPU_SUPPORT true
 
 namespace ObjectDetector {
@@ -28,7 +26,7 @@ namespace ObjectDetector {
         return true;
     }
 
-    shared_ptr<vector<shared_ptr<DetectObject>>>
+    shared_ptr<YoloV5Output>
     detect(const PixelsData &pixelsData, const float conf_threshold, const float iou_threshold) {
         if (net_init) {
             return YoloV5Executor::launch(net, YoloV5Model::yolov5s_6_1, pixelsData, GPU_SUPPORT, conf_threshold, iou_threshold);
@@ -36,7 +34,7 @@ namespace ObjectDetector {
         return nullptr;
     }
 
-    shared_ptr<vector<shared_ptr<DetectObject>>>
+    shared_ptr<YoloV5Output>
     detect(JNIEnv *env, jobject bitmap, const float conf_threshold, const float iou_threshold) {
         if (net_init) {
             return YoloV5Executor::launch(net, YoloV5Model::yolov5s_6_1, env, bitmap, GPU_SUPPORT, conf_threshold, iou_threshold);

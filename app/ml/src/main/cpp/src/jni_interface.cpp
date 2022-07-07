@@ -26,10 +26,8 @@ extern "C" JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *) {
     if (vm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION) == JNI_OK) {
         JVMConvert::clear(env);
     }
-    NCNNHelper::destroy_gpu_instance();
-    NCNNHelper::blob_pool_allocator.clear();
-    NCNNHelper::workspace_pool_allocator.clear();
     ObjectDetector::clear_model();
+    NCNNHelper::destroy_gpu_instance();
 }
 
 extern "C"
@@ -72,10 +70,11 @@ Java_io_github_xfy9326_glance_ml_NativeInterface_detectByPixelsData(JNIEnv *env,
 
     PixelsData pixelsData;
     JVMConvert::pixels_data_to_native(env, pixels_data, pixelsData);
-    const shared_ptr<vector<shared_ptr<DetectObject>>> output = ObjectDetector::detect(
+    const auto output = ObjectDetector::detect(
             pixelsData, (float) conf_threshold, (float) iou_threshold
     );
-    return JVMConvert::output_vector_to_jvm(env, output);
+    if (output == nullptr) return nullptr;
+    return JVMConvert::output_vector_to_jvm(env, output->objects);
 }
 
 extern "C"
@@ -83,9 +82,9 @@ JNIEXPORT jobjectArray JNICALL
 Java_io_github_xfy9326_glance_ml_NativeInterface_detectByBitmap(JNIEnv *env, jobject, jobject bitmap, jfloat conf_threshold, jfloat iou_threshold) {
     using namespace std;
 
-    const shared_ptr<vector<shared_ptr<DetectObject>>> output = ObjectDetector::detect(
+    const auto output = ObjectDetector::detect(
             env, bitmap, (float) conf_threshold, (float) iou_threshold
     );
-
-    return JVMConvert::output_vector_to_jvm(env, output);
+    if (output == nullptr) return nullptr;
+    return JVMConvert::output_vector_to_jvm(env, output->objects);
 }

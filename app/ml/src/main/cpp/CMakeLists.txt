@@ -9,8 +9,29 @@ set(ncnn_DIR ${CMAKE_SOURCE_DIR}/ncnn/${ANDROID_ABI}/lib/cmake/ncnn)
 find_package(ncnn REQUIRED)
 
 # ML lib
-aux_source_directory(src SRC_LIST)
-add_library(ml SHARED ${SRC_LIST})
+add_library(
+        ml
+        SHARED
+        src/data.h
+        src/debug.h
+        src/gru.h
+        src/gru.cpp
+        src/image_caption.h
+        src/image_caption.cpp
+        src/jni_interface.cpp
+        src/jvm_convert.h
+        src/jvm_convert.cpp
+        src/log.h
+        src/model.h
+        src/ncnn_helper.h
+        src/ncnn_helper.cpp
+        src/object_detector.h
+        src/object_detector.cpp
+        src/utils.h
+        src/utils.cpp
+        src/yolov5.h
+        src/yolov5.cpp
+)
 
 # Android NDK Log
 find_library(log-lib log)
@@ -21,10 +42,3 @@ target_link_libraries(
         ncnn
         jnigraphics
         ${log-lib})
-
-# Settings
-if (CMAKE_BUILD_TYPE STREQUAL "Release")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Os -ffunction-sections -fdata-sections -fvisibility=hidden -fvisibility-inlines-hidden")
-    set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS}")
-    SET_TARGET_PROPERTIES(ml PROPERTIES LINK_FLAGS "-Wl,-exclude-libs,ALL -Wl,--gc-sections -Wl,--strip-all")
-endif ()

@@ -45,8 +45,6 @@ namespace NCNNHelper {
     void configure_model(ncnn::Net &net) {
         ncnn::Option opt;
         opt.lightmode = true;
-        opt.blob_allocator = &blob_pool_allocator;
-        opt.workspace_allocator = &workspace_pool_allocator;
         opt.use_packing_layout = true;
         opt.use_vulkan_compute = VULKAN_COMPUTE && has_gpu_support();
         net.opt = opt;

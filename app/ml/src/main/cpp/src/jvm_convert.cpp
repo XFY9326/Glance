@@ -49,11 +49,11 @@ namespace JVMConvert {
         return true;
     }
 
-    jobjectArray output_vector_to_jvm(JNIEnv *env, const shared_ptr<vector<shared_ptr<DetectObject>>> &output) {
-        if (env == nullptr || output == nullptr) return nullptr;
-        jobjectArray object_array = env->NewObjectArray((jsize) output->size(), detect_object_class, nullptr);
-        for (int i = 0; i < output->size(); ++i) {
-            const shared_ptr<DetectObject> &item = output->at(i);
+    jobjectArray output_vector_to_jvm(JNIEnv *env, const vector<shared_ptr<DetectObject>> &output) {
+        if (env == nullptr) return nullptr;
+        jobjectArray object_array = env->NewObjectArray((jsize) output.size(), detect_object_class, nullptr);
+        for (int i = 0; i < output.size(); ++i) {
+            const shared_ptr<DetectObject> &item = output[i];
             jobject detected_object = env->NewObject(
                     detect_object_class, detect_object_class_constructor,
                     (jfloat) item->left, (jfloat) item->top, (jfloat) item->right, (jfloat) item->bottom,

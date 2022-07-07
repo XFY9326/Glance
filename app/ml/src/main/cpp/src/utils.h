@@ -11,14 +11,17 @@
 namespace Utils {
     using namespace std;
 
-    float sigmoid(float x);
+    double sigmoid(double x);
 
-    float reverse_sigmoid(float f);
+    double reverse_sigmoid(double f);
 
-    float intersection_over_union(const DetectObject &r1, const DetectObject &r2);
+    void non_maximum_suppression(
+            vector<shared_ptr<DetectObject>> &objects,
+            const float iou_threshold,
+            vector<shared_ptr<DetectObject>> &outputs
+    );
 
-    shared_ptr<vector<shared_ptr<DetectObject>>>
-    non_maximum_suppression(const map<int, unique_ptr<vector<shared_ptr<DetectObject>>>> &objects_map, const float iou_threshold);
+    unsigned int arg_max_dim_1(ncnn::Mat &mat);
 }
 
 #endif //GLANCE_UTILS_H

@@ -19,12 +19,6 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-
-            externalNativeBuild {
-                cmake {
-                    arguments("-DCMAKE_BUILD_TYPE=Release")
-                }
-            }
         }
     }
 

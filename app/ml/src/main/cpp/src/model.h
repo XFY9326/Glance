@@ -3,6 +3,7 @@
 
 #include "utils.h"
 
+#define YOLOV5_MAX_STRIDE 32
 #define YOLOV5_ANCHOR_SIZE 3
 #define YOLOV5_OUTPUT_LAYER_SIZE 3
 
@@ -17,6 +18,7 @@ namespace YoloV5Model {
     struct ModelInfo {
         const unsigned int input_width;
         const unsigned int input_height;
+        const unsigned int max_stride;
         const int input_blob;
         const OutputLayer output_layers[YOLOV5_OUTPUT_LAYER_SIZE];
         const int output_features_blob;
@@ -28,6 +30,7 @@ namespace YoloV5Model {
     // BLOB index comes from detection.id.h
     static const ModelInfo yolov5s_6_1{
             640, 640,
+            YOLOV5_MAX_STRIDE,
             // BLOB_images
             0,
             {
@@ -40,6 +43,51 @@ namespace YoloV5Model {
             },
             // BLOB_features
             102
+    };
+}
+
+#define GRU_MAX_SEQ 50
+#define GRU_STOP_WORD_ID 2
+#define GRU_EMBED_SIZE 256
+#define GRU_HIDDEN_SIZE 512
+
+namespace GRUModel {
+    struct ModelInfo {
+        const unsigned int max_seq;
+        const unsigned int embed_size;
+        const unsigned int hidden_size;
+        const unsigned int stop_word_id;
+        const int features_input_blob;
+        const int features_output_blob;
+        const int embed_input_blob;
+        const int embed_output_blob;
+        const int gru_input_blob_predict;
+        const int gru_input_blob_states;
+        const int gru_output_blob_predict;
+        const int gru_output_blob_states;
+    };
+
+    static const ModelInfo gru{
+            GRU_MAX_SEQ,
+            GRU_EMBED_SIZE,
+            GRU_HIDDEN_SIZE,
+            GRU_STOP_WORD_ID,
+            // features_preprocess.id.h BLOB_in0
+            0,
+            // features_preprocess.id.h BLOB_out0
+            1,
+            // embed_preprocess.id.h BLOB_in0
+            0,
+            // embed_preprocess.id.h BLOB_out0
+            1,
+            // gru.id.h BLOB_in0
+            0,
+            // gru.id.h BLOB_in1
+            1,
+            // gru.id.h BLOB_out0
+            4,
+            // gru.id.h BLOB_out1
+            3
     };
 }
 

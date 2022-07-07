@@ -1,6 +1,10 @@
 #ifndef GLANCE_DATA_H
 #define GLANCE_DATA_H
 
+#include <vector>
+#include <memory>
+#include "mat.h"
+
 struct DetectObject {
     float left;
     float top;
@@ -11,6 +15,11 @@ struct DetectObject {
 
     DetectObject(float left, float top, float right, float bottom, float confidence, int class_id) :
             left(left), top(top), right(right), bottom(bottom), confidence(confidence), class_id(class_id) {}
+};
+
+struct YoloV5Output {
+    std::vector<std::shared_ptr<DetectObject>> objects;
+    ncnn::Mat features;
 };
 
 struct ResizeInfo {

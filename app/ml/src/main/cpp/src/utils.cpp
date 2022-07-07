@@ -3,46 +3,68 @@
 namespace Utils {
     using namespace std;
 
-    float sigmoid(float x) {
-        x = min(x, 88.3762626647949f);
-        x = max(x, -88.3762626647949f);
-        return (float) (1.f / (1.f + exp(-x)));
+    double sigmoid(double x) {
+        x = min(x, 88.3762626647949);
+        x = max(x, -88.3762626647949);
+        return 1.f / (1.f + exp(-x));
     }
 
-    float reverse_sigmoid(float f) {
-        return (float) (-1.0f * (float) log((1.0f / (f + 1e-8)) - 1.0f));
+    double reverse_sigmoid(double f) {
+        return -1.0f * log((1.0f / (f + 1e-8)) - 1.0f);
     }
 
-    static const auto detected_object_comparator = [](const shared_ptr<DetectObject> &a, const shared_ptr<DetectObject> &b) {
+    static const auto detected_object_descend_sorter = [](const shared_ptr<DetectObject> &a, const shared_ptr<DetectObject> &b) {
         return a->confidence < b->confidence;
     };
 
-    float intersection_over_union(const DetectObject &r1, const DetectObject &r2) {
-        const double internal_width = min(r1.right, r2.right) - max(r1.left, r2.left);
-        const double internal_height = min(r1.bottom, r2.bottom) - max(r1.top, r2.top);
-        const double intersection_area = (internal_width < 0 || internal_height < 0) ? 0 : internal_width * internal_height;
-        const double union_area = (r1.right - r1.left) * (r1.bottom - r1.top) + (r2.right - r2.left) * (r2.bottom - r2.top) - intersection_area;
-        return (float) (intersection_area / union_area);
+    static float detect_object_area(const DetectObject &obj) {
+        return (obj.right - obj.left) * (obj.bottom - obj.top);
     }
 
-    shared_ptr<vector<shared_ptr<DetectObject>>>
-    non_maximum_suppression(const map<int, unique_ptr<vector<shared_ptr<DetectObject>>>> &objects_map, const float iou_threshold) {
-        auto picked_objects = make_shared<vector<shared_ptr<DetectObject>>>();
-        for (auto const &entry: objects_map) {
-            sort(entry.second->begin(), entry.second->end(), detected_object_comparator);
-            while (!entry.second->empty()) {
-                picked_objects->emplace_back(entry.second->back());
-                entry.second->pop_back();
-                auto it = entry.second->begin();
-                while (it != entry.second->end()) {
-                    if (intersection_over_union(*(picked_objects->back()), *(*it)) >= iou_threshold) {
-                        entry.second->erase(it);
-                    } else {
+    static float detect_object_intersection_area(const DetectObject &o1, const DetectObject &o2) {
+        const float inner_width = min(o1.right, o2.right) - max(o1.left, o2.left);
+        const float inner_height = min(o1.bottom, o2.bottom) - max(o1.top, o2.top);
+        return (inner_width < 0 || inner_height < 0) ? 0 : inner_width * inner_height;
+    }
+
+    void non_maximum_suppression(
+            vector<shared_ptr<DetectObject>> &objects,
+            const float iou_threshold,
+            vector<shared_ptr<DetectObject>> &outputs
+    ) {
+        sort(objects.begin(), objects.end(), detected_object_descend_sorter);
+        shared_ptr<DetectObject> o1, o2;
+        while (!objects.empty()) {
+            outputs.emplace_back(objects.back());
+            objects.pop_back();
+            auto it = objects.begin();
+            while (it != objects.end()) {
+                o1 = outputs.back();
+                o2 = *it;
+                float intersection_area = detect_object_intersection_area(*o1, *o2);
+                if (intersection_area > 0) {
+                    float iou = detect_object_area(*o1) + detect_object_area(*o2) - intersection_area;
+                    if (iou < iou_threshold) {
                         ++it;
+                    } else {
+                        objects.erase(it);
                     }
+                } else {
+                    ++it;
                 }
             }
         }
-        return picked_objects;
+    }
+
+    unsigned int arg_max_dim_1(ncnn::Mat &mat) {
+        unsigned int index = 0;
+        if (mat.dims == 1) {
+            for (unsigned int i = 1; i < mat.w; ++i) {
+                if (mat.channel(0).row(0)[i] > mat.channel(0).row(0)[index]) {
+                    index = i;
+                }
+            }
+        }
+        return index;
     }
 }

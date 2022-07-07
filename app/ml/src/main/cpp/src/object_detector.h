@@ -2,8 +2,6 @@
 #define GLANCE_OBJECT_DETECTOR_H
 
 #include <android/asset_manager_jni.h>
-#include "net.h"
-#include "yolov5.h"
 #include "data.h"
 
 namespace ObjectDetector {
@@ -15,10 +13,10 @@ namespace ObjectDetector {
 
     bool init_model(AAssetManager *mgr, const char *bin, const char *param_bin);
 
-    shared_ptr<vector<shared_ptr<DetectObject>>>
+    shared_ptr<YoloV5Output>
     detect(const PixelsData &pixelsData, const float conf_threshold, const float iou_threshold);
 
-    shared_ptr<vector<shared_ptr<DetectObject>>>
+    shared_ptr<YoloV5Output>
     detect(JNIEnv *env, jobject bitmap, const float conf_threshold, const float iou_threshold);
 }
 

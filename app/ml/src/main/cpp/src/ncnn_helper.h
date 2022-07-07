@@ -5,9 +5,6 @@
 #include "net.h"
 
 namespace NCNNHelper {
-    static ncnn::UnlockedPoolAllocator blob_pool_allocator;
-    static ncnn::PoolAllocator workspace_pool_allocator;
-
     bool is_gpu_instance_created();
 
     bool has_gpu_support();
