@@ -28,4 +28,5 @@
     <string name="image_analysis_result_title">Detected objects and reliability:</string>
     <string name="reliability">Reliability: %1$3d%%</string>
     <string name="empty_image_analysis_result">No objects!</string>
+    <string name="image_no_description">No description</string>
 </resources>

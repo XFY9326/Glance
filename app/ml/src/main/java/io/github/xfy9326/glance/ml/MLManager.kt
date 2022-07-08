@@ -18,6 +18,7 @@ import kotlinx.coroutines.sync.withLock
 object MLManager {
     private const val LABEL_CLASSES = "labels/classes.txt"
     private const val LABEL_VOCAB = "labels/vocab.txt"
+    private const val VOCABULARY_META_SIZE = 3
 
     private val initMutex = Mutex()
     private val analyzeMutex = Mutex()
@@ -102,4 +103,13 @@ object MLManager {
     ): Result<ImageInfo> = analyzeImage(data.width, data.height, requestCaption) {
         NativeInterface.analyzeImageByBitmap(data, confThreshold, iouThreshold, requestCaption)
     }
+
+    fun parseCaptionIds(captionIds: IntArray, vocabulary: Array<String>): String =
+        captionIds.asSequence().mapNotNull {
+            if (it >= VOCABULARY_META_SIZE && it < vocabulary.size) {
+                vocabulary[it]
+            } else {
+                null
+            }
+        }.joinToString(" ")
 }

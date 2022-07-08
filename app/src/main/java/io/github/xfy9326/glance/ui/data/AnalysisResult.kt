@@ -5,7 +5,10 @@ sealed interface AnalysisResult {
     object ImageLoadFailed : AnalysisResult
     object ModelProcessFailed : AnalysisResult
     object LabelsLoadFailed : AnalysisResult
-    class Success(val imageObjectInfo: ImageObjectInfo) : AnalysisResult
+    class Success(
+        val imageObjectInfo: ImageObjectInfo,
+        val caption: String? = null
+    ) : AnalysisResult
 }
 
 fun AnalysisResult.Success.hasObjects(): Boolean =

@@ -88,7 +88,10 @@ private fun ResultContent(
     modifier: Modifier,
     analysisResult: AnalysisResult
 ) {
-    AnalysisResultContent(modifier = modifier, analysisResult = analysisResult) {
+    AnalysisResultContent(
+        modifier = modifier,
+        analysisResult = analysisResult
+    ) {
         Column(
             modifier = modifier
                 .fillMaxSize()
