@@ -30,7 +30,7 @@ import io.github.xfy9326.glance.ui.theme.AppTheme
 @Composable
 private fun PreviewAnalysisModelLoadFailed() {
     AppTheme {
-        AnalysisModelLoadFailed(modifier = Modifier)
+        AnalysisModelProcessFailed(modifier = Modifier)
     }
 }
 
@@ -74,15 +74,15 @@ fun AnalysisResultContent(
         }
         AnalysisResult.Initializing -> AnalysisLoading(modifier = modifier)
         AnalysisResult.ImageLoadFailed -> AnalysisImageLoadFailed(modifier = modifier)
-        AnalysisResult.ModelLoadFailed -> AnalysisModelLoadFailed(modifier = modifier)
+        AnalysisResult.ModelProcessFailed -> AnalysisModelProcessFailed(modifier = modifier)
         AnalysisResult.LabelsLoadFailed -> AnalysisLabelsLoadFailed(modifier = modifier)
     }
 }
 
 @Composable
-private fun AnalysisModelLoadFailed(modifier: Modifier) {
+private fun AnalysisModelProcessFailed(modifier: Modifier) {
     AnalysisMessage(
-        text = stringResource(id = R.string.model_init_failed),
+        text = stringResource(id = R.string.image_process_failed),
         icon = Icons.Outlined.Dangerous,
         modifier = modifier
     )

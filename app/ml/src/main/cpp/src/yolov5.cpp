@@ -122,7 +122,12 @@ namespace YoloV5Executor {
     }
 
     static shared_ptr<YoloV5Output>
-    process(const ncnn::Net &net, const ModelInfo &modelInfo, const ncnn::Mat &input, const bool enable_gpu, const float conf_threshold, const float iou_threshold) {
+    process(
+            const ncnn::Net &net, const ModelInfo &modelInfo,
+            const ncnn::Mat &input, const bool enable_gpu,
+            const float conf_threshold, const float iou_threshold,
+            const bool extract_features
+    ) {
         ncnn::Extractor extractor = net.create_extractor();
         if (net.opt.use_vulkan_compute) {
             extractor.set_vulkan_compute(enable_gpu && NCNNHelper::is_gpu_instance_created());
@@ -130,8 +135,11 @@ namespace YoloV5Executor {
         extractor.input(modelInfo.input_blob, input);
 
         auto yolov5_output = make_shared<YoloV5Output>();
-
-        extractor.extract(modelInfo.output_features_blob, yolov5_output->features, OUTPUT_MAT_TYPE);
+        if (extract_features) {
+            auto features = make_shared<ncnn::Mat>();
+            extractor.extract(modelInfo.output_features_blob, *features, OUTPUT_MAT_TYPE);
+            yolov5_output->features = features;
+        }
 
         ncnn::Mat output;
         vector<shared_ptr<DetectObject>> result;
@@ -155,9 +163,9 @@ namespace YoloV5Executor {
 
     static shared_ptr<YoloV5Output> run_model(
             const ncnn::Net &net, const ModelInfo &modelInfo, const ncnn::Mat &input, const ResizeInfo &resize_info,
-            const bool enable_gpu, const float conf_threshold, const float iou_threshold
+            const bool enable_gpu, const float conf_threshold, const float iou_threshold, const bool extract_features
     ) {
-        auto output = process(net, modelInfo, input, enable_gpu, conf_threshold, iou_threshold);
+        auto output = process(net, modelInfo, input, enable_gpu, conf_threshold, iou_threshold, extract_features);
         post_process(output->objects, resize_info);
         return output;
     }
@@ -165,22 +173,22 @@ namespace YoloV5Executor {
     // Require RGBA_8888
     shared_ptr<YoloV5Output> launch(
             const ncnn::Net &net, const ModelInfo &modelInfo, const PixelsData &pixelsData,
-            const bool enable_gpu, const float conf_threshold, const float iou_threshold
+            const bool enable_gpu, const float conf_threshold, const float iou_threshold, const bool extract_features
     ) {
         ncnn::Mat input;
         ResizeInfo resize_info;
         pre_process_pixels(pixelsData, modelInfo, input, resize_info);
-        return run_model(net, modelInfo, input, resize_info, enable_gpu, conf_threshold, iou_threshold);
+        return run_model(net, modelInfo, input, resize_info, enable_gpu, conf_threshold, iou_threshold, extract_features);
     }
 
     // Require RGBA_8888
     shared_ptr<YoloV5Output> launch(
             const ncnn::Net &net, const ModelInfo &modelInfo, JNIEnv *env, jobject bitmap,
-            const bool enable_gpu, const float conf_threshold, const float iou_threshold
+            const bool enable_gpu, const float conf_threshold, const float iou_threshold, const bool extract_features
     ) {
         ncnn::Mat input;
         ResizeInfo resize_info;
         pre_process_bitmap(env, bitmap, modelInfo, input, resize_info);
-        return run_model(net, modelInfo, input, resize_info, enable_gpu, conf_threshold, iou_threshold);
+        return run_model(net, modelInfo, input, resize_info, enable_gpu, conf_threshold, iou_threshold, extract_features);
     }
 }

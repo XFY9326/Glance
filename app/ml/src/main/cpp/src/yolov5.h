@@ -16,12 +16,12 @@ namespace YoloV5Executor {
 
     shared_ptr<YoloV5Output> launch(
             const ncnn::Net &net, const ModelInfo &modelInfo, const PixelsData &pixelsData,
-            const bool enable_gpu, const float conf_threshold, const float iou_threshold
+            const bool enable_gpu, const float conf_threshold, const float iou_threshold, const bool extract_features
     );
 
     shared_ptr<YoloV5Output> launch(
             const ncnn::Net &net, const ModelInfo &modelInfo, JNIEnv *env, jobject bitmap,
-            const bool enable_gpu, const float conf_threshold, const float iou_threshold
+            const bool enable_gpu, const float conf_threshold, const float iou_threshold, const bool extract_features
     );
 }
 

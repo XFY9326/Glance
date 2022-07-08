@@ -16,7 +16,7 @@ namespace GRUExecutor {
 
     bool load_gru_model(AAssetManager *mgr, const ModelInfo &modelInfo, ncnn::Net &net, const char *bin, const char *param_bin);
 
-    shared_ptr<vector<unsigned int>> launch(
+    shared_ptr<vector<int>> launch(
             const ncnn::Net &features_net, const ncnn::Net &embed_net, const ncnn::Net &gru_net,
             const ncnn::Mat &features, const ModelInfo &modelInfo, const bool enable_gpu
     );

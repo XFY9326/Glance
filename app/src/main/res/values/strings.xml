@@ -21,7 +21,7 @@
     <string name="image_analysis">Image analysis</string>
     <string name="back">Back</string>
     <string name="image_load_failed">Image load failed!\nPlease select a valid picture!</string>
-    <string name="model_init_failed">Model initialization failed! </string>
+    <string name="image_process_failed">Image process failed! </string>
     <string name="labels_load_failed">Resource load failed! </string>
     <string name="image_processing">Image is processing \.\.\.</string>
     <string name="image_being_analyzed">The image being analyzed</string>

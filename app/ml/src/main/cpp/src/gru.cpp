@@ -110,13 +110,13 @@ namespace GRUExecutor {
         extractor.extract(modelInfo.gru_output_blob_predict, output_predict);
     }
 
-    shared_ptr<vector<unsigned int>> launch(
+    shared_ptr<vector<int>> launch(
             const ncnn::Net &features_net, const ncnn::Net &embed_net, const ncnn::Net &gru_net,
             const ncnn::Mat &features, const ModelInfo &modelInfo, const bool enable_gpu
     ) {
-        auto result = make_shared<vector<unsigned int>>();
+        auto result = make_shared<vector<int>>();
         bool is_first_recurrent = true;
-        unsigned int predict_word = 0;
+        int predict_word = 0;
         ncnn::Mat last_predict;
         ncnn::Mat output_predict;
         ncnn::Mat word_features(1);
@@ -143,7 +143,7 @@ namespace GRUExecutor {
                     gru_net, modelInfo,
                     last_predict, states, output_predict, enable_gpu
             );
-            predict_word = Utils::arg_max_dim_1(output_predict);
+            predict_word = (int) Utils::arg_max_dim_1(output_predict);
             if (predict_word == modelInfo.stop_word_id) {
                 break;
             } else {

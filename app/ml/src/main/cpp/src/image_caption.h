@@ -19,7 +19,7 @@ namespace ImageCaption {
             const char *gru_bin, const char *gru_param_bin
     );
 
-    shared_ptr<vector<unsigned int>> generate(const ncnn::Mat &features);
+    shared_ptr<vector<int>> generate_captions(const ncnn::Mat &features);
 }
 
 #endif //GLANCE_IMAGE_CAPTION_H

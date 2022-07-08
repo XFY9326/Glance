@@ -14,10 +14,10 @@ namespace ObjectDetector {
     bool init_model(AAssetManager *mgr, const char *bin, const char *param_bin);
 
     shared_ptr<YoloV5Output>
-    detect(const PixelsData &pixelsData, const float conf_threshold, const float iou_threshold);
+    detect(const PixelsData &pixelsData, const float conf_threshold, const float iou_threshold, const bool extract_features);
 
     shared_ptr<YoloV5Output>
-    detect(JNIEnv *env, jobject bitmap, const float conf_threshold, const float iou_threshold);
+    detect(JNIEnv *env, jobject bitmap, const float conf_threshold, const float iou_threshold, const bool extract_features);
 }
 
 #endif //GLANCE_OBJECT_DETECTOR_H

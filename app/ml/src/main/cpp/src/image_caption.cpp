@@ -39,7 +39,7 @@ namespace ImageCaption {
         return true;
     }
 
-    shared_ptr<vector<unsigned int>> generate(const ncnn::Mat &features) {
+    shared_ptr<vector<int>> generate_captions(const ncnn::Mat &features) {
         if (net_init) {
             return GRUExecutor::launch(
                     features_net, embed_net, gru_net,

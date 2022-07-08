@@ -8,7 +8,6 @@ project("ml")
 set(ncnn_DIR ${CMAKE_SOURCE_DIR}/ncnn/${ANDROID_ABI}/lib/cmake/ncnn)
 find_package(ncnn REQUIRED)
 
-# ML lib
 add_library(
         ml
         SHARED
@@ -22,6 +21,8 @@ add_library(
         src/jvm_convert.h
         src/jvm_convert.cpp
         src/log.h
+        src/ml_manager.h
+        src/ml_manager.cpp
         src/model.h
         src/ncnn_helper.h
         src/ncnn_helper.cpp

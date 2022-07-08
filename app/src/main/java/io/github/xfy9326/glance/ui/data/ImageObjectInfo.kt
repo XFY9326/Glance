@@ -1,14 +1,14 @@
 package io.github.xfy9326.glance.ui.data
 
 import androidx.compose.ui.geometry.Size
-import io.github.xfy9326.glance.ml.beans.DetectInfo
+import io.github.xfy9326.glance.ml.beans.ImageInfo
 
 data class ImageObjectInfo(
     val size: Size,
     val objects: List<ImageObject>
 )
 
-fun DetectInfo.toImageObjectInfo(
+fun ImageInfo.toImageObjectInfo(
     labels: Array<String>,
     onMap: Sequence<ImageObject>.() -> Sequence<ImageObject>
 ): ImageObjectInfo =

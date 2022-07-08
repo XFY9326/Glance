@@ -76,7 +76,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3")
 
     // ATools
-    val aToolsVersion = "0.0.13"
+    val aToolsVersion = "0.0.14"
     implementation("io.github.xfy9326.atools:atools-core:$aToolsVersion")
     implementation("io.github.xfy9326.atools:atools-io:$aToolsVersion")
     implementation("io.github.xfy9326.atools:atools-compose:$aToolsVersion")

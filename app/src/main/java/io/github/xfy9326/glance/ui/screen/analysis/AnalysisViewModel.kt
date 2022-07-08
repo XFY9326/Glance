@@ -36,9 +36,8 @@ class AnalysisViewModel constructor(private val imageUri: Uri) : ViewModel() {
     private suspend fun analyzeImage(): AnalysisResult {
         return imageUri.readBitmapAsync().fold(
             onSuccess = {
-                val model = MLManager.getDetectionModel()
-                val labels = model.loadLabels().getOrNull() ?: return@fold AnalysisResult.LabelsLoadFailed
-                val result = model.detectByBitmap(it, confThreshold, iouThreshold).getOrNull() ?: return@fold AnalysisResult.ModelLoadFailed
+                val labels = MLManager.loadClasses().getOrNull() ?: return@fold AnalysisResult.LabelsLoadFailed
+                val result = MLManager.analyzeImageByBitmap(it, confThreshold, iouThreshold, false).getOrNull() ?: return@fold AnalysisResult.ModelProcessFailed
                 AnalysisResult.Success(result.toImageObjectInfo(labels) {
                     sortedByDescending { obj -> obj.reliability }
                 })

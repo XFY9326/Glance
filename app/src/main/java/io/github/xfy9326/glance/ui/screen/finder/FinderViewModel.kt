@@ -18,8 +18,7 @@ class FinderViewModel : ViewModel() {
     private val iouThreshold = 0.45f
     private val resultTakeAmount = 3
 
-    private val detectionModel = MLManager.getDetectionModel()
-    private val detectionLabels by suspendLazy { detectionModel.loadLabels() }
+    private val classLabels by suspendLazy { MLManager.loadClasses() }
 
     private val _analysisResult = MutableStateFlow<AnalysisResult>(AnalysisResult.Initializing)
     val analysisResult = _analysisResult.asStateFlow()
@@ -28,13 +27,13 @@ class FinderViewModel : ViewModel() {
         imageAnalysis.setAnalyzer(imageAnalysisExecutor) {
             it.use {
                 runBlocking {
-                    val labels = detectionLabels.value().getOrNull()
+                    val labels = classLabels.value().getOrNull()
                     if (labels == null) {
                         _analysisResult.value = AnalysisResult.LabelsLoadFailed
                     } else {
-                        val result = detectionModel.detectByPixelsData(it.toPixelsData(), confThreshold, iouThreshold).getOrNull()
+                        val result = MLManager.analyzeImageByPixelsData(it.toPixelsData(), confThreshold, iouThreshold, false).getOrNull()
                         if (result == null) {
-                            _analysisResult.value = AnalysisResult.ModelLoadFailed
+                            _analysisResult.value = AnalysisResult.ModelProcessFailed
                         } else {
                             val imageObjectInfo = result.toImageObjectInfo(labels) {
                                 sortedByDescending { obj ->
