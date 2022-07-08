@@ -28,11 +28,11 @@ struct MLOutput {
 };
 
 struct ResizeInfo {
-    int width_offset;
-    int height_offset;
+    int width_offset = 0;
+    int height_offset = 0;
     int scaled_width;
     int scaled_height;
-    float ratio;
+    double ratio;
 
     ResizeInfo() {}
 };

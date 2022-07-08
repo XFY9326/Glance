@@ -37,16 +37,20 @@ namespace YoloV5Executor {
 
     static void get_resize_info(ResizeInfo &resize_info, const int width, const int height, const int target_width, const int target_height, const int max_stride) {
         if (width > height) {
-            resize_info.ratio = (float) ((double) target_width / width);
+            resize_info.ratio = (double) target_width / width;
             resize_info.scaled_width = target_width;
-            resize_info.scaled_height = (int) ((double) height * resize_info.ratio);
-        } else {
-            resize_info.ratio = (float) ((double) target_height / height);
-            resize_info.scaled_width = (int) ((double) width * resize_info.ratio);
+            resize_info.scaled_height = (int) (height * resize_info.ratio);
+            resize_info.height_offset = ((resize_info.scaled_height + max_stride - 1) / max_stride * max_stride - resize_info.scaled_height) / 2;
+        } else if (width < height) {
+            resize_info.ratio = (double) target_height / height;
+            resize_info.scaled_width = (int) (width * resize_info.ratio);
             resize_info.scaled_height = target_height;
+            resize_info.width_offset = ((resize_info.scaled_width + max_stride - 1) / max_stride * max_stride - resize_info.scaled_width) / 2;
+        } else {
+            resize_info.ratio = (double) target_width / width;
+            resize_info.scaled_width = target_width;
+            resize_info.scaled_height = target_width;
         }
-        resize_info.width_offset = ((resize_info.scaled_width + max_stride - 1) / max_stride * max_stride - resize_info.scaled_width) / 2;
-        resize_info.height_offset = ((resize_info.scaled_height + max_stride - 1) / max_stride * max_stride - resize_info.scaled_height) / 2;
     }
 
     static void pre_process_input(ncnn::Mat &input, ncnn::Mat &output, const ResizeInfo &resize_info) {
@@ -78,13 +82,13 @@ namespace YoloV5Executor {
 
     static void decode_proposals(
             const OutputLayer &layer, const unsigned int input_width, const unsigned int input_height, const ncnn::Mat &output,
-            const float conf_threshold, vector<shared_ptr<DetectObject>> &result) {
+            const float conf_threshold, const double reverse_conf_threshold, vector<shared_ptr<DetectObject>> &result
+    ) {
         const int feature_size = output.w;
         const int anchor_size = output.c;
         const int num_x = (int) input_width / layer.stride;
         const int num_y = (int) input_height / layer.stride;
 
-        const double reverse_conf_threshold = Utils::reverse_sigmoid(conf_threshold);
         for (int a = 0; a < anchor_size; ++a) {
             const ncnn::Mat anchor_features = output.channel(a);
             for (int y = 0; y < num_y; ++y) {
@@ -105,10 +109,10 @@ namespace YoloV5Executor {
                             int class_id = class_index - YOLOV5_OUTPUT_META_SIZE;
 
                             auto new_object = make_shared<DetectObject>(
-                                    max(0.0f, pb_cx - pb_w * 0.5f),
-                                    max(0.0f, pb_cy - pb_h * 0.5f),
-                                    min((float) input_width, pb_cx + pb_w * 0.5f),
-                                    min((float) input_height, pb_cy + pb_h * 0.5f),
+                                    pb_cx - pb_w * 0.5f,
+                                    pb_cy - pb_h * 0.5f,
+                                    pb_cx + pb_w * 0.5f,
+                                    pb_cy + pb_h * 0.5f,
                                     confidence,
                                     class_id
                             );
@@ -144,10 +148,12 @@ namespace YoloV5Executor {
         ncnn::Mat output;
         vector<shared_ptr<DetectObject>> result;
 
+        const double reverse_conf_threshold = Utils::reverse_sigmoid(conf_threshold);
         for (auto &&item: modelInfo.output_layers) {
             extractor.extract(item.blob, output);
-            decode_proposals(item, input.w, input.h, output, conf_threshold, result);
+            decode_proposals(item, input.w, input.h, output, conf_threshold, reverse_conf_threshold, result);
         }
+
         Utils::non_maximum_suppression(result, iou_threshold, yolov5_output->objects);
         return yolov5_output;
     }
