@@ -42,7 +42,7 @@ android {
 
 dependencies {
     // ATools
-    implementation("io.github.xfy9326.atools:atools-io:0.0.14")
+    implementation("io.github.xfy9326.atools:atools-io:0.0.15")
 
     // Kotlin Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3")

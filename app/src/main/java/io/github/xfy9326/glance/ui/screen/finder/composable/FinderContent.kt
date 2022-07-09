@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.sp
 import io.github.xfy9326.atools.compose.common.DividedLayout
 import io.github.xfy9326.glance.R
 import io.github.xfy9326.glance.ui.base.PreviewSurfaceProvider
-import io.github.xfy9326.glance.ui.common.AnalysisResultContent
+import io.github.xfy9326.glance.ui.common.AnalysisResultStatus
 import io.github.xfy9326.glance.ui.common.PreviewImageObjectInfo
 import io.github.xfy9326.glance.ui.common.SimpleTopAppToolBar
 import io.github.xfy9326.glance.ui.data.AnalysisResult
@@ -66,6 +66,8 @@ fun FinderContent(
                 .fillMaxSize(),
             weightUpStart = 0.7f,
             weightDownEnd = 0.3f,
+            modifierUpStart = Modifier.fillMaxWidth(),
+            modifierDownEnd = Modifier.fillMaxWidth(),
             contentUpStart = {
                 FinderCameraPreview(
                     modifier = Modifier.fillMaxSize(),
@@ -88,7 +90,7 @@ private fun ResultContent(
     modifier: Modifier,
     analysisResult: AnalysisResult
 ) {
-    AnalysisResultContent(
+    AnalysisResultStatus(
         modifier = modifier,
         analysisResult = analysisResult
     ) {
@@ -100,7 +102,7 @@ private fun ResultContent(
             verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            it.countOutputClasses().forEach {
+            it.imageObjectInfo.objects.countOutputClasses().forEach {
                 Text(
                     text = if (it.second > 1) "${it.second}  ${it.first}" else it.first,
                     fontSize = 26.sp,

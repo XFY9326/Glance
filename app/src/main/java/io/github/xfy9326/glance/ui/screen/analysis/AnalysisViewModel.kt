@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class AnalysisViewModel constructor(private val imageUri: Uri) : ViewModel() {
+    private val objectsTakeAmount = 10
     private val confThreshold = 0.25f
     private val iouThreshold = 0.45f
 
@@ -41,7 +42,7 @@ class AnalysisViewModel constructor(private val imageUri: Uri) : ViewModel() {
                 val result = MLManager.analyzeImageByBitmap(it, confThreshold, iouThreshold, true).getOrNull() ?: return@fold AnalysisResult.ModelProcessFailed
                 AnalysisResult.Success(
                     result.toImageObjectInfo(classes) {
-                        sortedByDescending { obj -> obj.reliability }
+                        sortedByDescending { obj -> obj.reliability }.take(objectsTakeAmount)
                     },
                     result.captionIds?.let { arr -> MLManager.parseCaptionIds(arr, vocabulary) }
                 )

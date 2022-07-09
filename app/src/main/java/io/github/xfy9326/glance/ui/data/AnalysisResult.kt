@@ -10,6 +10,3 @@ sealed interface AnalysisResult {
         val caption: String? = null
     ) : AnalysisResult
 }
-
-fun AnalysisResult.Success.hasObjects(): Boolean =
-    imageObjectInfo.objects.isNotEmpty()

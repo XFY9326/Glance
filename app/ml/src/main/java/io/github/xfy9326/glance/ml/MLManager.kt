@@ -5,7 +5,7 @@ package io.github.xfy9326.glance.ml
 import android.graphics.Bitmap
 import io.github.xfy9326.atools.io.IOManager
 import io.github.xfy9326.atools.io.file.assetFile
-import io.github.xfy9326.atools.io.okio.lineIterator
+import io.github.xfy9326.atools.io.okio.readAllLines
 import io.github.xfy9326.atools.io.okio.source
 import io.github.xfy9326.atools.io.okio.useBuffer
 import io.github.xfy9326.glance.ml.beans.ImageInfo
@@ -40,7 +40,7 @@ object MLManager {
     private suspend fun loadLabels(path: String): Result<Array<String>> = withContext(Dispatchers.IO) {
         runCatching {
             assetFile(path).source().useBuffer {
-                lineIterator().asSequence().toList().toTypedArray()
+                readAllLines().toTypedArray()
             }
         }
     }
