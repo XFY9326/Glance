@@ -89,6 +89,9 @@ dependencies {
     implementation("androidx.core:core-ktx:1.8.0")
     implementation("androidx.core:core-splashscreen:1.0.0-rc01")
 
+    // AndroidX Customview
+    implementation("androidx.customview:customview:1.1.0")
+
     // AndroidX Activity
     val activityVersion = "1.5.0"
     implementation("androidx.activity:activity-ktx:$activityVersion")
