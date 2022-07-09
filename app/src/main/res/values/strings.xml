@@ -24,8 +24,7 @@
     <string name="image_process_failed">Image process failed! </string>
     <string name="labels_load_failed">Resource load failed! </string>
     <string name="image_processing">Processing image</string>
-    <string name="analyzed_image">The image being analyzed</string>
-    <string name="image_being_analyzed">The image being analyzed</string>
+    <string name="analyzed_image">Input picture</string>
     <string name="image_caption_title">This image may describe</string>
     <string name="detected_objects_title">This image may contains</string>
     <string name="reliability">Reliability: %1$3d%%</string>
