@@ -27,6 +27,7 @@ extern "C" JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *) {
         JVMConvert::clear(env);
     }
     MLManager::clear_models();
+    NCNNHelper::clear_allocator();
     NCNNHelper::destroy_gpu_instance();
 }
 

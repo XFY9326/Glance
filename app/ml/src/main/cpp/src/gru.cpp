@@ -2,8 +2,6 @@
 #include "ncnn_helper.h"
 #include "utils.h"
 
-// Avoid unpacking fp16 when transferring mats between models
-#define OUTPUT_MAT_TYPE 1
 
 namespace GRUExecutor {
     using namespace std;
@@ -21,8 +19,6 @@ namespace GRUExecutor {
 
             ncnn::Mat output;
             extractor.extract(modelInfo.features_output_blob, output);
-
-            extractor.clear();
         }
         return load_success;
     }
@@ -39,8 +35,6 @@ namespace GRUExecutor {
 
             ncnn::Mat output;
             extractor.extract(modelInfo.embed_output_blob, output);
-
-            extractor.clear();
         }
         return load_success;
     }
@@ -61,8 +55,6 @@ namespace GRUExecutor {
             ncnn::Mat output_states;
             extractor.extract(modelInfo.gru_output_blob_predict, output_predict);
             extractor.extract(modelInfo.gru_output_blob_states, output_states);
-
-            extractor.clear();
         }
         return load_success;
     }
@@ -72,9 +64,7 @@ namespace GRUExecutor {
             const ncnn::Mat &features, ncnn::Mat &output, const bool enable_gpu
     ) {
         ncnn::Extractor extractor = net.create_extractor();
-        if (net.opt.use_vulkan_compute) {
-            extractor.set_vulkan_compute(enable_gpu && NCNNHelper::is_gpu_instance_created());
-        }
+        NCNNHelper::configure_extractor(net, extractor, enable_gpu);
 
         extractor.input(modelInfo.features_input_blob, features);
         extractor.extract(modelInfo.features_output_blob, output, OUTPUT_MAT_TYPE);
@@ -85,9 +75,7 @@ namespace GRUExecutor {
             const ncnn::Mat &word_features, ncnn::Mat &output, const bool enable_gpu
     ) {
         ncnn::Extractor extractor = net.create_extractor();
-        if (net.opt.use_vulkan_compute) {
-            extractor.set_vulkan_compute(enable_gpu && NCNNHelper::is_gpu_instance_created());
-        }
+        NCNNHelper::configure_extractor(net, extractor, enable_gpu);
 
         extractor.input(modelInfo.embed_input_blob, word_features);
         extractor.extract(modelInfo.embed_output_blob, output, OUTPUT_MAT_TYPE);
@@ -99,9 +87,7 @@ namespace GRUExecutor {
             ncnn::Mat &output_predict, const bool enable_gpu
     ) {
         ncnn::Extractor extractor = net.create_extractor();
-        if (net.opt.use_vulkan_compute) {
-            extractor.set_vulkan_compute(enable_gpu && NCNNHelper::is_gpu_instance_created());
-        }
+        NCNNHelper::configure_extractor(net, extractor, enable_gpu);
 
         extractor.input(modelInfo.gru_input_blob_predict, predict);
         extractor.input(modelInfo.gru_input_blob_states, states);

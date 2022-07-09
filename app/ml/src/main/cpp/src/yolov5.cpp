@@ -1,6 +1,7 @@
 #include "yolov5.h"
 #include "utils.h"
 #include "ncnn_helper.h"
+#include "log.h"
 
 #define YOLOV5_OUTPUT_DX 0
 #define YOLOV5_OUTPUT_DY 1
@@ -10,8 +11,6 @@
 #define YOLOV5_OUTPUT_META_SIZE 5
 #define YOLOV5_INPUT_BORDER_PADDING 114.f
 
-// Avoid unpacking fp16 when transferring mats between models
-#define OUTPUT_MAT_TYPE 1
 
 namespace YoloV5Executor {
     using namespace std;
@@ -30,7 +29,6 @@ namespace YoloV5Executor {
             for (auto &&item: modelInfo.output_layers) {
                 extractor.extract(item.blob, output);
             }
-            extractor.clear();
         }
         return load_success;
     }
@@ -133,9 +131,8 @@ namespace YoloV5Executor {
             const bool extract_features
     ) {
         ncnn::Extractor extractor = net.create_extractor();
-        if (net.opt.use_vulkan_compute) {
-            extractor.set_vulkan_compute(enable_gpu && NCNNHelper::is_gpu_instance_created());
-        }
+        NCNNHelper::configure_extractor(net, extractor, enable_gpu);
+
         extractor.input(modelInfo.input_blob, input);
 
         auto yolov5_output = make_shared<YoloV5Output>();
