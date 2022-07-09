@@ -62,9 +62,6 @@ fun MainScreen(
         onSettingsClick = {
 
         },
-        onHelpClick = {
-
-        },
         onAboutClick = {
             aboutDialog.value = true
         }

@@ -8,7 +8,10 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.ImageSearch
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Radar
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,7 +40,6 @@ private fun PreviewMainScreen() {
             onCameraPhotoAnalysisClick = {},
             onLocalImageAnalysisClick = {},
             onSettingsClick = {},
-            onHelpClick = {},
             onAboutClick = {}
         )
     }
@@ -51,7 +53,6 @@ fun MainContent(
     onCameraPhotoAnalysisClick: () -> Unit,
     onLocalImageAnalysisClick: () -> Unit,
     onSettingsClick: () -> Unit,
-    onHelpClick: () -> Unit,
     onAboutClick: () -> Unit
 ) {
     val contentScrollState = rememberScrollState()
@@ -80,10 +81,9 @@ fun MainContent(
                     onCameraPhotoAnalysisClick = onCameraPhotoAnalysisClick,
                     onLocalImageAnalysisClick = onLocalImageAnalysisClick
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(24.dp))
                 Others(
                     onSettingsClick = onSettingsClick,
-                    onHelpClick = onHelpClick,
                     onAboutClick = onAboutClick
                 )
             }
@@ -149,7 +149,6 @@ private fun Functions(
 @Composable
 private fun Others(
     onSettingsClick: () -> Unit,
-    onHelpClick: () -> Unit,
     onAboutClick: () -> Unit
 ) {
     Column(
@@ -160,11 +159,6 @@ private fun Others(
             icon = Icons.Default.Settings,
             title = stringResource(id = R.string.settings),
             onClick = onSettingsClick
-        )
-        FunctionItem(
-            icon = Icons.Default.HelpCenter,
-            title = stringResource(id = R.string.help),
-            onClick = onHelpClick
         )
         FunctionItem(
             icon = Icons.Default.Info,

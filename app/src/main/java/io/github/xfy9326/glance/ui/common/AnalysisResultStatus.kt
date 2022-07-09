@@ -66,7 +66,7 @@ fun AnalysisResultStatus(
         AnalysisResult.ModelProcessFailed -> Box(modifier = modifier) {
             AnalysisModelProcessFailed(modifier = Modifier.align(Alignment.Center))
         }
-        AnalysisResult.LabelsLoadFailed -> Box(modifier = modifier) {
+        AnalysisResult.ResourcesLoadFailed -> Box(modifier = modifier) {
             AnalysisLabelsLoadFailed(modifier = Modifier.align(Alignment.Center))
         }
     }

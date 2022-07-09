@@ -4,7 +4,7 @@ sealed interface AnalysisResult {
     object Initializing : AnalysisResult
     object ImageLoadFailed : AnalysisResult
     object ModelProcessFailed : AnalysisResult
-    object LabelsLoadFailed : AnalysisResult
+    object ResourcesLoadFailed : AnalysisResult
     class Success(
         val imageObjectInfo: ImageObjectInfo,
         val caption: String? = null
