@@ -1,6 +1,7 @@
 #include "ml_manager.h"
 #include "object_detector.h"
 #include "image_caption.h"
+#include "utils.h"
 #include "log.h"
 
 #define LOG_TAG "ML_MANAGER"
@@ -45,6 +46,7 @@ namespace MLManager {
     ) {
         auto result = make_shared<MLOutput>();
         result->objects = make_shared<vector<shared_ptr<DetectObject>>>(detect_result.objects);
+        Utils::detected_object_descend_confidence_sort(*result->objects);
         if (request_caption) {
             if (detect_result.features != nullptr) {
                 auto captions = ImageCaption::generate_captions(*detect_result.features);

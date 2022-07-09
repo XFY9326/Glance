@@ -27,12 +27,16 @@ namespace Utils {
         return (inner_width < 0 || inner_height < 0) ? 0 : inner_width * inner_height;
     }
 
+    void detected_object_descend_confidence_sort(vector<shared_ptr<DetectObject>> &objects) {
+        sort(objects.begin(), objects.end(), detected_object_descend_sorter);
+    }
+
     void non_maximum_suppression(
             vector<shared_ptr<DetectObject>> &objects,
             const float iou_threshold,
             vector<shared_ptr<DetectObject>> &outputs
     ) {
-        sort(objects.begin(), objects.end(), detected_object_descend_sorter);
+        detected_object_descend_confidence_sort(objects);
         shared_ptr<DetectObject> o1, o2;
         while (!objects.empty()) {
             outputs.emplace_back(objects.back());

@@ -15,6 +15,8 @@ namespace Utils {
 
     double reverse_sigmoid(double f);
 
+    void detected_object_descend_confidence_sort(vector<shared_ptr<DetectObject>> &objects);
+
     void non_maximum_suppression(
             vector<shared_ptr<DetectObject>> &objects,
             const float iou_threshold,
