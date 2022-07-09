@@ -36,9 +36,7 @@ class FinderViewModel : ViewModel() {
                             _analysisResult.value = AnalysisResult.ModelProcessFailed
                         } else {
                             val imageObjectInfo = result.toImageObjectInfo(labels) {
-                                sortedByDescending { obj ->
-                                    obj.reliability
-                                }.take(
+                                take(
                                     resultTakeAmount
                                 ).sortedBy { obj ->
                                     obj.classId

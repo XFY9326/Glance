@@ -10,13 +10,13 @@ data class ImageObjectInfo(
 
 fun ImageInfo.toImageObjectInfo(
     labels: Array<String>,
-    onMap: Sequence<ImageObject>.() -> Sequence<ImageObject>
+    onMap: (Sequence<ImageObject>.() -> Sequence<ImageObject>)? = null
 ): ImageObjectInfo =
     ImageObjectInfo(
         size = Size(width.toFloat(), height.toFloat()),
         objects = objects.asSequence().map {
             it.toImageObject(labels)
-        }.run(onMap).toList()
+        }.let { onMap?.invoke(it) ?: it }.toList()
     )
 
 fun List<ImageObject>.countOutputClasses(): List<Pair<String, Int>> {

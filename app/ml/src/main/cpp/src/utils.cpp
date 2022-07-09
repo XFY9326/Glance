@@ -13,8 +13,12 @@ namespace Utils {
         return -1.0f * log((1.0f / (f + 1e-8)) - 1.0f);
     }
 
-    static const auto detected_object_descend_sorter = [](const shared_ptr<DetectObject> &a, const shared_ptr<DetectObject> &b) {
+    static const auto detected_object_ascend_sorter = [](const shared_ptr<DetectObject> &a, const shared_ptr<DetectObject> &b) {
         return a->confidence < b->confidence;
+    };
+
+    static const auto detected_object_descend_sorter = [](const shared_ptr<DetectObject> &a, const shared_ptr<DetectObject> &b) {
+        return a->confidence > b->confidence;
     };
 
     static float detect_object_area(const DetectObject &obj) {
@@ -36,7 +40,7 @@ namespace Utils {
             const float iou_threshold,
             vector<shared_ptr<DetectObject>> &outputs
     ) {
-        detected_object_descend_confidence_sort(objects);
+        sort(objects.begin(), objects.end(), detected_object_ascend_sorter);
         shared_ptr<DetectObject> o1, o2;
         while (!objects.empty()) {
             outputs.emplace_back(objects.back());

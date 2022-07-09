@@ -41,9 +41,7 @@ class AnalysisViewModel constructor(private val imageUri: Uri) : ViewModel() {
                 val vocabulary = MLManager.loadVocabulary().getOrNull() ?: return@fold AnalysisResult.LabelsLoadFailed
                 val result = MLManager.analyzeImageByBitmap(it, confThreshold, iouThreshold, true).getOrNull() ?: return@fold AnalysisResult.ModelProcessFailed
                 AnalysisResult.Success(
-                    result.toImageObjectInfo(classes) {
-                        sortedByDescending { obj -> obj.reliability }.take(objectsTakeAmount)
-                    },
+                    result.toImageObjectInfo(classes),
                     result.captionIds?.let { arr -> MLManager.parseCaptionIds(arr, vocabulary) }
                 )
             },
