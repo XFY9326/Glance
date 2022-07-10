@@ -6,12 +6,12 @@ import io.github.xfy9326.glance.ui.base.CameraAnalysisViewModel
 import io.github.xfy9326.glance.ui.base.toPixelsData
 import io.github.xfy9326.glance.ui.data.AnalysisResult
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Duration.Companion.milliseconds
 
 class SceneViewModel : CameraAnalysisViewModel() {
 
     override suspend fun getAnalysisMinInterval(): Duration {
-        return 2.seconds
+        return 1200.milliseconds
     }
 
     override suspend fun onAnalyzeImage(imageProxy: ImageProxy): AnalysisResult {
