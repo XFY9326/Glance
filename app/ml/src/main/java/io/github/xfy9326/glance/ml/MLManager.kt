@@ -3,6 +3,7 @@
 package io.github.xfy9326.glance.ml
 
 import android.graphics.Bitmap
+import android.util.Log
 import io.github.xfy9326.atools.io.IOManager
 import io.github.xfy9326.atools.io.file.assetFile
 import io.github.xfy9326.atools.io.okio.readAllLines
@@ -103,10 +104,23 @@ object MLManager {
             }
         )
 
+    private fun <R> benchmark(type: String, block: () -> R): R {
+        return if (BuildConfig.DEBUG) {
+            val startMills = System.currentTimeMillis()
+            block().also {
+                Log.d("MLManager", "$type: ${System.currentTimeMillis() - startMills} mills")
+            }
+        } else {
+            block()
+        }
+    }
+
     suspend fun analyzeImageCaptionByPixelsData(pixelsData: PixelsData): Result<IntArray> =
         analyzeImage(
             onAnalyze = {
-                NativeInterface.analyzeImageCaptionByPixelsData(pixelsData)
+                benchmark("analyzeImageCaptionByPixelsData") {
+                    NativeInterface.analyzeImageCaptionByPixelsData(pixelsData)
+                }
             },
             onTransform = {
                 it ?: error("Caption generate failed!")
@@ -116,13 +130,17 @@ object MLManager {
     suspend fun analyzeImageByPixelsData(
         data: PixelsData, confThreshold: Float, iouThreshold: Float, requestCaption: Boolean
     ): Result<ImageInfo> = detectImage(data.width, data.height, requestCaption) {
-        NativeInterface.analyzeImageByPixelsData(data, confThreshold, iouThreshold, requestCaption)
+        benchmark("analyzeImageByPixelsData") {
+            NativeInterface.analyzeImageByPixelsData(data, confThreshold, iouThreshold, requestCaption)
+        }
     }
 
     suspend fun analyzeImageByBitmap(
         data: Bitmap, confThreshold: Float, iouThreshold: Float, requestCaption: Boolean
     ): Result<ImageInfo> = detectImage(data.width, data.height, requestCaption) {
-        NativeInterface.analyzeImageByBitmap(data, confThreshold, iouThreshold, requestCaption)
+        benchmark("analyzeImageByBitmap") {
+            NativeInterface.analyzeImageByBitmap(data, confThreshold, iouThreshold, requestCaption)
+        }
     }
 
     fun parseCaptionIds(captionIds: IntArray, vocabulary: TextLabels): String =
