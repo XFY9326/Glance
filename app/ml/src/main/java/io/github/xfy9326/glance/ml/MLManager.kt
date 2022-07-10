@@ -11,6 +11,7 @@ import io.github.xfy9326.atools.io.okio.useBuffer
 import io.github.xfy9326.glance.ml.beans.ImageInfo
 import io.github.xfy9326.glance.ml.beans.MLOutput
 import io.github.xfy9326.glance.ml.beans.PixelsData
+import io.github.xfy9326.glance.ml.beans.TextLabels
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -37,17 +38,19 @@ object MLManager {
 
     fun isModelsInitialized(): Boolean = NativeInterface.isModelsInitialized()
 
-    private suspend fun loadLabels(path: String): Result<Array<String>> = withContext(Dispatchers.IO) {
+    private suspend fun loadLabels(path: String): Result<TextLabels> = withContext(Dispatchers.IO) {
         runCatching {
-            assetFile(path).source().useBuffer {
-                readAllLines().toTypedArray()
-            }
+            TextLabels(
+                assetFile(path).source().useBuffer {
+                    readAllLines().toTypedArray()
+                }
+            )
         }
     }
 
-    suspend fun loadClasses(): Result<Array<String>> = loadLabels(LABEL_CLASSES)
+    suspend fun loadClasses(): Result<TextLabels> = loadLabels(LABEL_CLASSES)
 
-    suspend fun loadVocabulary(): Result<Array<String>> = loadLabels(LABEL_VOCAB)
+    suspend fun loadVocabulary(): Result<TextLabels> = loadLabels(LABEL_VOCAB)
 
     private suspend fun internalInit(): Boolean {
         return isModelInitializeSuccess ?: initMutex.withLock {
@@ -104,7 +107,7 @@ object MLManager {
         NativeInterface.analyzeImageByBitmap(data, confThreshold, iouThreshold, requestCaption)
     }
 
-    fun parseCaptionIds(captionIds: IntArray, vocabulary: Array<String>): String =
+    fun parseCaptionIds(captionIds: IntArray, vocabulary: TextLabels): String =
         captionIds.asSequence().mapNotNull {
             if (it >= VOCABULARY_META_SIZE && it < vocabulary.size) {
                 vocabulary[it]

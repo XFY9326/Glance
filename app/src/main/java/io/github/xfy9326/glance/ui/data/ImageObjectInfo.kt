@@ -2,6 +2,7 @@ package io.github.xfy9326.glance.ui.data
 
 import androidx.compose.ui.geometry.Size
 import io.github.xfy9326.glance.ml.beans.ImageInfo
+import io.github.xfy9326.glance.ml.beans.TextLabels
 
 data class ImageObjectInfo(
     val size: Size,
@@ -9,14 +10,14 @@ data class ImageObjectInfo(
 )
 
 fun ImageInfo.toImageObjectInfo(
-    labels: Array<String>,
-    onMap: (Sequence<ImageObject>.() -> Sequence<ImageObject>)? = null
+    labels: TextLabels,
+    onMap: Sequence<ImageObject>.() -> Sequence<ImageObject>
 ): ImageObjectInfo =
     ImageObjectInfo(
         size = Size(width.toFloat(), height.toFloat()),
         objects = objects.asSequence().map {
             it.toImageObject(labels)
-        }.let { onMap?.invoke(it) ?: it }.toList()
+        }.run(onMap).toList()
     )
 
 fun List<ImageObject>.countOutputClasses(): List<Pair<String, Int>> {

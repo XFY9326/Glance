@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Glance</string>
+    <string name="app_version">Version: %1$s</string>
     <string name="guide">Guide</string>
     <string name="guide_summary">Real-time scene description</string>
     <string name="finder">Finder</string>

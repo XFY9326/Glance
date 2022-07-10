@@ -1,5 +1,7 @@
 package io.github.xfy9326.glance.ml.beans
 
+import io.github.xfy9326.glance.ml.MLManager
+
 data class ImageInfo internal constructor(
     val width: Int,
     val height: Int,
@@ -30,4 +32,8 @@ data class ImageInfo internal constructor(
         result = 31 * result + (captionIds?.contentHashCode() ?: 0)
         return result
     }
+}
+
+fun ImageInfo.getCaptionText(vocabulary: TextLabels): String? {
+    return captionIds?.let { MLManager.parseCaptionIds(it, vocabulary) }
 }

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import io.github.xfy9326.atools.coroutines.suspendLazy
 import io.github.xfy9326.atools.io.okio.readBitmapAsync
 import io.github.xfy9326.glance.ml.MLManager
+import io.github.xfy9326.glance.ml.beans.getCaptionText
 import io.github.xfy9326.glance.ui.data.AnalysisResult
 import io.github.xfy9326.glance.ui.data.AnalyzingImage
 import io.github.xfy9326.glance.ui.data.toImageObjectInfo
@@ -41,8 +42,10 @@ class AnalysisViewModel constructor(private val imageUri: Uri) : ViewModel() {
                 val vocabulary = MLManager.loadVocabulary().getOrNull() ?: return@fold AnalysisResult.ResourcesLoadFailed
                 val result = MLManager.analyzeImageByBitmap(it, confThreshold, iouThreshold, true).getOrNull() ?: return@fold AnalysisResult.ModelProcessFailed
                 AnalysisResult.Success(
-                    result.toImageObjectInfo(classes),
-                    result.captionIds?.let { arr -> MLManager.parseCaptionIds(arr, vocabulary) }
+                    result.toImageObjectInfo(classes) {
+                        take(objectsTakeAmount)
+                    },
+                    result.getCaptionText(vocabulary)
                 )
             },
             onFailure = {

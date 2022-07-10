@@ -31,6 +31,7 @@ fun AboutDialog(onDismissRequest: () -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(80.dp)
+                .semantics(mergeDescendants = true) {}
         ) {
             Row(
                 modifier = Modifier.fillMaxSize(),
@@ -40,12 +41,11 @@ fun AboutDialog(onDismissRequest: () -> Unit) {
                 Column(
                     modifier = Modifier
                         .padding(horizontal = 8.dp)
-                        .fillMaxHeight()
-                        .semantics(mergeDescendants = true) {},
+                        .fillMaxHeight(),
                     verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically)
                 ) {
                     Text(text = stringResource(id = R.string.app_name), fontSize = 16.sp)
-                    Text(text = BuildConfig.VERSION_NAME, fontSize = 14.sp)
+                    Text(text = stringResource(id = R.string.app_version, BuildConfig.VERSION_NAME), fontSize = 14.sp)
                 }
             }
         }

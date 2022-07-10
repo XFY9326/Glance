@@ -3,6 +3,7 @@ package io.github.xfy9326.glance.ui.data
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import io.github.xfy9326.glance.ml.beans.DetectObject
+import io.github.xfy9326.glance.ml.beans.TextLabels
 import kotlin.math.roundToInt
 
 data class ImageObject(
@@ -13,7 +14,7 @@ data class ImageObject(
     val size: Size
 )
 
-fun DetectObject.toImageObject(labels: Array<String>) =
+fun DetectObject.toImageObject(labels: TextLabels) =
     ImageObject(
         classId = classId,
         classText = labels[classId],
