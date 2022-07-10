@@ -59,6 +59,17 @@ Java_io_github_xfy9326_glance_ml_NativeInterface_initModels(
 }
 
 extern "C"
+JNIEXPORT jintArray JNICALL
+Java_io_github_xfy9326_glance_ml_NativeInterface_analyzeImageCaptionByPixelsData(JNIEnv *env, jobject, jobject pixels_data) {
+    using namespace std;
+
+    PixelsData pixelsData;
+    JVMConvert::pixels_data_to_native(env, pixels_data, pixelsData);
+    const auto output = MLManager::analyze_image_caption(pixelsData);
+    return JVMConvert::caption_ids_vector_to_jvm(env, *output);
+}
+
+extern "C"
 JNIEXPORT jobject JNICALL
 Java_io_github_xfy9326_glance_ml_NativeInterface_analyzeImageByPixelsData(
         JNIEnv *env, jobject, jobject pixels_data,
@@ -71,7 +82,7 @@ Java_io_github_xfy9326_glance_ml_NativeInterface_analyzeImageByPixelsData(
     const auto output = MLManager::analyze_image(
             pixelsData, request_caption == JNI_TRUE, (float) conf_threshold, (float) iou_threshold
     );
-    return JVMConvert::ml_output_to_jvm(env, *output);
+    return JVMConvert::ml_detect_output_to_jvm(env, *output);
 }
 
 extern "C"
@@ -85,5 +96,5 @@ Java_io_github_xfy9326_glance_ml_NativeInterface_analyzeImageByBitmap(
     const auto output = MLManager::analyze_image(
             env, bitmap, request_caption == JNI_TRUE, (float) conf_threshold, (float) iou_threshold
     );
-    return JVMConvert::ml_output_to_jvm(env, *output);
+    return JVMConvert::ml_detect_output_to_jvm(env, *output);
 }

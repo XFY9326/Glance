@@ -9,7 +9,7 @@ import io.github.xfy9326.atools.io.okio.readAllLines
 import io.github.xfy9326.atools.io.okio.source
 import io.github.xfy9326.atools.io.okio.useBuffer
 import io.github.xfy9326.glance.ml.beans.ImageInfo
-import io.github.xfy9326.glance.ml.beans.MLOutput
+import io.github.xfy9326.glance.ml.beans.MLDetectOutput
 import io.github.xfy9326.glance.ml.beans.PixelsData
 import io.github.xfy9326.glance.ml.beans.TextLabels
 import kotlinx.coroutines.*
@@ -65,45 +65,63 @@ object MLManager {
         }
     }
 
-    private suspend fun analyzeImage(width: Int, height: Int, requestCaption: Boolean, block: () -> MLOutput): Result<ImageInfo> =
+    private suspend fun <T, R> analyzeImage(onAnalyze: () -> T, onTransform: (T) -> R): Result<R> =
         withContext(Dispatchers.Default) {
             runCatching {
                 if (internalInit()) {
-                    val result = analyzeMutex.withLock {
-                        block()
-                    }
-                    if (result.objects != null) {
-                        if (!requestCaption || result.captionIds != null) {
-                            return@runCatching ImageInfo(
-                                width = width,
-                                height = height,
-                                objects = result.objects,
-                                captionIds = result.captionIds
-                            )
-                        } else {
-                            error("Caption generate failed!")
+                    onTransform(
+                        analyzeMutex.withLock {
+                            onAnalyze()
                         }
-                    } else {
-                        error("Object detect failed!")
-                    }
+                    )
                 } else {
                     error("Model init failed!")
                 }
             }
         }
 
+    private suspend fun detectImage(width: Int, height: Int, requestCaption: Boolean, block: () -> MLDetectOutput): Result<ImageInfo> =
+        analyzeImage(
+            onAnalyze = {
+                block()
+            },
+            onTransform = {
+                if (it.objects != null) {
+                    if (!requestCaption || it.captionIds != null) {
+                        return@analyzeImage ImageInfo(
+                            width = width,
+                            height = height,
+                            objects = it.objects,
+                            captionIds = it.captionIds
+                        )
+                    } else {
+                        error("Caption generate failed!")
+                    }
+                } else {
+                    error("Object detect failed!")
+                }
+            }
+        )
+
+    suspend fun analyzeImageCaptionByPixelsData(pixelsData: PixelsData): Result<IntArray> =
+        analyzeImage(
+            onAnalyze = {
+                NativeInterface.analyzeImageCaptionByPixelsData(pixelsData)
+            },
+            onTransform = {
+                it ?: error("Caption generate failed!")
+            }
+        )
+
     suspend fun analyzeImageByPixelsData(
         data: PixelsData, confThreshold: Float, iouThreshold: Float, requestCaption: Boolean
-    ): Result<ImageInfo> = analyzeImage(data.width, data.height, requestCaption) {
-        val start = System.currentTimeMillis()
-        NativeInterface.analyzeImageByPixelsData(data, confThreshold, iouThreshold, requestCaption).also {
-            println(System.currentTimeMillis() - start)
-        }
+    ): Result<ImageInfo> = detectImage(data.width, data.height, requestCaption) {
+        NativeInterface.analyzeImageByPixelsData(data, confThreshold, iouThreshold, requestCaption)
     }
 
     suspend fun analyzeImageByBitmap(
         data: Bitmap, confThreshold: Float, iouThreshold: Float, requestCaption: Boolean
-    ): Result<ImageInfo> = analyzeImage(data.width, data.height, requestCaption) {
+    ): Result<ImageInfo> = detectImage(data.width, data.height, requestCaption) {
         NativeInterface.analyzeImageByBitmap(data, confThreshold, iouThreshold, requestCaption)
     }
 

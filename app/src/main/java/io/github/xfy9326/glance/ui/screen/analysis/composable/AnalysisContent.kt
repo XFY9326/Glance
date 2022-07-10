@@ -35,7 +35,7 @@ private fun PreviewAnalysisContent() {
         AnalysisScreenContent(
             scaffoldState = rememberScaffoldState(),
             image = AnalyzingImage(Uri.EMPTY),
-            analysisResult = AnalysisResult.Success(
+            analysisResult = AnalysisResult.DetectSuccess(
                 imageObjectInfo = PreviewImageObjectInfo,
                 caption = "test image caption"
             ),
@@ -103,20 +103,21 @@ private fun ResultContent(analysisResult: AnalysisResult) {
             .semantics {
                 liveRegion = LiveRegionMode.Polite
             },
-        analysisResult = analysisResult
-    ) {
-        AnalysisImageCaption(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(6.dp),
-            caption = it.caption
-        )
-        Divider()
-        AnalysisImageObjects(
-            modifier = Modifier.fillMaxWidth(),
-            imageObjects = it.imageObjectInfo.objects
-        )
-    }
+        analysisResult = analysisResult,
+        onDetectSuccess = {
+            AnalysisImageCaption(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(6.dp),
+                caption = it.caption
+            )
+            Divider()
+            AnalysisImageObjects(
+                modifier = Modifier.fillMaxWidth(),
+                imageObjects = it.imageObjectInfo.objects
+            )
+        }
+    )
 }
 
 @Composable

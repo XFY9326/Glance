@@ -38,8 +38,8 @@ class MainActivity : ComponentActivity() {
     private fun Content() {
         val context = LocalContext.current
         MainScreen(
-            onNavigateToGuide = {
-                context.startActivity<GuideActivity>()
+            onNavigateToScene = {
+                context.startActivity<SceneActivity>()
             },
             onNavigateToFinder = {
                 context.startActivity<FinderActivity>()

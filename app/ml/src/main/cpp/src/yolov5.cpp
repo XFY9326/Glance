@@ -155,6 +155,20 @@ namespace YoloV5Executor {
         return yolov5_output;
     }
 
+    static shared_ptr<ncnn::Mat> process_extract_features(
+            const ncnn::Net &net, const ModelInfo &modelInfo,
+            const ncnn::Mat &input, const bool enable_gpu
+    ) {
+        ncnn::Extractor extractor = net.create_extractor();
+        NCNNHelper::configure_extractor(net, extractor, enable_gpu);
+
+        extractor.input(modelInfo.input_blob, input);
+
+        auto features = make_shared<ncnn::Mat>();
+        extractor.extract(modelInfo.output_features_blob, *features, OUTPUT_MAT_TYPE);
+        return features;
+    }
+
     static void post_process(const vector<shared_ptr<DetectObject>> &objects, const ResizeInfo &resize_info) {
         for (auto &&object: objects) {
             object->left = (float) (((double) object->left - resize_info.width_offset) / resize_info.ratio);
@@ -164,7 +178,7 @@ namespace YoloV5Executor {
         }
     }
 
-    static shared_ptr<YoloV5Output> run_model(
+    static shared_ptr<YoloV5Output> internal_detect(
             const ncnn::Net &net, const ModelInfo &modelInfo, const ncnn::Mat &input, const ResizeInfo &resize_info,
             const bool enable_gpu, const float conf_threshold, const float iou_threshold, const bool extract_features
     ) {
@@ -174,24 +188,35 @@ namespace YoloV5Executor {
     }
 
     // Require RGBA_8888
-    shared_ptr<YoloV5Output> launch(
+    shared_ptr<ncnn::Mat> extract_features(
+            const ncnn::Net &net, const ModelInfo &modelInfo,
+            const PixelsData &pixelsData, const bool enable_gpu
+    ) {
+        ncnn::Mat input;
+        ResizeInfo resize_info;
+        pre_process_pixels(pixelsData, modelInfo, input, resize_info);
+        return process_extract_features(net, modelInfo, input, enable_gpu);
+    }
+
+    // Require RGBA_8888
+    shared_ptr<YoloV5Output> detect(
             const ncnn::Net &net, const ModelInfo &modelInfo, const PixelsData &pixelsData,
             const bool enable_gpu, const float conf_threshold, const float iou_threshold, const bool extract_features
     ) {
         ncnn::Mat input;
         ResizeInfo resize_info;
         pre_process_pixels(pixelsData, modelInfo, input, resize_info);
-        return run_model(net, modelInfo, input, resize_info, enable_gpu, conf_threshold, iou_threshold, extract_features);
+        return internal_detect(net, modelInfo, input, resize_info, enable_gpu, conf_threshold, iou_threshold, extract_features);
     }
 
     // Require RGBA_8888
-    shared_ptr<YoloV5Output> launch(
+    shared_ptr<YoloV5Output> detect(
             const ncnn::Net &net, const ModelInfo &modelInfo, JNIEnv *env, jobject bitmap,
             const bool enable_gpu, const float conf_threshold, const float iou_threshold, const bool extract_features
     ) {
         ncnn::Mat input;
         ResizeInfo resize_info;
         pre_process_bitmap(env, bitmap, modelInfo, input, resize_info);
-        return run_model(net, modelInfo, input, resize_info, enable_gpu, conf_threshold, iou_threshold, extract_features);
+        return internal_detect(net, modelInfo, input, resize_info, enable_gpu, conf_threshold, iou_threshold, extract_features);
     }
 }

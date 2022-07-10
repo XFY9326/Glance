@@ -26,10 +26,20 @@ namespace ObjectDetector {
         return true;
     }
 
+    shared_ptr<ncnn::Mat> extract_features(const PixelsData &pixelsData) {
+        if (net_init) {
+            return YoloV5Executor::extract_features(
+                    net, YoloV5Model::yolov5s_6_1,
+                    pixelsData, GPU_SUPPORT
+            );
+        }
+        return nullptr;
+    }
+
     shared_ptr<YoloV5Output>
     detect(const PixelsData &pixelsData, const float conf_threshold, const float iou_threshold, const bool extract_features) {
         if (net_init) {
-            return YoloV5Executor::launch(
+            return YoloV5Executor::detect(
                     net, YoloV5Model::yolov5s_6_1,
                     pixelsData, GPU_SUPPORT,
                     conf_threshold, iou_threshold,
@@ -42,7 +52,7 @@ namespace ObjectDetector {
     shared_ptr<YoloV5Output>
     detect(JNIEnv *env, jobject bitmap, const float conf_threshold, const float iou_threshold, const bool extract_features) {
         if (net_init) {
-            return YoloV5Executor::launch(
+            return YoloV5Executor::detect(
                     net, YoloV5Model::yolov5s_6_1,
                     env, bitmap, GPU_SUPPORT,
                     conf_threshold, iou_threshold,

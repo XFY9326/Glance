@@ -15,14 +15,16 @@ namespace MLManager {
 
     bool init_models(AAssetManager *mgr);
 
-    shared_ptr<MLOutput> analyze_image(
+    shared_ptr<vector<int>> analyze_image_caption(const PixelsData &pixelsData);
+
+    shared_ptr<MLDetectOutput> analyze_image(
             const PixelsData &pixelsData,
             const bool request_caption,
             const float conf_threshold,
             const float iou_threshold
     );
 
-    shared_ptr<MLOutput> analyze_image(
+    shared_ptr<MLDetectOutput> analyze_image(
             JNIEnv *env, jobject bitmap,
             const bool request_caption,
             const float conf_threshold,

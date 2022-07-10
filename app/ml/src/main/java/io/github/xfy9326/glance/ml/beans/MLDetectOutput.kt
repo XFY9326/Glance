@@ -3,7 +3,7 @@ package io.github.xfy9326.glance.ml.beans
 import androidx.annotation.Keep
 
 @Keep
-internal data class MLOutput internal constructor(
+internal data class MLDetectOutput internal constructor(
     val objects: Array<DetectObject>?,
     val captionIds: IntArray?
 ) {
@@ -11,7 +11,7 @@ internal data class MLOutput internal constructor(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as MLOutput
+        other as MLDetectOutput
 
         if (objects != null) {
             if (other.objects == null) return false

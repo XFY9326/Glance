@@ -5,12 +5,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
-import io.github.xfy9326.glance.ui.screen.guide.GuideViewModel
-import io.github.xfy9326.glance.ui.screen.guide.composable.GuideScreen
+import io.github.xfy9326.glance.ui.screen.scene.SceneViewModel
+import io.github.xfy9326.glance.ui.screen.scene.composable.SceneScreen
 import io.github.xfy9326.glance.ui.theme.AppTheme
+import io.github.xfy9326.glance.utils.AnalysisCameraUtils.bindAnalysisCamera
 
-class GuideActivity : ComponentActivity() {
-    private val viewModel by viewModels<GuideViewModel>()
+class SceneActivity : ComponentActivity() {
+    private val viewModel by viewModels<SceneViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,9 +24,12 @@ class GuideActivity : ComponentActivity() {
 
     @Composable
     private fun Content() {
-        GuideScreen(
+        SceneScreen(
             viewModel = viewModel,
-            onBackPressed = this::onBackPressed
+            onBackPressed = this::onBackPressed,
+            onBindCamera = {
+                bindAnalysisCamera(it, viewModel::setImageAnalysisAnalyzer)
+            }
         )
     }
 }

@@ -11,19 +11,19 @@ data class ImageObjectInfo(
 
 fun ImageInfo.toImageObjectInfo(
     labels: TextLabels,
-    onMap: Sequence<ImageObject>.() -> Sequence<ImageObject>
+    onMap: (Sequence<ImageObject>.() -> Sequence<ImageObject>)? = null
 ): ImageObjectInfo =
     ImageObjectInfo(
         size = Size(width.toFloat(), height.toFloat()),
         objects = objects.asSequence().map {
             it.toImageObject(labels)
-        }.run(onMap).toList()
+        }.let { onMap?.invoke(it) ?: it }.toList()
     )
 
-fun List<ImageObject>.countOutputClasses(): List<Pair<String, Int>> {
+fun List<ImageObject>.countOutputClasses(): LinkedHashMap<String, Int> {
     val combinedMap = LinkedHashMap<String, Int>()
     forEach {
         combinedMap[it.classText] = combinedMap.getOrDefault(it.classText, 0) + 1
     }
-    return combinedMap.toList()
+    return combinedMap
 }

@@ -49,7 +49,7 @@ namespace JVMConvert {
         if (field == nullptr) return false;
         pixels_data_class_pixels = field;
 
-        clazz = env->FindClass("io/github/xfy9326/glance/ml/beans/MLOutput");
+        clazz = env->FindClass("io/github/xfy9326/glance/ml/beans/MLDetectOutput");
         if (clazz == nullptr) return false;
         ml_output_class = reinterpret_cast<jclass>(env->NewGlobalRef(clazz));
 
@@ -75,14 +75,14 @@ namespace JVMConvert {
         return object_array;
     }
 
-    static jintArray caption_ids_vector_to_jvm(JNIEnv *env, const vector<int> &output) {
+    jintArray caption_ids_vector_to_jvm(JNIEnv *env, const vector<int> &output) {
         if (env == nullptr) return nullptr;
         jintArray int_array = env->NewIntArray((jsize) output.size());
         env->SetIntArrayRegion(int_array, 0, (jsize) output.size(), (jint *) &output[0]);
         return int_array;
     }
 
-    jobject ml_output_to_jvm(JNIEnv *env, const MLOutput &output) {
+    jobject ml_detect_output_to_jvm(JNIEnv *env, const MLDetectOutput &output) {
         return env->NewObject(
                 ml_output_class, ml_output_class_constructor,
                 (output.objects != nullptr) ? detect_object_vector_to_jvm(env, *output.objects) : nullptr,

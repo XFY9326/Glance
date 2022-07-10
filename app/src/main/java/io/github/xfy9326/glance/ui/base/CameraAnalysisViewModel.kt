@@ -11,9 +11,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.Executors
+import kotlin.time.Duration
 
 abstract class CameraAnalysisViewModel : ViewModel() {
     private val imageAnalysisExecutor = Executors.newSingleThreadExecutor()
+    private var lastAnalysisOutputMills = 0L
 
     private val _classLabels by suspendLazy { MLManager.loadClasses() }
     private val _captionVocabulary by suspendLazy { MLManager.loadVocabulary() }
@@ -25,7 +27,11 @@ abstract class CameraAnalysisViewModel : ViewModel() {
         imageAnalysis.setAnalyzer(imageAnalysisExecutor) {
             it.use {
                 runBlocking {
-                    _analysisResult.value = onAnalyzeImage(it)
+                    val minIntervalMills = getAnalysisMinInterval().inWholeMilliseconds
+                    if (minIntervalMills == 0L || System.currentTimeMillis() - lastAnalysisOutputMills > minIntervalMills) {
+                        _analysisResult.value = onAnalyzeImage(it)
+                        lastAnalysisOutputMills = System.currentTimeMillis()
+                    }
                 }
             }
         }
@@ -36,6 +42,8 @@ abstract class CameraAnalysisViewModel : ViewModel() {
     suspend fun getCaptionVocabulary() = _captionVocabulary.value().getOrNull()
 
     protected abstract suspend fun onAnalyzeImage(imageProxy: ImageProxy): AnalysisResult
+
+    protected open suspend fun getAnalysisMinInterval(): Duration = Duration.ZERO
 
     @CallSuper
     override fun onCleared() {

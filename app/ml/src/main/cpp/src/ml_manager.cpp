@@ -40,11 +40,20 @@ namespace MLManager {
         return result;
     }
 
-    static shared_ptr<MLOutput> internal_analyze_image(
+    shared_ptr<vector<int>> analyze_image_caption(const PixelsData &pixelsData) {
+        auto features = ObjectDetector::extract_features(pixelsData);
+        if (features != nullptr) {
+            return ImageCaption::generate_captions(*features);
+        } else {
+            return nullptr;
+        }
+    }
+
+    static shared_ptr<MLDetectOutput> internal_analyze_image(
             const YoloV5Output &detect_result,
             const bool request_caption
     ) {
-        auto result = make_shared<MLOutput>();
+        auto result = make_shared<MLDetectOutput>();
         result->objects = make_shared<vector<shared_ptr<DetectObject>>>(detect_result.objects);
         Utils::detected_object_descend_confidence_sort(*result->objects);
         if (request_caption) {
@@ -58,7 +67,7 @@ namespace MLManager {
         return result;
     }
 
-    shared_ptr<MLOutput> analyze_image(
+    shared_ptr<MLDetectOutput> analyze_image(
             const PixelsData &pixelsData,
             const bool request_caption,
             const float conf_threshold,
@@ -68,7 +77,7 @@ namespace MLManager {
         return internal_analyze_image(*detect_result, request_caption);
     }
 
-    shared_ptr<MLOutput> analyze_image(
+    shared_ptr<MLDetectOutput> analyze_image(
             JNIEnv *env, jobject bitmap,
             const bool request_caption,
             const float conf_threshold,

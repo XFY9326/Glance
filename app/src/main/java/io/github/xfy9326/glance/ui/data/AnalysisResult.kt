@@ -5,8 +5,13 @@ sealed interface AnalysisResult {
     object ImageLoadFailed : AnalysisResult
     object ModelProcessFailed : AnalysisResult
     object ResourcesLoadFailed : AnalysisResult
-    class Success(
+
+    class DetectSuccess(
         val imageObjectInfo: ImageObjectInfo,
         val caption: String? = null
+    ) : AnalysisResult
+
+    class CaptionGenerateSuccess(
+        val caption: String
     ) : AnalysisResult
 }

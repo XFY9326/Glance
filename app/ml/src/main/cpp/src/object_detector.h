@@ -13,6 +13,8 @@ namespace ObjectDetector {
 
     bool init_model(AAssetManager *mgr, const char *bin, const char *param_bin);
 
+    shared_ptr<ncnn::Mat> extract_features(const PixelsData &pixelsData);
+
     shared_ptr<YoloV5Output>
     detect(const PixelsData &pixelsData, const float conf_threshold, const float iou_threshold, const bool extract_features);
 

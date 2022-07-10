@@ -27,7 +27,7 @@ private fun PreviewAnalysisImageView() {
         AnalysisImageView(
             modifier = Modifier.size(500.dp),
             image = AnalyzingImage(Uri.EMPTY),
-            analysisResult = AnalysisResult.Success(PreviewImageObjectInfo)
+            analysisResult = AnalysisResult.DetectSuccess(PreviewImageObjectInfo)
         )
     }
 }
@@ -55,7 +55,7 @@ fun AnalysisImageView(
             contentDescription = stringResource(id = R.string.analyzed_image),
             modifier = Modifier.fillMaxSize(),
         )
-        if (analysisResult is AnalysisResult.Success) {
+        if (analysisResult is AnalysisResult.DetectSuccess) {
             ImageObjectBoxLayer(
                 imageObjectInfo = analysisResult.imageObjectInfo,
                 modifier = Modifier.fillMaxSize()

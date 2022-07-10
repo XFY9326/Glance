@@ -35,7 +35,7 @@ private fun PreviewMainScreen() {
     AppTheme {
         MainContent(
             scaffoldState = rememberScaffoldState(),
-            onGuideClick = {},
+            onSceneClick = {},
             onFinderClick = {},
             onCameraPhotoAnalysisClick = {},
             onLocalImageAnalysisClick = {},
@@ -48,7 +48,7 @@ private fun PreviewMainScreen() {
 @Composable
 fun MainContent(
     scaffoldState: ScaffoldState,
-    onGuideClick: () -> Unit,
+    onSceneClick: () -> Unit,
     onFinderClick: () -> Unit,
     onCameraPhotoAnalysisClick: () -> Unit,
     onLocalImageAnalysisClick: () -> Unit,
@@ -76,7 +76,7 @@ fun MainContent(
                 Header()
                 Spacer(modifier = Modifier.height(8.dp))
                 Functions(
-                    onGuideClick = onGuideClick,
+                    onSceneClick = onSceneClick,
                     onFinderClick = onFinderClick,
                     onCameraPhotoAnalysisClick = onCameraPhotoAnalysisClick,
                     onLocalImageAnalysisClick = onLocalImageAnalysisClick
@@ -108,7 +108,7 @@ private fun Header() {
 
 @Composable
 private fun Functions(
-    onGuideClick: () -> Unit,
+    onSceneClick: () -> Unit,
     onFinderClick: () -> Unit,
     onCameraPhotoAnalysisClick: () -> Unit,
     onLocalImageAnalysisClick: () -> Unit
@@ -120,10 +120,10 @@ private fun Functions(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         FunctionCard(
-            icon = ImageVector.vectorResource(id = R.drawable.ic_blind_24),
-            title = stringResource(id = R.string.guide),
-            summary = stringResource(id = R.string.guide_summary),
-            onClick = onGuideClick
+            icon = ImageVector.vectorResource(id = R.drawable.ic_detection_24),
+            title = stringResource(id = R.string.scene),
+            summary = stringResource(id = R.string.scene_summary),
+            onClick = onSceneClick
         )
         FunctionCard(
             icon = Icons.Default.Radar,
@@ -132,7 +132,7 @@ private fun Functions(
             onClick = onFinderClick
         )
         FunctionCard(
-            icon = ImageVector.vectorResource(id = R.drawable.ic_detection_24),
+            icon = ImageVector.vectorResource(id = R.drawable.ic_blind_24),
             title = stringResource(id = R.string.camera_photo_analysis),
             summary = stringResource(id = R.string.camera_photo_analysis_summary),
             onClick = onCameraPhotoAnalysisClick

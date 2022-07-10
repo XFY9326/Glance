@@ -10,7 +10,7 @@ import io.github.xfy9326.glance.ui.data.toImageObjectInfo
 class FinderViewModel : CameraAnalysisViewModel() {
     companion object {
         private const val resultTakeAmount = 3
-        private const val confThreshold = 0.5f
+        private const val confThreshold = 0.35f
         private const val iouThreshold = 0.45f
     }
 
@@ -27,6 +27,6 @@ class FinderViewModel : CameraAnalysisViewModel() {
                 obj.classId
             }
         }
-        return AnalysisResult.Success(imageObjectInfo)
+        return AnalysisResult.DetectSuccess(imageObjectInfo)
     }
 }

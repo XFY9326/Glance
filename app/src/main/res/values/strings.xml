@@ -2,8 +2,8 @@
 <resources>
     <string name="app_name">Glance</string>
     <string name="app_version">Version: %1$s</string>
-    <string name="guide">Guide</string>
-    <string name="guide_summary">Real-time scene description</string>
+    <string name="scene">Scene</string>
+    <string name="scene_summary">Real-time scene description</string>
     <string name="finder">Finder</string>
     <string name="finder_summary">Use the camera to find items</string>
     <string name="camera_photo_analysis">What\'s nearby?</string>

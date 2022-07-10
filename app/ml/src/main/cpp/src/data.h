@@ -22,7 +22,7 @@ struct YoloV5Output {
     std::shared_ptr<ncnn::Mat> features = nullptr;
 };
 
-struct MLOutput {
+struct MLDetectOutput {
     std::shared_ptr<std::vector<std::shared_ptr<DetectObject>>> objects = nullptr;
     std::shared_ptr<std::vector<int>> caption_ids = nullptr;
 };

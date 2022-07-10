@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainScreen(
     viewModel: MainViewModel = viewModel(),
-    onNavigateToGuide: () -> Unit,
+    onNavigateToScene: () -> Unit,
     onNavigateToFinder: () -> Unit,
     onNavigateToAnalysis: (Uri) -> Unit
 ) {
@@ -33,9 +33,9 @@ fun MainScreen(
     val selectPicture = createSelectPictureLauncher(scaffoldState.snackbarHostState) {
         onNavigateToAnalysis(it)
     }
-    val guideCameraPermission = rememberCameraPermissionRequest(
+    val sceneCameraPermission = rememberCameraPermissionRequest(
         snackbarHostState = scaffoldState.snackbarHostState,
-        onPermissionGranted = { onNavigateToGuide() }
+        onPermissionGranted = { onNavigateToScene() }
     )
     val finderCameraPermission = rememberCameraPermissionRequest(
         snackbarHostState = scaffoldState.snackbarHostState,
@@ -47,8 +47,8 @@ fun MainScreen(
     )
     MainContent(
         scaffoldState = scaffoldState,
-        onGuideClick = {
-            guideCameraPermission.requestPermission()
+        onSceneClick = {
+            sceneCameraPermission.requestPermission()
         },
         onFinderClick = {
             finderCameraPermission.requestPermission()

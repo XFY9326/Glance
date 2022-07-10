@@ -2,7 +2,7 @@ package io.github.xfy9326.glance.ml
 
 import android.content.res.AssetManager
 import android.graphics.Bitmap
-import io.github.xfy9326.glance.ml.beans.MLOutput
+import io.github.xfy9326.glance.ml.beans.MLDetectOutput
 import io.github.xfy9326.glance.ml.beans.PixelsData
 
 internal object NativeInterface {
@@ -18,11 +18,13 @@ internal object NativeInterface {
 
     external fun isModelsInitialized(): Boolean
 
+    external fun analyzeImageCaptionByPixelsData(pixelsData: PixelsData): IntArray?
+
     external fun analyzeImageByPixelsData(
         pixelsData: PixelsData, confThreshold: Float, iouThreshold: Float, requestCaption: Boolean
-    ): MLOutput
+    ): MLDetectOutput
 
     external fun analyzeImageByBitmap(
         bitmap: Bitmap, confThreshold: Float, iouThreshold: Float, requestCaption: Boolean
-    ): MLOutput
+    ): MLDetectOutput
 }

@@ -35,7 +35,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.GuideActivity" />
+        <activity android:name=".activity.SceneActivity" />
 
         <activity android:name=".activity.FinderActivity" />
 

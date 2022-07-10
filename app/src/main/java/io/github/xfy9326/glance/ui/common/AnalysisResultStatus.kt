@@ -51,11 +51,15 @@ private fun PreviewAnalysisImageLoadFailed() {
 fun AnalysisResultStatus(
     modifier: Modifier = Modifier,
     analysisResult: AnalysisResult,
-    onAnalysisSuccess: @Composable ColumnScope.(AnalysisResult.Success) -> Unit
+    onCaptionGenerateSuccess: (@Composable BoxScope.(AnalysisResult.CaptionGenerateSuccess) -> Unit)? = null,
+    onDetectSuccess: (@Composable ColumnScope.(AnalysisResult.DetectSuccess) -> Unit)? = null
 ) {
     when (analysisResult) {
-        is AnalysisResult.Success -> Column(modifier = modifier) {
-            onAnalysisSuccess(analysisResult)
+        is AnalysisResult.CaptionGenerateSuccess -> Box(modifier = modifier) {
+            onCaptionGenerateSuccess?.invoke(this, analysisResult)
+        }
+        is AnalysisResult.DetectSuccess -> Column(modifier = modifier) {
+            onDetectSuccess?.invoke(this, analysisResult)
         }
         AnalysisResult.Initializing -> Box(modifier = modifier) {
             AnalysisLoading(modifier = Modifier.align(Alignment.Center))

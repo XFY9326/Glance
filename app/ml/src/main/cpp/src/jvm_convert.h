@@ -11,7 +11,9 @@ namespace JVMConvert {
 
     bool init(JNIEnv *env);
 
-    jobject ml_output_to_jvm(JNIEnv *env, const MLOutput &output);
+    jintArray caption_ids_vector_to_jvm(JNIEnv *env, const vector<int> &output);
+
+    jobject ml_detect_output_to_jvm(JNIEnv *env, const MLDetectOutput &output);
 
     bool pixels_data_to_native(JNIEnv *env, jobject pixels_data, PixelsData &pixelsData);
 
