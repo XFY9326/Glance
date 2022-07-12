@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import io.github.xfy9326.atools.coroutines.suspendLazy
 import io.github.xfy9326.atools.io.okio.readBitmapAsync
 import io.github.xfy9326.glance.ml.MLManager
 import io.github.xfy9326.glance.ml.beans.getCaptionText
@@ -21,7 +20,6 @@ class AnalysisViewModel constructor(private val imageUri: Uri) : ViewModel() {
     private val iouThreshold = 0.45f
 
     val analyzingImage = AnalyzingImage(imageUri)
-    private val cachedAnalysisResult by suspendLazy { analyzeImage() }
     private val _analysisResult = MutableStateFlow<AnalysisResult>(AnalysisResult.Initializing)
     val analysisResult = _analysisResult.asStateFlow()
 
@@ -31,7 +29,7 @@ class AnalysisViewModel constructor(private val imageUri: Uri) : ViewModel() {
 
     private fun initImageAnalysing() {
         viewModelScope.launch {
-            _analysisResult.value = cachedAnalysisResult.value()
+            _analysisResult.value = analyzeImage()
         }
     }
 

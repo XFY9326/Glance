@@ -4,7 +4,7 @@ import androidx.annotation.CallSuper
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import androidx.lifecycle.ViewModel
-import io.github.xfy9326.atools.coroutines.suspendLazy
+import io.github.xfy9326.atools.coroutines.suspendLazyValue
 import io.github.xfy9326.glance.ml.MLManager
 import io.github.xfy9326.glance.ui.data.AnalysisResult
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,8 +17,8 @@ abstract class CameraAnalysisViewModel : ViewModel() {
     private val imageAnalysisExecutor = Executors.newSingleThreadExecutor()
     private var lastAnalysisOutputMills = 0L
 
-    private val _classLabels by suspendLazy { MLManager.loadClasses() }
-    private val _captionVocabulary by suspendLazy { MLManager.loadVocabulary() }
+    private val _classLabels = suspendLazyValue { MLManager.loadClasses() }
+    private val _captionVocabulary = suspendLazyValue { MLManager.loadVocabulary() }
 
     private val _analysisResult = MutableStateFlow<AnalysisResult>(AnalysisResult.Initializing)
     val analysisResult = _analysisResult.asStateFlow()
