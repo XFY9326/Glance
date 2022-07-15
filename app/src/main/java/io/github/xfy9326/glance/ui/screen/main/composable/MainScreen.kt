@@ -59,9 +59,6 @@ fun MainScreen(
         onLocalImageAnalysisClick = {
             selectPicture.launch(ImageMimeType.IMAGE)
         },
-        onSettingsClick = {
-
-        },
         onAboutClick = {
             aboutDialog.value = true
         }

@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class AnalysisViewModel constructor(private val imageUri: Uri) : ViewModel() {
+class AnalysisViewModel(private val imageUri: Uri) : ViewModel() {
     private val objectsTakeAmount = 10
     private val confThreshold = 0.25f
     private val iouThreshold = 0.45f

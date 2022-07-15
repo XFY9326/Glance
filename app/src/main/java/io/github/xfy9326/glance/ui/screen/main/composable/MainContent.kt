@@ -11,7 +11,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ImageSearch
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Radar
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -39,7 +38,6 @@ private fun PreviewMainScreen() {
             onFinderClick = {},
             onCameraPhotoAnalysisClick = {},
             onLocalImageAnalysisClick = {},
-            onSettingsClick = {},
             onAboutClick = {}
         )
     }
@@ -52,7 +50,6 @@ fun MainContent(
     onFinderClick: () -> Unit,
     onCameraPhotoAnalysisClick: () -> Unit,
     onLocalImageAnalysisClick: () -> Unit,
-    onSettingsClick: () -> Unit,
     onAboutClick: () -> Unit
 ) {
     val contentScrollState = rememberScrollState()
@@ -74,16 +71,15 @@ fun MainContent(
                     .fillMaxWidth(fraction = contentWidthFraction)
             ) {
                 Header()
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(16.dp))
                 Functions(
                     onSceneClick = onSceneClick,
                     onFinderClick = onFinderClick,
                     onCameraPhotoAnalysisClick = onCameraPhotoAnalysisClick,
                     onLocalImageAnalysisClick = onLocalImageAnalysisClick
                 )
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(28.dp))
                 Others(
-                    onSettingsClick = onSettingsClick,
                     onAboutClick = onAboutClick
                 )
             }
@@ -117,7 +113,7 @@ private fun Functions(
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         FunctionCard(
             icon = ImageVector.vectorResource(id = R.drawable.ic_detection_24),
@@ -148,18 +144,11 @@ private fun Functions(
 
 @Composable
 private fun Others(
-    onSettingsClick: () -> Unit,
     onAboutClick: () -> Unit
 ) {
-    Column(
-        modifier = Modifier.padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(6.dp)
+    Box(
+        modifier = Modifier.padding(horizontal = 16.dp)
     ) {
-        FunctionItem(
-            icon = Icons.Default.Settings,
-            title = stringResource(id = R.string.settings),
-            onClick = onSettingsClick
-        )
         FunctionItem(
             icon = Icons.Default.Info,
             title = stringResource(id = R.string.about),
