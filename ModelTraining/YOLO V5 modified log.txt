@@ -1,0 +1,24 @@
+Layer amount          Blob amount
+173 197
+
+Add 2 layers and 3 blobs:
+
+175 200
+
+--------------------------------------------------
+
+Line 89:
+Swish                    Mul_103                  1 1 input.148 onnx::Conv_225
+
+Add behind (split avgPool Flatten):
+
+Split            splitncnn_F              1 2 onnx::Conv_225 Features::splitncnn_0 Features::splitncnn_1
+Pooling          GlobalAveragePool_F      1 1 Features::splitncnn_0 features 0=1 4=1
+
+Modified behind:
+onnx::Conv_225 -> Features::splitncnn_1
+
+--------------------------------------------------
+
+Line 90:
+Convolution      Conv_104                 1 1 Features::splitncnn_1 input.152 0=256 1=1 11=1 2=1 12=1 3=1 13=1 4=0 14=0 15=0 16=0 5=1 6=131072
