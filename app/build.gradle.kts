@@ -87,7 +87,7 @@ dependencies {
 
     // AndroidX
     implementation("androidx.core:core-ktx:1.8.0")
-    implementation("androidx.core:core-splashscreen:1.0.0-rc01")
+    implementation("androidx.core:core-splashscreen:1.0.0")
 
     // AndroidX Customview
     implementation("androidx.customview:customview:1.1.0")
@@ -104,13 +104,13 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifeCycleVersion")
 
     // AndroidX CameraX
-    val cameraVersion = "1.1.0-rc02"
+    val cameraVersion = "1.1.0"
     implementation("androidx.camera:camera-camera2:$cameraVersion")
     implementation("androidx.camera:camera-lifecycle:$cameraVersion")
     implementation("androidx.camera:camera-view:$cameraVersion")
 
     // Jetpack Compose
-    val composeVersion = "1.2.0-rc02"
+    val composeVersion = "1.2.0"
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
     implementation("androidx.compose.foundation:foundation:$composeVersion")
@@ -118,7 +118,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-core:$composeVersion")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
-    val accompanistVersion = "0.24.12-rc"
+    val accompanistVersion = "0.25.0"
     implementation("com.google.accompanist:accompanist-insets-ui:$accompanistVersion")
 
     // Test
