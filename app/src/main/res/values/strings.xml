@@ -7,9 +7,9 @@
     <string name="finder">Finder</string>
     <string name="finder_summary">Use the camera to find items</string>
     <string name="camera_photo_analysis">What\'s nearby?</string>
-    <string name="camera_photo_analysis_summary">Take a picture and analyze</string>
+    <string name="camera_photo_analysis_summary">Take a picture and analyse</string>
     <string name="local_image_analysis">What\'s in the picture?</string>
-    <string name="local_image_analysis_summary">Select a image and analyze</string>
+    <string name="local_image_analysis_summary">Select a image and analyse</string>
     <string name="help">Help</string>
     <string name="settings">Settings</string>
     <string name="about">About</string>
